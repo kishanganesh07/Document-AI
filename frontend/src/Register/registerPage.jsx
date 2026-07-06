@@ -31,7 +31,7 @@ export function RegisterPage() {
       success('Workspace created!', 'Welcome to DocuFlow.');
       navigate('/generate', { replace: true });
     } catch (err) {
-      error('Registration failed', 'Please try again later.');
+      error('Registration failed', err.message || 'Please try again later.');
     } finally {
       setLoading(false);
     }

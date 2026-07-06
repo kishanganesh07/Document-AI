@@ -26,7 +26,7 @@ export function LoginPage() {
       success('Welcome back!', 'You have been signed in.');
       navigate(from, { replace: true });
     } catch (err) {
-      error('Sign in failed', 'Please check your credentials and try again.');
+      error('Sign in failed', err.message || 'Please check your credentials and try again.');
     } finally {
       setLoading(false);
     }
