@@ -6,12 +6,12 @@ import { ToastContainer } from '@/components/ui/Toast';
 
 export function AppShell() {
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--bg-base)]">
+    <div className="flex h-screen overflow-hidden bg-app">
       <Sidebar />
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto m-4 glass rounded-2xl p-2 relative shadow-lg">
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
       </div>
