@@ -1,0 +1,85 @@
+﻿@import "tailwindcss";
+
+@theme {
+  --color-primary: #4F46E5;
+  --color-primary-hover: #4338CA;
+  
+  --color-success: #10B981;
+  --color-success-bg: #D1FAE5;
+  --color-success-border: #A7F3D0;
+  
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FEF3C7;
+  --color-warning-border: #FDE68A;
+  
+  --color-error: #EF4444;
+  --color-error-bg: #FEE2E2;
+  --color-error-border: #FECACA;
+  
+  --color-info: #3B82F6;
+  --color-info-bg: #DBEAFE;
+  --color-info-border: #BFDBFE;
+
+  --color-ai: #8B5CF6;
+  --color-ai-bg: #EDE9FE;
+  --color-ai-border: #DDD6FE;
+
+  --color-verify: #059669;
+  --color-verify-bg: #ECFDF5;
+  --color-verify-border: #D1FAE5;
+}
+
+@layer base {
+  :root {
+    --bg-base: #F8FAFC;
+    --bg-surface: #FFFFFF;
+    --bg-surface-el: #F1F5F9;
+    --bg-hover: #E2E8F0;
+    
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
+    --text-xmuted: #94A3B8;
+    
+    --border: #E2E8F0;
+  }
+
+  :root.dark {
+    --bg-base: #0B0F19;
+    --bg-surface: #111827;
+    --bg-surface-el: #1F2937;
+    --bg-hover: #374151;
+    
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+    --text-xmuted: #64748B;
+    
+    --border: #374151;
+    
+    /* Dark mode adjustments for specific intents */
+    --color-success-bg: rgba(16, 185, 129, 0.15);
+    --color-success-border: rgba(16, 185, 129, 0.3);
+    
+    --color-warning-bg: rgba(245, 158, 11, 0.15);
+    --color-warning-border: rgba(245, 158, 11, 0.3);
+    
+    --color-error-bg: rgba(239, 68, 68, 0.15);
+    --color-error-border: rgba(239, 68, 68, 0.3);
+    
+    --color-info-bg: rgba(59, 130, 246, 0.15);
+    --color-info-border: rgba(59, 130, 246, 0.3);
+    
+    --color-ai-bg: rgba(139, 92, 246, 0.15);
+    --color-ai-border: rgba(139, 92, 246, 0.3);
+    
+    --color-verify-bg: rgba(5, 150, 105, 0.15);
+    --color-verify-border: rgba(5, 150, 105, 0.3);
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+  }
+}
