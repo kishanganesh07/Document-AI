@@ -7,9 +7,10 @@ import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { formatDate } from '@/lib/utils';
 import { Search, Filter, Eye, Download, MoreVertical, FileText } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function DocumentsPage() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -133,7 +134,13 @@ export function DocumentsPage() {
                           <Button variant="ghost" size="xs" icon={<Eye size={14} />}>View</Button>
                         </Link>
                         {doc.status === 'generated' &&
-                    <Button variant="ghost" size="xs" icon={<Download size={14} />} title="Download PDF" />
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      icon={<Download size={14} />}
+                      title="View & Download"
+                      onClick={() => navigate(`/documents/${doc._id}`)}
+                    />
                     }
                       </div>
                     </td>

@@ -25,6 +25,12 @@ export const useUIStore = create()(
         return { theme: newTheme };
       }),
 
+      setTheme: (newTheme) => set(() => {
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+        document.documentElement.classList.toggle('light', newTheme === 'light');
+        return { theme: newTheme };
+      }),
+
       toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
       openCommandPalette: () => set({ commandPaletteOpen: true }),
       closeCommandPalette: () => set({ commandPaletteOpen: false })

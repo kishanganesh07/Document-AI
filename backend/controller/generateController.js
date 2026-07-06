@@ -93,7 +93,7 @@ export const processPrompt = async (req, res) => {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       systemInstruction: systemPrompt
     });
 
@@ -116,6 +116,10 @@ export const processPrompt = async (req, res) => {
     res.json(jsonResponse);
   } catch (err) {
     console.error('Error generating document with AI:', err);
+    // Friendly error for quota exceeded
+    if (err.message && err.message.includes('429')) {
+      return res.status(429).json({ message: 'AI quota limit reached. Please wait a moment and try again.' });
+    }
     res.status(500).json({ message: 'Server error generating document' });
   }
 };

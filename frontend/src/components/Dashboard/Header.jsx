@@ -5,11 +5,11 @@ import { useAuthStore } from '@/stores/auth.store';
 import { useLocation } from 'react-router-dom';
 
 const PAGE_TITLES = {
+  '/': 'Dashboard',
   '/generate': 'Generate',
   '/documents': 'My Documents',
   '/templates': 'Templates',
   '/batch': 'Batch Generate',
-  '/dashboard': 'Dashboard',
   '/organization': 'Organization',
   '/settings': 'Settings'
 };

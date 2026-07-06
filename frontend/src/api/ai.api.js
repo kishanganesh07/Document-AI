@@ -15,6 +15,9 @@ export async function processUserPrompt(prompt, onProgress) {
     });
 
     if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error('AI quota limit reached. Please wait a moment and try again.');
+      }
       throw new Error('Failed to generate document from AI');
     }
 

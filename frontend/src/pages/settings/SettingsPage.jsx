@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { User, Shield, Bell, Key, Moon, Sun, Monitor, Save } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
+import { useUIStore } from '@/stores/ui.store';
 import { useNotificationStore } from '@/stores/notification.store';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +11,7 @@ export function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const { user } = useAuthStore();
   const { success } = useNotificationStore();
+  const { theme, setTheme } = useUIStore();
 
   const handleSave = () => {
     success('Settings saved', 'Your preferences have been updated successfully.');
@@ -73,9 +75,9 @@ export function SettingsPage() {
                 <div>
                   <label className="text-sm font-medium text-[var(--text-primary)] block mb-4">Theme Preference</label>
                   <div className="grid grid-cols-3 gap-4">
-                    <ThemeCard icon={<Sun size={24} />} label="Light" active={false} />
-                    <ThemeCard icon={<Moon size={24} />} label="Dark" active={true} />
-                    <ThemeCard icon={<Monitor size={24} />} label="System" active={false} />
+                    <ThemeCard icon={<Sun size={24} />} label="Light" active={theme === 'light'} onClick={() => setTheme('light')} />
+                    <ThemeCard icon={<Moon size={24} />} label="Dark" active={theme === 'dark'} onClick={() => setTheme('dark')} />
+                    <ThemeCard icon={<Monitor size={24} />} label="System" active={theme === 'system'} onClick={() => setTheme('system')} />
                   </div>
                 </div>
                 <div className="pt-4 border-t border-[var(--border)] flex justify-end">
@@ -114,16 +116,18 @@ function TabButton({ active, onClick, children, icon }) {
 
 }
 
-function ThemeCard({ icon, label, active }) {
+function ThemeCard({ icon, label, active, onClick }) {
   return (
-    <div className={cn(
-      'border-2 rounded-xl p-4 flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors',
-      active ?
-      'border-[var(--color-primary)] bg-[var(--color-primary)]/5 text-[var(--color-primary)]' :
-      'border-[var(--border)] bg-[var(--bg-surface-el)] hover:border-[var(--text-muted)] text-[var(--text-secondary)]'
-    )}>
+    <div
+      onClick={onClick}
+      className={cn(
+        'border-2 rounded-xl p-4 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all select-none',
+        active ?
+        'border-[var(--color-primary)] bg-[var(--color-primary)]/5 text-[var(--color-primary)] shadow-sm' :
+        'border-[var(--border)] bg-[var(--bg-surface-el)] hover:border-[var(--color-primary)]/50 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+      )}>
       {icon}
       <span className="text-sm font-medium">{label}</span>
-    </div>);
-
+    </div>
+  );
 }
