@@ -1,9 +1,8 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { AppShell } from '@/components/Navigation/AppShell';
 import { ProtectedRoute, PublicRoute } from './guards';
 
 // Lazy loading or direct imports - direct for now in Phase 1/2
-import { HomePage } from '@/Home/HomePage';
 import { GeneratePage } from '@/pages/generate/GeneratePage';
 import { DocumentsPage } from '@/pages/documents/DocumentsPage';
 import { DocumentDetailPage } from '@/pages/documents/DocumentDetailPage';
@@ -38,7 +37,7 @@ const router = createBrowserRouter([
   {
     element: <AppShell />,
     children: [
-    { path: '/', element: <HomePage /> },
+    { path: '/', element: <Navigate to="/generate" replace /> },
 
     {
       path: '/generate',
