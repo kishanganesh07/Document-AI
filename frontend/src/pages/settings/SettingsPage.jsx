@@ -70,7 +70,7 @@ export function SettingsPage() {
                 {/* Avatar */}
                 <div className="flex items-center gap-5">
                   <div className="relative">
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-violet-600 flex items-center justify-center text-white font-bold text-3xl shadow-sm">
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-blue-600 flex items-center justify-center text-white font-bold text-3xl shadow-sm">
                       {user?.name?.charAt(0) || 'U'}
                     </div>
                     <button className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[var(--bg-surface)] border-2 border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--color-primary)] transition-colors shadow-sm">
@@ -103,7 +103,7 @@ export function SettingsPage() {
           {/* Appearance */}
           {activeTab === 'appearance' && (
             <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl shadow-[var(--shadow-sm)] overflow-hidden animate-fade-in">
-              <div className="px-6 py-5 border-b border-[var(--border)] bg-gradient-to-r from-violet-500/5 to-transparent">
+              <div className="px-6 py-5 border-b border-[var(--border)] bg-gradient-to-r from-blue-500/5 to-transparent">
                 <h2 className="text-base font-bold text-[var(--text-primary)]">Appearance</h2>
                 <p className="text-xs text-[var(--text-muted)] mt-0.5">Choose how DocuFlow looks to you.</p>
               </div>

@@ -9,48 +9,21 @@ import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
   {
-    to: '/',
-    icon: Gauge,
-    label: 'Dashboard',
-    color: 'text-sky-400',
-    activeBg: 'bg-sky-400/10',
-    end: true,
+    section: 'Workspace',
+    links: [
+      { to: '/', icon: Gauge, label: 'Dashboard', end: true },
+      { to: '/generate', icon: Wand2, label: 'Generate' },
+      { to: '/documents', icon: ScrollText, label: 'Documents' },
+      { to: '/templates', icon: Layers, label: 'Templates' },
+    ]
   },
   {
-    to: '/generate',
-    icon: Wand2,
-    label: 'Generate',
-    color: 'text-fuchsia-400',
-    activeBg: 'bg-fuchsia-400/10',
-  },
-  {
-    to: '/documents',
-    icon: ScrollText,
-    label: 'Documents',
-    color: 'text-teal-400',
-    activeBg: 'bg-teal-400/10',
-  },
-  {
-    to: '/templates',
-    icon: Layers,
-    label: 'Templates',
-    color: 'text-amber-400',
-    activeBg: 'bg-amber-400/10',
-  },
-  {
-    to: '/organization',
-    icon: Network,
-    label: 'Organization',
-    color: 'text-rose-400',
-    activeBg: 'bg-rose-400/10',
-  },
-  {
-    to: '/settings',
-    icon: SlidersHorizontal,
-    label: 'Settings',
-    color: 'text-slate-400',
-    activeBg: 'bg-slate-500/10',
-  },
+    section: 'Organization',
+    links: [
+      { to: '/organization', icon: Network, label: 'Organization' },
+      { to: '/settings', icon: SlidersHorizontal, label: 'Settings' },
+    ]
+  }
 ];
 
 export function Sidebar() {
@@ -60,7 +33,7 @@ export function Sidebar() {
 
   return (
     <aside className={cn(
-      'bg-[var(--bg-surface)] border-r border-[var(--border)] transition-all duration-300 flex flex-col shrink-0',
+      'bg-[var(--bg-sidebar)] border-r border-[var(--border)] transition-all duration-300 flex flex-col shrink-0',
       sidebarCollapsed ? 'w-[68px]' : 'w-60'
     )}>
       {/* Logo */}
@@ -68,10 +41,7 @@ export function Sidebar() {
         <div className="flex items-center gap-2.5 overflow-hidden">
           {!sidebarCollapsed && (
             <div className="overflow-hidden">
-              <span className="font-bold text-sm tracking-tight whitespace-nowrap" style={{
-                background: 'linear-gradient(135deg, #38bdf8 0%, #a78bfa 50%, #f472b6 100%)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
-              }}>
+              <span className="font-bold text-sm tracking-tight whitespace-nowrap text-[var(--color-primary)]">
                 DocuFlow
               </span>
               <span className="block text-[9px] text-[var(--text-xmuted)] font-medium tracking-widest uppercase leading-none">
@@ -80,46 +50,55 @@ export function Sidebar() {
             </div>
           )}
           {sidebarCollapsed && (
-            <span className="font-black text-base" style={{
-              background: 'linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
-            }}>D</span>
+            <span className="font-black text-base text-[var(--color-primary)]">D</span>
           )}
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 flex flex-col gap-0.5 px-2 overflow-y-auto overflow-x-hidden">
-        {NAV_LINKS.map((link) => {
-          const Icon = link.icon;
-          return (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.end}
-              className={({ isActive }) => cn(
-                'flex items-center gap-3 rounded-lg transition-all duration-150 overflow-hidden group relative',
-                sidebarCollapsed ? 'justify-center p-2.5' : 'px-3 py-2',
-                isActive
-                  ? `${link.activeBg} ${link.color} font-semibold`
-                  : 'text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
-              )}
-              title={sidebarCollapsed ? link.label : undefined}
-            >
-              {({ isActive }) => (
-                <>
-                  <Icon size={18} className={cn('shrink-0', isActive ? link.color : '')} />
-                  {!sidebarCollapsed && (
-                    <span className="whitespace-nowrap text-sm">{link.label}</span>
+      <nav className="flex-1 py-4 flex flex-col px-2 overflow-y-auto overflow-x-hidden">
+        {NAV_LINKS.map((group, groupIdx) => (
+          <div key={group.section} className={cn("flex flex-col gap-0.5", groupIdx > 0 && "mt-6")}>
+            {!sidebarCollapsed && (
+              <span className="px-3 text-[10px] font-bold tracking-wider text-[var(--text-xmuted)] uppercase mb-1">
+                {group.section}
+              </span>
+            )}
+            {sidebarCollapsed && groupIdx > 0 && (
+              <div className="w-full h-px bg-[var(--border)] my-2" />
+            )}
+            {group.links.map((link) => {
+              const Icon = link.icon;
+              return (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.end}
+                  className={({ isActive }) => cn(
+                    'flex items-center gap-3 rounded-lg transition-all duration-150 overflow-hidden group relative',
+                    sidebarCollapsed ? 'justify-center p-2.5' : 'px-3 py-2',
+                    isActive
+                      ? 'bg-[var(--color-primary-subtle)] text-[var(--color-primary)] font-semibold'
+                      : 'text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]'
                   )}
-                  {isActive && !sidebarCollapsed && (
-                    <span className={cn('ml-auto w-1.5 h-1.5 rounded-full', link.color.replace('text-', 'bg-'))} />
+                  title={sidebarCollapsed ? link.label : undefined}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <Icon size={18} className={cn('shrink-0', isActive ? 'text-[var(--color-primary)]' : '')} />
+                      {!sidebarCollapsed && (
+                        <span className="whitespace-nowrap text-sm">{link.label}</span>
+                      )}
+                      {isActive && !sidebarCollapsed && (
+                        <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
+                      )}
+                    </>
                   )}
-                </>
-              )}
-            </NavLink>
-          );
-        })}
+                </NavLink>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       {/* Bottom */}
@@ -127,10 +106,8 @@ export function Sidebar() {
         {/* User chip */}
         {!sidebarCollapsed && user && (
           <div className="flex items-center gap-2.5 px-2 py-2 mb-1">
-            <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" style={{
-              background: 'linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%)'
-            }}>
-              {user.name?.[0] ?? 'U'}
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 overflow-hidden bg-[var(--bg-hover)] border border-[var(--border)]">
+              <img src="https://ui-avatars.com/api/?name=Kishan&background=f1f5f9&color=475569&rounded=true&bold=true" alt="Avatar" className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-[var(--text-primary)] truncate">{user.name}</p>

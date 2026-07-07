@@ -5,13 +5,13 @@ import { cn } from '@/lib/utils';
 
 
 const badgeVariants = {
-  default: 'bg-[var(--bg-surface-el)] text-[var(--text-secondary)] border border-[var(--border)]',
-  success: 'bg-[var(--color-success-bg)] text-[var(--color-success)] border border-[var(--color-success-border)]',
-  warning: 'bg-[var(--color-warning-bg)] text-[var(--color-warning)] border border-[var(--color-warning-border)]',
-  error: 'bg-[var(--color-error-bg)] text-[var(--color-error)] border border-[var(--color-error-border)]',
-  info: 'bg-[var(--color-info-bg)] text-[var(--color-info)] border border-[var(--color-info-border)]',
-  ai: 'bg-[var(--color-ai-bg)] text-[var(--color-ai)] border border-[var(--color-ai-border)]',
-  verify: 'bg-[var(--color-verify-bg)] text-[var(--color-verify)] border border-[var(--color-verify-border)]',
+  default: 'bg-[var(--bg-hover)] text-[var(--text-secondary)]',
+  success: 'bg-[var(--color-success-bg)] text-[var(--color-success)]',
+  warning: 'bg-[var(--color-warning-bg)] text-[var(--color-warning)]',
+  error: 'bg-[var(--color-error-bg)] text-[var(--color-error)]',
+  info: 'bg-[var(--color-info-bg)] text-[var(--color-info)]',
+  ai: 'bg-[var(--color-ai-bg)] text-[var(--color-ai)]',
+  verify: 'bg-[var(--color-verify-bg)] text-[var(--color-verify)]',
   muted: 'bg-[var(--bg-surface-el)] text-[var(--text-muted)]'
 };
 

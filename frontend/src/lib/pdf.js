@@ -15,6 +15,16 @@ export async function downloadAsPdf(htmlString, filename) {
   document.body.appendChild(container);
 
   try {
+    // Wait for all images to load before rendering
+    const images = Array.from(container.getElementsByTagName('img'));
+    await Promise.all(images.map(img => {
+      if (img.complete) return Promise.resolve();
+      return new Promise((resolve) => {
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+    }));
+
     // Render the canvas
     const canvas = await html2canvas(container, {
       scale: 2, // Higher scale for better quality

@@ -39,7 +39,7 @@ export function EditableField({ field, value, onChange, validation, isAIGenerate
   'border-[var(--border)]';
 
   const displayValue = value !== undefined && value !== null && value !== '' ?
-  String(value) :
+  (field.type === 'json' && typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)) :
   <span className="text-[var(--text-xmuted)] italic">Not set</span>;
 
   if (field.type === 'textarea') {
@@ -59,6 +59,52 @@ export function EditableField({ field, value, onChange, validation, isAIGenerate
         {validation && <ValidationMessage result={validation} />}
       </div>);
 
+  }
+
+  if (field.type === 'json') {
+    return (
+      <div className="flex flex-col gap-1">
+        <FieldLabel field={field} isAIGenerated={isAIGenerated} />
+        {editing ? (
+          <div className="flex flex-col gap-1.5">
+            <textarea
+              value={localValue}
+              onChange={(e) => setLocalValue(e.target.value)}
+              rows={6}
+              className={cn(
+                'w-full bg-[var(--bg-surface)] border rounded-lg px-3 py-2 text-[11px] font-mono text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] whitespace-pre',
+                borderClass
+              )}
+            />
+            <div className="flex justify-end gap-2 mt-1">
+              <button onClick={cancel} className="text-xs px-2 py-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">Cancel</button>
+              <button onClick={() => {
+                try {
+                  onChange(field.key, JSON.parse(localValue));
+                  setEditing(false);
+                } catch(e) {
+                  alert("Invalid JSON format. Please fix any errors before saving.");
+                }
+              }} className="text-xs text-white bg-[var(--color-primary)] hover:opacity-90 px-3 py-1 rounded-md transition-opacity">Save</button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              setLocalValue(typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value ?? ''));
+              setEditing(true);
+            }}
+            className={cn(
+              'text-left border rounded-lg px-3 py-2 text-[11px] font-mono whitespace-pre transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--bg-hover)] overflow-x-auto',
+              borderClass
+            )}
+          >
+            {value !== undefined && value !== null && value !== '' ? (typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)) : <span className="text-[var(--text-xmuted)] italic font-sans text-sm">Not set</span>}
+          </button>
+        )}
+        {validation && <ValidationMessage result={validation} />}
+      </div>
+    );
   }
 
   if (field.type === 'select' && field.options) {

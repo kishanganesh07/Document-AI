@@ -73,10 +73,8 @@ export function Header() {
             onClick={() => setIsProfileOpen(!isProfileOpen)}
             className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-lg hover:bg-[var(--bg-hover)] transition-all"
           >
-            <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{
-              background: 'linear-gradient(135deg, #6C63FF 0%, #C026D3 100%)'
-            }}>
-              <span className="text-[11px] font-bold text-white">{user?.name?.[0] ?? 'U'}</span>
+            <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 overflow-hidden bg-[var(--bg-hover)] border border-[var(--border)]">
+              <img src="https://ui-avatars.com/api/?name=Kishan&background=f1f5f9&color=475569&rounded=true&bold=true" alt="Avatar" className="w-full h-full object-cover" />
             </div>
             {user?.name && (
               <span className="hidden sm:block text-xs font-semibold text-[var(--text-primary)] max-w-[80px] truncate">

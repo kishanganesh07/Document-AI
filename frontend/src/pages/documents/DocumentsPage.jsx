@@ -104,7 +104,7 @@ export function DocumentsPage() {
                 <th className="px-6 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--border)] text-[var(--text-primary)]">
+            <tbody className="text-[var(--text-primary)]">
               {isLoading
                 ? Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i}>
@@ -127,12 +127,14 @@ export function DocumentsPage() {
                 ? (
                     <tr>
                       <td colSpan={5} className="px-6 py-20 text-center">
-                        <div className="flex flex-col items-center justify-center">
-                          <div className="w-14 h-14 rounded-2xl bg-[var(--bg-surface-el)] flex items-center justify-center mb-4">
-                            <FileText size={24} className="text-[var(--text-xmuted)]" />
+                        <div className="flex flex-col items-center justify-center py-12">
+                          <div className="text-4xl mb-4">
+                            📄
                           </div>
-                          <p className="font-semibold text-[var(--text-primary)]">No documents found</p>
-                          <p className="text-[var(--text-muted)] text-xs mt-1">
+                          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">
+                            {hasFilters ? 'No documents found' : 'Your workspace is empty'}
+                          </h3>
+                          <p className="text-sm text-[var(--text-secondary)] mb-6 max-w-sm mx-auto">
                             {hasFilters ? 'Try adjusting your filters.' : 'Generate your first document to get started.'}
                           </p>
                           {hasFilters
@@ -151,11 +153,14 @@ export function DocumentsPage() {
                     </tr>
                   )
                 : data?.data.map((doc) => (
-                    <tr key={doc._id} className="hover:bg-[var(--bg-hover)] transition-colors cursor-pointer group">
+                    <tr key={doc._id} className="even:bg-[var(--bg-surface-el)] odd:bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] transition-colors cursor-pointer group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[var(--color-primary)]/10 flex items-center justify-center shrink-0">
-                            <FileText size={14} className="text-[var(--color-primary)]" />
+                          <div className="w-8 h-10 bg-white border border-[var(--border)] shadow-sm rounded-sm shrink-0 p-1 flex flex-col gap-0.5">
+                            <div className="h-0.5 w-3 bg-gray-200 rounded-sm" />
+                            <div className="h-[1px] w-4 bg-gray-100 rounded-sm" />
+                            <div className="h-[1px] w-4 bg-gray-100 rounded-sm" />
+                            <div className="mt-auto h-1.5 w-full bg-[var(--color-primary)]/10 rounded-sm" />
                           </div>
                           <div>
                             <div className="font-semibold text-[var(--text-primary)] text-sm leading-tight group-hover:text-[var(--color-primary)] transition-colors">

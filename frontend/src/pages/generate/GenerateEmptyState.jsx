@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { Receipt, UserCheck, BadgeCheck, TrendingUp, ClipboardList, GraduationCap, ArrowRight, Wand2, Layers } from 'lucide-react';
+import { Receipt, UserCheck, BadgeCheck, TrendingUp, ClipboardList, GraduationCap, ArrowRight, Wand2, Layers, Briefcase } from 'lucide-react';
 import { PromptComposer } from '@/components/domain/ai/PromptComposer';
 import { MOCK_TEMPLATES } from '@/mocks/templates.mock';
 import { DOCUMENT_TYPE_LABELS } from '@/lib/utils';
 
 const SUGGESTED_PROMPTS = [
-  { label: 'Create an invoice', prompt: 'Create an invoice for Acme Technologies for ₹45,000, due on August 15.', icon: Receipt, color: '#6C63FF', bg: 'rgba(108,99,255,0.1)' },
-  { label: 'Generate offer letter', prompt: 'Generate an offer letter for Arjun Mehta for the position of Senior Software Engineer with ₹24 LPA CTC, joining August 1.', icon: UserCheck, color: '#00D4AA', bg: 'rgba(0,212,170,0.1)' },
-  { label: 'Issue a certificate', prompt: 'Issue a certificate of completion to Ananya Singh for the Advanced React Development course with grade A+.', icon: BadgeCheck, color: '#C026D3', bg: 'rgba(192,38,211,0.1)' },
-  { label: 'Prepare a quotation', prompt: 'Prepare a quotation for BuildNext Infra for ERP software license, 10 seats at ₹12,000/seat.', icon: ClipboardList, color: '#F7A731', bg: 'rgba(247,167,49,0.1)' },
-  { label: 'Create a monthly report', prompt: 'Create a monthly performance report for June 2024.', icon: TrendingUp, color: '#22D3EE', bg: 'rgba(34,211,238,0.1)' },
-  { label: 'Generate a question paper', prompt: 'Generate a question paper for Advanced Mathematics, 3 hours, 100 marks, exam date July 20.', icon: GraduationCap, color: '#FF5C72', bg: 'rgba(255,92,114,0.1)' },
+  { label: 'Create an invoice', prompt: 'Create an invoice for Acme Technologies for ₹45,000, due on August 15.', icon: Receipt, color: '#334155', bg: 'var(--color-primary-subtle)' },
+  { label: 'Generate offer letter', prompt: 'Generate an offer letter for Arjun Mehta for the position of Senior Software Engineer with ₹24 LPA CTC, joining August 1.', icon: UserCheck, color: '#10B981', bg: 'var(--color-success-bg)' },
+  { label: 'Issue a certificate', prompt: 'Issue a certificate of completion to Ananya Singh for the Advanced React Development course with grade A+.', icon: BadgeCheck, color: '#6366F1', bg: 'var(--color-ai-bg)' },
+  { label: 'Prepare a quotation', prompt: 'Prepare a quotation for BuildNext Infra for ERP software license, 10 seats at ₹12,000/seat.', icon: ClipboardList, color: '#F59E0B', bg: 'var(--color-warning-bg)' },
+  { label: 'Create a monthly report', prompt: 'Create a monthly performance report for June 2024.', icon: TrendingUp, color: '#3B82F6', bg: 'var(--color-info-bg)' },
+  { label: 'Generate ATS Resume', prompt: 'Build an ATS-friendly resume for a Software Engineer with 5 years of experience in React and Node.', icon: Briefcase, color: '#E11D48', bg: 'var(--color-error-bg)' },
 ];
 
 export function GenerateEmptyState({ onPrompt, onTemplateSelect }) {
@@ -26,13 +26,13 @@ export function GenerateEmptyState({ onPrompt, onTemplateSelect }) {
         <div style={{
           position: 'absolute', top: '-80px', left: '50%', transform: 'translateX(-50%)',
           width: '600px', height: '400px',
-          background: 'radial-gradient(ellipse at center, rgba(108,99,255,0.14) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at center, var(--color-primary-subtle) 0%, transparent 70%)',
           filter: 'blur(40px)',
         }} />
         <div style={{
           position: 'absolute', bottom: '-60px', right: '-100px',
           width: '400px', height: '400px',
-          background: 'radial-gradient(ellipse at center, rgba(192,38,211,0.10) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at center, var(--color-ai-bg) 0%, transparent 70%)',
           filter: 'blur(50px)',
         }} />
       </div>
@@ -44,17 +44,15 @@ export function GenerateEmptyState({ onPrompt, onTemplateSelect }) {
           <div style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           width: '60px', height: '60px', borderRadius: '18px', marginBottom: '4px',
-          background: 'linear-gradient(135deg, #6C63FF 0%, #C026D3 100%)',
-          boxShadow: '0 8px 24px rgba(108,99,255,0.4), 0 0 0 1px rgba(108,99,255,0.2)',
+          background: 'var(--color-primary)',
+          boxShadow: 'var(--shadow-md)',
         }}>
             <Wand2 size={26} color="white" />
           </div>
           <div>
             <h1 style={{
               fontSize: '28px', fontWeight: '800', letterSpacing: '-0.03em',
-              background: 'linear-gradient(135deg, var(--text-primary) 0%, #6C63FF 60%, #C026D3 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text', marginBottom: '8px', lineHeight: 1.2,
+              color: 'var(--text-primary)', marginBottom: '8px', lineHeight: 1.2,
             }}>
               What would you like to create?
             </h1>

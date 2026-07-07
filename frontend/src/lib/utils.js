@@ -43,5 +43,6 @@ export const DOCUMENT_TYPE_LABELS = {
   offer_letter: 'Offer Letter',
   certificate: 'Certificate',
   report: 'Report',
-  question_paper: 'Question Paper'
+  question_paper: 'Question Paper',
+  resume: 'Resume'
 };

@@ -6,20 +6,20 @@ export const MOCK_DOCUMENTS = [
   ownerId: 'u_1',
   organizationId: 'org_1',
   documentType: 'invoice',
-  title: 'Acme Corp — Q2 Software License',
+  title: 'Stripe — Q2 Software License',
   status: 'generated',
   schemaVersion: '1.0.0',
   documentData: {
     invoiceNumber: 'INV-2024-001',
     invoiceDate: '2024-06-15',
-    clientName: 'Acme Corp',
+    clientName: 'Stripe',
     currency: 'USD',
     items: [
     { id: 'i1', description: 'Enterprise License Q2', quantity: 1, rate: 15000, amount: 15000 }]
 
   },
   currentVersion: 1,
-  recipientName: 'Acme Corp',
+  recipientName: 'Stripe',
   pdfUrl: '/mock/inv-2024-001.pdf',
   verificationId: 'INV-ACME-449',
   verification: {
@@ -35,17 +35,17 @@ export const MOCK_DOCUMENTS = [
   ownerId: 'u_1',
   organizationId: 'org_1',
   documentType: 'offer_letter',
-  title: 'Offer Letter — John Smith',
+  title: 'Offer Letter — Sarah Chen',
   status: 'draft',
   schemaVersion: '1.0.0',
   documentData: {
-    candidateName: 'John Smith',
-    jobTitle: 'Senior Engineer',
-    ctc: 120000,
+    candidateName: 'Sarah Chen',
+    jobTitle: 'Senior Platform Engineer',
+    ctc: 160000,
     currency: 'USD'
   },
   currentVersion: 1,
-  recipientName: 'John Smith',
+  recipientName: 'Sarah Chen',
   createdAt: '2024-06-16T14:20:00Z',
   updatedAt: '2024-06-16T15:10:00Z'
 },
@@ -58,7 +58,7 @@ export const MOCK_DOCUMENTS = [
   status: 'revoked',
   schemaVersion: '1.0.0',
   documentData: {
-    recipientName: 'Jane Doe',
+    recipientName: 'Marcus Johnson',
     courseName: 'Data Science Bootcamp'
   },
   currentVersion: 1,

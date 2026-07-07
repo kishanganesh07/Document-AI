@@ -36,4 +36,13 @@ export const MOCK_TEMPLATES = [
   isCustom: true,
   htmlContent: '',
   usageCount: 45
+},
+{
+  _id: 'tpl_5',
+  name: 'ATS-Friendly Resume',
+  documentType: 'resume',
+  description: 'Clean, parseable resume format for tech jobs.',
+  isCustom: false,
+  htmlContent: '',
+  usageCount: 4120
 }];

@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 const variants = {
   primary: 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white shadow-sm',
-  secondary: 'bg-[var(--bg-surface-el)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] border border-[var(--border)]',
+  secondary: 'bg-transparent hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] border border-[var(--border-strong)]',
   ghost: 'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
   danger: 'bg-[var(--color-error-bg)] hover:bg-[var(--color-error)] hover:text-white text-[var(--color-error)] border border-[var(--color-error-border)]',
   outline: 'border border-[var(--border)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] text-[var(--text-secondary)]',

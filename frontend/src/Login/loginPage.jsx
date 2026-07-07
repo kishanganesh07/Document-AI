@@ -61,7 +61,7 @@ export function LoginPage() {
           flex: 1;
           position: relative;
           overflow: hidden;
-          background: linear-gradient(145deg, #1a0533 0%, #0f0c29 40%, #0d1b5e 100%);
+          background: linear-gradient(145deg, #1E3A8A 0%, #2563EB 40%, #3B82F6 100%);
           flex-direction: column;
         }
         @media (min-width: 1024px) {
@@ -79,7 +79,7 @@ export function LoginPage() {
           transition: border-color 0.15s;
           font-family: inherit;
         }
-        .login-input:focus { border-color: #6C63FF; }
+        .login-input:focus { border-color: var(--color-primary); }
         .login-input-pw {
           padding-right: 40px;
         }
@@ -88,7 +88,7 @@ export function LoginPage() {
           padding: 13px;
           border-radius: 12px;
           border: none;
-          background: linear-gradient(135deg, #6C63FF 0%, #C026D3 100%);
+          background: var(--color-primary);
           color: white;
           font-size: 15px;
           font-weight: 700;
@@ -97,7 +97,7 @@ export function LoginPage() {
           align-items: center;
           justify-content: center;
           gap: 8px;
-          box-shadow: 0 4px 20px rgba(108,99,255,0.35);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
           transition: all 0.2s;
           margin-top: 4px;
           font-family: inherit;
@@ -109,7 +109,8 @@ export function LoginPage() {
         }
         .login-btn:not(:disabled):hover {
           transform: translateY(-1px);
-          box-shadow: 0 6px 28px rgba(108,99,255,0.45);
+          box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+          background: var(--color-primary-hover);
         }
         .feature-pill {
           display: flex;
@@ -117,8 +118,8 @@ export function LoginPage() {
           gap: 12px;
           padding: 12px 16px;
           border-radius: 12px;
-          background: rgba(255,255,255,0.07);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.12);
+          border: 1px solid rgba(255,255,255,0.2);
           backdrop-filter: blur(8px);
         }
       `}</style>
@@ -132,9 +133,7 @@ export function LoginPage() {
           <div style={{ marginBottom: '48px' }}>
             <span style={{
               fontSize: '22px', fontWeight: '800', letterSpacing: '-0.03em',
-              background: 'linear-gradient(135deg, #6C63FF 0%, #C026D3 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+              color: 'var(--text-primary)'
             }}>
               DocuFlow
             </span>
@@ -228,18 +227,18 @@ export function LoginPage() {
               friction={0.82}
               wallBounce={0.95}
               followCursor={true}
-              colors={['#6C63FF', '#C026D3', '#22D3EE', '#F7A731', '#00D4AA']}
+              colors={['#93C5FD', '#BFDBFE', '#FFFFFF', '#60A5FA', '#DBEAFE']}
             />
           </div>
 
           {/* Gradient depth overlays */}
           <div style={{
             position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
-            background: 'radial-gradient(ellipse at 30% 20%, rgba(108,99,255,0.3) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 60%)',
           }} />
           <div style={{
             position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
-            background: 'radial-gradient(ellipse at 80% 80%, rgba(192,38,211,0.25) 0%, transparent 55%)',
+            background: 'radial-gradient(ellipse at 80% 80%, rgba(30,58,138,0.4) 0%, transparent 55%)',
           }} />
 
           {/* Content */}
@@ -248,23 +247,17 @@ export function LoginPage() {
             alignItems: 'center', justifyContent: 'center', flex: 1, padding: '48px', textAlign: 'center',
           }}>
 
-            {/* Icon badge */}
-            <div style={{
-              width: '72px', height: '72px', borderRadius: '22px', marginBottom: '28px',
-              background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)',
-              backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-            }}>
-              <Sparkles size={30} color="white" />
-            </div>
-
-            <h2 style={{
-              fontSize: '32px', fontWeight: '800', color: 'white',
-              letterSpacing: '-0.03em', marginBottom: '14px', lineHeight: 1.2,
-            }}>
-              Master your<br />workflow
-            </h2>
-            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.55)', maxWidth: '300px', lineHeight: 1.7, marginBottom: '36px' }}>
+              <div style={{
+                width: '64px', height: '64px', borderRadius: '20px', background: 'white',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+              }}>
+                <span style={{ fontSize: '28px' }}>🚀</span>
+              </div>
+              <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#FFFFFF', marginBottom: '16px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+                Create professional documents instantly.
+              </h2>
+              <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.6, maxWidth: '400px', marginBottom: '36px' }}>
               Automate documents with the power of AI. Intelligent parsing, smart validation, and instant export.
             </p>
 
@@ -274,7 +267,7 @@ export function LoginPage() {
                 <div key={text} className="feature-pill">
                   <div style={{
                     width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0,
-                    background: 'rgba(108,99,255,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
                     <Icon size={14} color="white" />
                   </div>

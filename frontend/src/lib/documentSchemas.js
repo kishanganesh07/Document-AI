@@ -216,6 +216,59 @@ export const DOCUMENT_SCHEMA_REGISTRY = {
 
     }]
 
+  },
+  resume: {
+    version: '1.0.0',
+    documentType: 'resume',
+    sections: [
+      {
+        id: 'basic_info',
+        label: 'Basic Information',
+        fields: [
+          { key: 'name', label: 'Full Name', type: 'text', required: true },
+          { key: 'professionalTitle', label: 'Professional Title', type: 'text' },
+          { key: 'professionalSummary', label: 'Professional Summary', type: 'textarea', required: true }
+        ]
+      },
+      {
+        id: 'contact_info',
+        label: 'Contact Information',
+        fields: [
+          { key: 'contactInfo', label: 'Contact Details', type: 'json' }
+        ]
+      },
+      {
+        id: 'experience',
+        label: 'Experience',
+        fields: [
+          { key: 'experience', label: 'Work Experience', type: 'json' }
+        ]
+      },
+      {
+        id: 'projects',
+        label: 'Projects',
+        fields: [
+          { key: 'projects', label: 'Projects', type: 'json' }
+        ]
+      },
+      {
+        id: 'education',
+        label: 'Education & Certifications',
+        fields: [
+          { key: 'education', label: 'Education', type: 'json' },
+          { key: 'certifications', label: 'Certifications', type: 'json' }
+        ]
+      },
+      {
+        id: 'skills',
+        label: 'Skills',
+        fields: [
+          { key: 'technicalSkills', label: 'Technical Skills', type: 'json' },
+          { key: 'languages', label: 'Languages', type: 'json' },
+          { key: 'interests', label: 'Interests', type: 'json' }
+        ]
+      }
+    ]
   }
 };
 

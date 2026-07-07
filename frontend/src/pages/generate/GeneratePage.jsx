@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useGenerateStore } from '@/stores/generate.store';
 import { processUserPrompt, generateDocumentPreviewHtml } from '@/api/ai.api';
 import { AIMessage, UserMessage } from '@/components/domain/ai/AIMessage';
@@ -13,6 +14,7 @@ import { PostGenerationModal } from './PostGenerationModal';
 import { useNotificationStore } from '@/stores/notification.store';
 import { DOCUMENT_TYPE_LABELS, generateId } from '@/lib/utils';
 import { saveDocument } from '@/api/document.api';
+import { downloadAsPdf } from '@/lib/pdf';
 import { MOCK_TEMPLATES } from '@/mocks/templates.mock';
 import {
   Wand2, RotateCcw, ScrollText, AlertCircle,
@@ -23,6 +25,8 @@ import { cn } from '@/lib/utils';
 
 export function GeneratePage() {
   const store = useGenerateStore();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { success, error } = useNotificationStore();
   const messagesEndRef = useRef(null);
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -160,13 +164,24 @@ export function GeneratePage() {
     }
   };
 
+  useEffect(() => {
+    if (location.state?.template && isEmpty) {
+      const template = location.state.template;
+      // Clear location state to prevent re-triggering
+      navigate('.', { replace: true, state: {} });
+      
+      const prompt = `Generate a new ${template.name}`;
+      handleUserMessage(prompt);
+    }
+  }, [location.state, isEmpty, navigate]);
+
   const handleFieldChange = (key, value) => {
     store.updateDocumentData({ [key]: value });
     // Remove AI-generated marker when user edits
     setAiGeneratedFields((prev) => {
-      const next = new Set(prev);
-      next.delete(key);
-      return next;
+      const newSet = new Set(prev);
+      newSet.delete(key);
+      return newSet;
     });
   };
 
@@ -262,15 +277,10 @@ export function GeneratePage() {
         </div>
       </div>
 
-      {/* ===== DESKTOP 3-PANEL ===== */}
+      {/* ===== DESKTOP 2-PANEL (Linear Workflow) ===== */}
       <div className="hidden md:flex flex-1 overflow-hidden">
-        {/* Panel 1: Chat (30%) */}
-        <div className="w-[30%] min-w-[260px] max-w-[380px] flex flex-col border-r border-[var(--border)] overflow-hidden">
-          <ChatPanel onSend={handleUserMessage} onQuickAction={() => {}} />
-        </div>
-
-        {/* Panel 2: Workspace (35%) */}
-        <div className="flex-1 flex flex-col overflow-hidden border-r border-[var(--border)]">
+        {/* Panel 1: Workspace & AI (50%) */}
+        <div className="w-1/2 min-w-[400px] flex flex-col border-r border-[var(--border)] overflow-hidden bg-[var(--bg-base)] relative z-10 shadow-[var(--shadow-sm)]">
           <WorkspacePanel
             errorCount={errorCount}
             warningCount={warningCount}
@@ -280,39 +290,54 @@ export function GeneratePage() {
             generating={generating}
             isDirty={store.isDirty}>
             
-            {store.detectedType &&
-            <DynamicFieldRenderer
-              documentType={store.detectedType}
-              documentData={store.documentData}
-              validationResults={store.validationResults}
-              aiGeneratedFields={aiGeneratedFields}
-              onChange={handleFieldChange} />
+            {/* Step 1: AI Prompt & Chat */}
+            <div className="mb-6 pb-6 border-b border-[var(--border)]">
+              <ChatPanel onSend={handleUserMessage} onQuickAction={() => {}} />
+            </div>
 
-            }
-            {store.validationResults.length > 0 &&
-            <ValidationSummary results={store.validationResults} />
-            }
+            {/* Step 2: AI Suggestions */}
             {activeSuggestions.length > 0 &&
-            <div className="space-y-2">
-                <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider flex items-center gap-1.5">
-                  <Wand2 size={11} />
+              <div className="space-y-3 mb-6 pb-6 border-b border-[var(--border)]">
+                <p className="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider flex items-center gap-1.5">
+                  <Wand2 size={13} className="text-[var(--color-ai)]" />
                   AI Suggestions
                 </p>
                 {activeSuggestions.map((s) =>
-              <SuggestionCard
-                key={s.id}
-                suggestion={s}
-                onApply={store.applySuggestion}
-                onDismiss={store.dismissSuggestion} />
+                  <SuggestionCard
+                    key={s.id}
+                    suggestion={s}
+                    onApply={store.applySuggestion}
+                    onDismiss={store.dismissSuggestion} />
+                )}
+              </div>
+            }
 
-              )}
+            {/* Step 3: Editable Form */}
+            {store.detectedType &&
+              <div className="space-y-4">
+                <p className="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider">
+                  Document Content
+                </p>
+                <DynamicFieldRenderer
+                  documentType={store.detectedType}
+                  documentData={store.documentData}
+                  validationResults={store.validationResults}
+                  aiGeneratedFields={aiGeneratedFields}
+                  onChange={handleFieldChange} />
+              </div>
+            }
+
+            {/* Step 4: Validation Summary */}
+            {store.validationResults.length > 0 &&
+              <div className="mt-6">
+                <ValidationSummary results={store.validationResults} />
               </div>
             }
           </WorkspacePanel>
         </div>
 
-        {/* Panel 3: Preview (35%) */}
-        <div className="w-[35%] min-w-[260px] flex flex-col overflow-hidden">
+        {/* Panel 2: Live Preview (50%) */}
+        <div className="w-1/2 flex flex-col overflow-hidden bg-[var(--bg-surface-el)]">
           <DocumentPreview
             html={store.previewHtml}
             isLoading={previewLoading}
@@ -327,46 +352,42 @@ export function GeneratePage() {
                   setPreviewLoading(false);
                 }
               }
+            }}
+            onDownload={async () => {
+              if (store.previewHtml) {
+                success('Download started', 'Generating PDF...');
+                try {
+                  await downloadAsPdf(store.previewHtml, `Generated_${store.detectedType || 'document'}`);
+                  success('Download complete', 'Your PDF has been saved.');
+                } catch (err) {
+                  error('Download failed', 'Could not generate PDF. Please try again.');
+                }
+              }
             }} />
           
-
           {/* Bottom actions */}
-          <div className="border-t border-[var(--border)] bg-[var(--bg-surface)] px-4 py-3 space-y-3">
-            {/* Readiness indicator */}
+          <div className="border-t border-[var(--border)] bg-[var(--bg-surface)] px-6 py-4 space-y-4">
             <ReadinessIndicator errorCount={errorCount} warningCount={warningCount} />
-
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Button
                 variant="secondary"
-                size="sm"
-                icon={<CloudUpload size={13} />}
+                size="md"
+                icon={<CloudUpload size={16} />}
                 onClick={handleSaveDraft}
                 className="flex-1">
-                
                 Save Draft
               </Button>
               <Button
                 variant="primary"
-                size="sm"
-                icon={generating ? <Loader2 size={13} className="animate-spin" /> : <FileDown size={13} />}
+                size="md"
+                icon={generating ? <Loader2 size={16} className="animate-spin" /> : <FileDown size={16} />}
                 onClick={handleGeneratePdf}
                 loading={generating}
                 disabled={errorCount > 0}
                 className="flex-1">
-                
                 Generate PDF
               </Button>
             </div>
-            <Button
-              variant="ai"
-              size="sm"
-              icon={<ShieldCheck size={13} />}
-              onClick={handleGeneratePdf}
-              className="w-full"
-              disabled={errorCount > 0}>
-              
-              Generate & Verify
-            </Button>
           </div>
         </div>
       </div>
@@ -406,7 +427,7 @@ function ChatPanel({ onSend, onQuickAction }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
             width: '30px', height: '30px', borderRadius: '10px', flexShrink: 0,
-            background: 'linear-gradient(135deg, rgba(139,92,246,0.2) 0%, rgba(91,106,240,0.2) 100%)',
+            background: 'var(--color-primary-subtle)',
             border: '1px solid rgba(139,92,246,0.25)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
