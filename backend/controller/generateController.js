@@ -1,4 +1,8 @@
 import { HfInference } from '@huggingface/inference';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
 
 const systemPrompt = `You are an AI Document Assistant for DocuFlow.
 Your primary role is to assist users in creating, modifying, and filling documents.
@@ -94,7 +98,26 @@ export const processPrompt = async (req, res) => {
     const hf = new HfInference(apiKey);
     
     // We append a reminder to output strict JSON to help open source models
-    const promptWithJsonInstruction = prompt + '\n\nIMPORTANT: You must return ONLY a raw JSON object conforming strictly to the schema provided in the system instructions. Do not include markdown formatting or any other text.';
+    let promptWithJsonInstruction = prompt + '\n\nIMPORTANT: You must return ONLY a raw JSON object conforming strictly to the schema provided in the system instructions. Do not include markdown formatting or any other text.';
+
+    // If a file was uploaded, extract its text
+    if (req.file) {
+      let documentText = '';
+      try {
+        if (req.file.mimetype === 'application/pdf') {
+          const pdfData = await pdfParse(req.file.buffer);
+          documentText = pdfData.text;
+        } else {
+          // Assume text-based file (txt, csv, etc)
+          documentText = req.file.buffer.toString('utf-8');
+        }
+        
+        promptWithJsonInstruction += `\n\n--- DOCUMENT CONTEXT ATTACHED BY USER ---\n${documentText}\n-----------------------------------------`;
+      } catch (fileErr) {
+        console.error('Error parsing uploaded file:', fileErr);
+        return res.status(400).json({ message: 'Failed to read the uploaded document' });
+      }
+    }
 
     const models = [
       'meta-llama/Meta-Llama-3-8B-Instruct',

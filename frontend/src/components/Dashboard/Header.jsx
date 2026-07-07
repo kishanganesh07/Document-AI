@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Bell, Sun, Moon, Command } from 'lucide-react';
+import { ScanSearch, Bell, SunMedium, MoonStar, Command } from 'lucide-react';
 import { useUIStore } from '@/stores/ui.store';
 import { useAuthStore } from '@/stores/auth.store';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -42,7 +42,7 @@ export function Header() {
           onClick={openCommandPalette}
           className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-el)] hover:border-[var(--color-primary)]/50 hover:bg-[var(--bg-hover)] transition-all text-left"
         >
-          <Search size={13} className="text-[var(--text-xmuted)] shrink-0" />
+          <ScanSearch size={13} className="text-[var(--text-xmuted)] shrink-0" />
           <span className="flex-1 text-xs text-[var(--text-xmuted)]">Search anything...</span>
           <span className="flex items-center gap-0.5 text-[10px] text-[var(--text-xmuted)] bg-[var(--bg-hover)] border border-[var(--border)] rounded px-1.5 py-0.5 font-mono">
             <Command size={9} />K
@@ -58,7 +58,7 @@ export function Header() {
           className="p-2 rounded-lg hover:bg-[var(--bg-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
           title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
         >
-          {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+          {theme === 'dark' ? <SunMedium size={16} /> : <MoonStar size={16} />}
         </button>
 
         {/* Notifications */}
@@ -73,7 +73,9 @@ export function Header() {
             onClick={() => setIsProfileOpen(!isProfileOpen)}
             className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-lg hover:bg-[var(--bg-hover)] transition-all"
           >
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[var(--color-primary)] to-violet-600 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{
+              background: 'linear-gradient(135deg, #6C63FF 0%, #C026D3 100%)'
+            }}>
               <span className="text-[11px] font-bold text-white">{user?.name?.[0] ?? 'U'}</span>
             </div>
             {user?.name && (

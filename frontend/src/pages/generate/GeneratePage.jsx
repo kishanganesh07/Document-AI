@@ -15,8 +15,8 @@ import { DOCUMENT_TYPE_LABELS, generateId } from '@/lib/utils';
 import { saveDocument } from '@/api/document.api';
 import { MOCK_TEMPLATES } from '@/mocks/templates.mock';
 import {
-  Sparkles, RotateCcw, FileText, AlertCircle,
-  CheckCircle2, Loader2, Save, Download, ShieldCheck } from
+  Wand2, RotateCcw, ScrollText, AlertCircle,
+  CheckCircle2, Loader2, CloudUpload, FileDown, ShieldCheck } from
 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -62,7 +62,7 @@ export function GeneratePage() {
     return () => clearTimeout(timeout);
   }, [store.documentData, store.detectedType]);
 
-  const handleUserMessage = async (prompt) => {
+  const handleUserMessage = async (prompt, attachedFile = null) => {
     // Add user message
     store.addMessage({ role: 'user', content: prompt });
 
@@ -78,7 +78,7 @@ export function GeneratePage() {
     store.setProcessing('understanding');
 
     try {
-      const result = await processUserPrompt(prompt, (stage) => {
+      const result = await processUserPrompt(prompt, attachedFile, (stage) => {
         store.setProcessing(stage);
         // Update the last message's processing stage
         useGenerateStore.setState((s) => ({
@@ -295,7 +295,7 @@ export function GeneratePage() {
             {activeSuggestions.length > 0 &&
             <div className="space-y-2">
                 <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles size={11} />
+                  <Wand2 size={11} />
                   AI Suggestions
                 </p>
                 {activeSuggestions.map((s) =>
@@ -339,7 +339,7 @@ export function GeneratePage() {
               <Button
                 variant="secondary"
                 size="sm"
-                icon={<Save size={13} />}
+                icon={<CloudUpload size={13} />}
                 onClick={handleSaveDraft}
                 className="flex-1">
                 
@@ -348,7 +348,7 @@ export function GeneratePage() {
               <Button
                 variant="primary"
                 size="sm"
-                icon={generating ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} />}
+                icon={generating ? <Loader2 size={13} className="animate-spin" /> : <FileDown size={13} />}
                 onClick={handleGeneratePdf}
                 loading={generating}
                 disabled={errorCount > 0}
@@ -394,141 +394,176 @@ function ChatPanel({ onSend, onQuickAction }) {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" style={{ background: 'var(--bg-base)' }}>
       {/* Header */}
-      <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between shrink-0">
-        <div>
-          <h2 className="text-xs font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
-            <Sparkles size={12} className="text-[var(--color-ai)]" />
-            AI Assistant
-          </h2>
-          <p className="text-[10px] text-[var(--text-xmuted)] mt-0.5">Describe, refine, or update your document</p>
+      <div style={{
+        padding: '14px 16px 14px',
+        borderBottom: '1px solid var(--border)',
+        background: 'var(--bg-surface)',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        flexShrink: 0,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '30px', height: '30px', borderRadius: '10px', flexShrink: 0,
+            background: 'linear-gradient(135deg, rgba(139,92,246,0.2) 0%, rgba(91,106,240,0.2) 100%)',
+            border: '1px solid rgba(139,92,246,0.25)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Wand2 size={13} style={{ color: 'var(--color-ai)' }} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>AI Assistant</h2>
+            <p style={{ fontSize: '10px', color: 'var(--text-xmuted)', marginTop: '1px' }}>Describe, refine, or update your document</p>
+          </div>
         </div>
         <button
           onClick={() => useGenerateStore.getState().resetWorkspace()}
-          className="p-1.5 rounded-lg text-[var(--text-xmuted)] hover:text-[var(--text-muted)] hover:bg-[var(--bg-hover)] transition-colors"
+          style={{
+            padding: '6px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+            color: 'var(--text-xmuted)', background: 'transparent', display: 'flex',
+            transition: 'all 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-xmuted)'; }}
           title="New conversation">
-          
           <RotateCcw size={12} />
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {messages.map((message) =>
-        message.role === 'user' ?
-        <UserMessage key={message.id} message={message} /> :
-        <AIMessage key={message.id} message={message} onQuickAction={onQuickAction} />
+          message.role === 'user' ?
+          <UserMessage key={message.id} message={message} /> :
+          <AIMessage key={message.id} message={message} onQuickAction={onQuickAction} />
         )}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Composer */}
-      <div className="px-4 py-3 border-t border-[var(--border)] shrink-0">
+      <div style={{
+        padding: '12px 16px', borderTop: '1px solid var(--border)',
+        background: 'var(--bg-surface)', flexShrink: 0,
+      }}>
         <PromptComposer
           onSend={onSend}
           isProcessing={isProcessing}
           placeholder="Ask to make changes, add fields, or describe what's missing..." />
-        
-        <p className="text-[10px] text-[var(--text-xmuted)] text-center mt-2">
-          Enter â†µ to send, Shift+Enter for new line
+        <p style={{ fontSize: '10px', color: 'var(--text-xmuted)', textAlign: 'center', marginTop: '8px' }}>
+          Enter ↵ to send &nbsp;·&nbsp; Shift+Enter for new line
         </p>
       </div>
-    </div>);
-
+    </div>
+  );
 }
 
 function WorkspacePanel({
   children, errorCount, warningCount, activeSuggestions,
   onSaveDraft, onGenerate, generating, isDirty
-
-
-
-
-
-
-
-
-
 }) {
   const { detectedType, confidence } = useGenerateStore();
 
   return (
-    <div className="flex flex-col h-full">
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--bg-base)' }}>
       {/* Header */}
-      <div className="px-4 py-3 border-b border-[var(--border)] shrink-0">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
-            <FileText size={12} className="text-[var(--text-muted)]" />
+      <div style={{
+        padding: '14px 16px',
+        borderBottom: '1px solid var(--border)',
+        background: 'var(--bg-surface)',
+        flexShrink: 0,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '-0.01em' }}>
+            <div style={{
+              width: '22px', height: '22px', borderRadius: '7px',
+              background: 'var(--bg-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <ScrollText size={11} style={{ color: 'var(--text-muted)' }} />
+            </div>
             Document Details
           </h2>
-          {isDirty && <span className="text-[10px] text-[var(--color-warning)]">ÃƒÂ¢Ã¢â‚¬â€Ã‚Â Unsaved changes</span>}
+          {isDirty && <span style={{ fontSize: '10px', color: 'var(--color-warning)', display: 'flex', alignItems: 'center', gap: '4px' }}>⚠ Unsaved changes</span>}
         </div>
 
-        {detectedType &&
-        <div className="flex items-center gap-2 mt-2 flex-wrap">
-            <div className="flex items-center gap-1.5 text-[11px]">
-              <span className="text-[var(--text-muted)]">Type:</span>
-              <span className="font-medium text-[var(--text-primary)]">{DOCUMENT_TYPE_LABELS[detectedType]}</span>
+        {detectedType && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '10px', flexWrap: 'wrap' }}>
+            <div style={{
+              padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600',
+              background: 'rgba(91,106,240,0.1)', color: 'var(--color-primary)',
+              border: '1px solid rgba(91,106,240,0.2)',
+            }}>
+              {DOCUMENT_TYPE_LABELS[detectedType]}
             </div>
-            <div className="flex items-center gap-1.5 text-[11px]">
-              <span className="text-[var(--text-muted)]">Confidence:</span>
-              <div className="flex items-center gap-1">
-                <div className="w-16 h-1.5 bg-[var(--border)] rounded-full overflow-hidden">
-                  <div
-                  className="h-full bg-[var(--color-ai)] rounded-full transition-all"
-                  style={{ width: `${confidence * 100}%` }} />
-                
-                </div>
-                <span className="font-medium text-[var(--color-ai)]">{Math.round(confidence * 100)}%</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ width: '60px', height: '4px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', background: 'var(--color-ai)', borderRadius: '2px', width: `${confidence * 100}%`, transition: 'width 0.4s ease' }} />
               </div>
+              <span style={{ fontSize: '11px', fontWeight: '600', color: 'var(--color-ai)' }}>{Math.round(confidence * 100)}%</span>
             </div>
-            {errorCount > 0 &&
-          <span className="flex items-center gap-1 text-[11px] text-[var(--color-error)]">
+            {errorCount > 0 && (
+              <span style={{ fontSize: '11px', color: 'var(--color-error)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <AlertCircle size={11} /> {errorCount} error{errorCount !== 1 ? 's' : ''}
               </span>
-          }
-            {warningCount > 0 && !errorCount &&
-          <span className="text-[11px] text-[var(--color-warning)]">{warningCount} warning{warningCount !== 1 ? 's' : ''}</span>
-          }
-            {errorCount === 0 && warningCount === 0 &&
-          <span className="flex items-center gap-1 text-[11px] text-[var(--color-success)]">
+            )}
+            {warningCount > 0 && !errorCount && (
+              <span style={{ fontSize: '11px', color: 'var(--color-warning)' }}>{warningCount} warning{warningCount !== 1 ? 's' : ''}</span>
+            )}
+            {errorCount === 0 && warningCount === 0 && (
+              <span style={{ fontSize: '11px', color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <CheckCircle2 size={11} /> Valid
               </span>
-          }
+            )}
           </div>
-        }
+        )}
       </div>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {children}
       </div>
-    </div>);
-
+    </div>
+  );
 }
+
 
 function ReadinessIndicator({ errorCount, warningCount }) {
   if (errorCount > 0) {
     return (
-      <div className="flex items-center gap-2 text-xs text-[var(--color-error)]">
-        <AlertCircle size={13} />
-        <span>{errorCount} issue{errorCount !== 1 ? 's' : ''} must be resolved</span>
-      </div>);
-
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '8px',
+        padding: '8px 12px', borderRadius: '10px',
+        background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+      }}>
+        <AlertCircle size={13} style={{ color: 'var(--color-error)', flexShrink: 0 }} />
+        <span style={{ fontSize: '12px', color: 'var(--color-error)', fontWeight: '500' }}>
+          {errorCount} issue{errorCount !== 1 ? 's' : ''} must be resolved
+        </span>
+      </div>
+    );
   }
   if (warningCount > 0) {
     return (
-      <div className="flex items-center gap-2 text-xs text-[var(--color-warning)]">
-        <CheckCircle2 size={13} />
-        <span>Ready to generate ({warningCount} optional warning{warningCount !== 1 ? 's' : ''})</span>
-      </div>);
-
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '8px',
+        padding: '8px 12px', borderRadius: '10px',
+        background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)',
+      }}>
+        <CheckCircle2 size={13} style={{ color: 'var(--color-warning)', flexShrink: 0 }} />
+        <span style={{ fontSize: '12px', color: 'var(--color-warning)', fontWeight: '500' }}>
+          Ready to generate ({warningCount} optional warning{warningCount !== 1 ? 's' : ''})
+        </span>
+      </div>
+    );
   }
   return (
-    <div className="flex items-center gap-2 text-xs text-[var(--color-success)]">
-      <CheckCircle2 size={13} />
-      <span>Ready to generate</span>
-    </div>);
-
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: '8px',
+      padding: '8px 12px', borderRadius: '10px',
+      background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)',
+    }}>
+      <CheckCircle2 size={13} style={{ color: 'var(--color-success)', flexShrink: 0 }} />
+      <span style={{ fontSize: '12px', color: 'var(--color-success)', fontWeight: '500' }}>Ready to generate</span>
+    </div>
+  );
 }

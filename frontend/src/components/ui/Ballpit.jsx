@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Vector3 as a,
   MeshPhysicalMaterial as c,
@@ -724,12 +724,18 @@ function createBallpit(e, t = {}) {
 const Ballpit = ({ className = '', followCursor = true, ...props }) => {
   const canvasRef = useRef(null);
   const spheresInstanceRef = useRef(null);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    spheresInstanceRef.current = createBallpit(canvas, { followCursor, ...props });
+    try {
+      spheresInstanceRef.current = createBallpit(canvas, { followCursor, ...props });
+    } catch (err) {
+      console.warn('WebGL initialization failed for Ballpit:', err);
+      setHasError(true);
+    }
 
     return () => {
       if (spheresInstanceRef.current) {
@@ -739,7 +745,17 @@ const Ballpit = ({ className = '', followCursor = true, ...props }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <canvas className={className} ref={canvasRef} style={{ width: '100%', height: '100%' }} />;
+  if (hasError) {
+    return <div className={className} style={{ width: '100%', height: '100%', opacity: 0.1, background: 'linear-gradient(45deg, var(--color-primary), var(--color-secondary))' }} />;
+  }
+
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className={className} 
+      style={{ width: '100%', height: '100%', outline: 'none' }} 
+    />
+  );
 };
 
 export default Ballpit;

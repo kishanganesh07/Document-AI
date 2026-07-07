@@ -7,14 +7,23 @@ import { Building2, Users, Key, Copy, Plus, MoreVertical, Shield, X, Check, Eye,
 import { cn, formatDate } from '@/lib/utils';
 import { useNotificationStore } from '@/stores/notification.store';
 
-function generateApiKey() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let key = 'sk_live_';
-  for (let i = 0; i < 32; i++) {
-    key += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return key;
+function TabButton({ active, onClick, icon, children }) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        'flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors',
+        active 
+          ? 'border-[var(--color-primary)] text-[var(--text-primary)]' 
+          : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
+      )}
+    >
+      {icon}
+      {children}
+    </button>
+  );
 }
+
 
 export function OrganizationPage() {
   const { organization, user } = useAuthStore();
@@ -30,15 +39,9 @@ export function OrganizationPage() {
     { id: 'u_alice', name: 'Alice Cooper', email: 'alice@docuflow.io', role: 'manager', createdAt: new Date(Date.now() - 864000000).toISOString() }
   ]);
 
-  // API Keys state
-  const [apiKeys, setApiKeys] = useState([
-    { id: 'key_1', name: 'Production Server Key', key: 'sk_live_' + '*'.repeat(32), created: new Date().toISOString(), used: false }
-  ]);
-  const [visibleKeys, setVisibleKeys] = useState({});
-
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
-    success('Copied to clipboard', 'API Key has been copied.');
+    success('Copied to clipboard', 'Text has been copied.');
   };
 
   const handleInvite = () => {
@@ -61,29 +64,6 @@ export function OrganizationPage() {
     setShowInviteModal(false);
   };
 
-  const handleGenerateKey = () => {
-    const newKey = generateApiKey();
-    const keyEntry = {
-      id: `key_${Date.now()}`,
-      name: `API Key ${apiKeys.length + 1}`,
-      key: newKey,
-      created: new Date().toISOString(),
-      used: false
-    };
-    setApiKeys((prev) => [...prev, keyEntry]);
-    setVisibleKeys((prev) => ({ ...prev, [keyEntry.id]: true }));
-    success('API Key generated!', 'Your new key is visible below. Copy it now — it won\'t be shown again.');
-  };
-
-  const handleRevokeKey = (id) => {
-    setApiKeys((prev) => prev.filter((k) => k.id !== id));
-    success('Key revoked', 'The API key has been deleted.');
-  };
-
-  const toggleKeyVisibility = (id) => {
-    setVisibleKeys((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
   if (!organization) return null;
 
   return (
@@ -96,7 +76,6 @@ export function OrganizationPage() {
       <div className="flex border-b border-[var(--border)]">
         <TabButton active={activeTab === 'general'} onClick={() => setActiveTab('general')} icon={<Building2 size={16} />}>General</TabButton>
         <TabButton active={activeTab === 'members'} onClick={() => setActiveTab('members')} icon={<Users size={16} />}>Members</TabButton>
-        <TabButton active={activeTab === 'api-keys'} onClick={() => setActiveTab('api-keys')} icon={<Key size={16} />}>API Keys</TabButton>
       </div>
 
       <div className="pt-4">
@@ -193,45 +172,6 @@ export function OrganizationPage() {
             </div>
           </div>
         )}
-
-        {activeTab === 'api-keys' && (
-          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl shadow-sm">
-            <div className="p-4 border-b border-[var(--border)] flex justify-between items-center">
-              <div>
-                <h2 className="text-base font-semibold text-[var(--text-primary)]">API Keys</h2>
-                <p className="text-xs text-[var(--text-muted)] mt-0.5">Use these keys to authenticate via the DocuFlow REST API.</p>
-              </div>
-              <Button variant="primary" size="sm" icon={<Plus size={16} />} onClick={handleGenerateKey}>Generate Key</Button>
-            </div>
-            <div className="p-6 space-y-4">
-              {apiKeys.length === 0 && (
-                <p className="text-center text-sm text-[var(--text-muted)] py-6">No API keys yet. Click "Generate Key" to create one.</p>
-              )}
-              {apiKeys.map((k) => (
-                <div key={k.id} className="flex items-center justify-between p-4 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)]">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-[var(--text-primary)]">{k.name}</h3>
-                      <Badge variant={k.used ? 'default' : 'success'}>{k.used ? 'Used' : 'Never used'}</Badge>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <code className="text-xs bg-[var(--bg-surface-el)] px-2 py-1 rounded border border-[var(--border)] font-mono text-[var(--text-secondary)] max-w-xs truncate">
-                        {visibleKeys[k.id] ? k.key : (k.key.startsWith('sk_live_*') ? k.key : 'sk_live_' + '*'.repeat(32))}
-                      </code>
-                      <button onClick={() => toggleKeyVisibility(k.id)} className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors" title={visibleKeys[k.id] ? 'Hide' : 'Reveal'}>
-                        {visibleKeys[k.id] ? <EyeOff size={14} /> : <Eye size={14} />}
-                      </button>
-                      <button onClick={() => handleCopy(k.key)} className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors" title="Copy">
-                        <Copy size={14} />
-                      </button>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={() => handleRevokeKey(k.id)}>Revoke</Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Invite Member Modal */}
@@ -271,22 +211,5 @@ export function OrganizationPage() {
         </>
       )}
     </div>
-  );
-}
-
-function TabButton({ active, onClick, children, icon }) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        'px-6 py-3 text-sm font-medium transition-colors flex items-center gap-2 border-b-2 -mb-[1px]',
-        active ?
-        'text-[var(--color-primary)] border-[var(--color-primary)]' :
-        'text-[var(--text-secondary)] border-transparent hover:text-[var(--text-primary)] hover:border-[var(--border)]'
-      )}>
-      
-      {icon}
-      {children}
-    </button>
   );
 }

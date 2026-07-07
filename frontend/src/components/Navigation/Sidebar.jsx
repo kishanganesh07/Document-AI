@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  LogOut, LayoutDashboard, FileText, Sparkles, LayoutTemplate,
-  Building2, Settings, ChevronLeft, ChevronRight, Zap
+  LogOut, Gauge, ScrollText, Wand2, Layers,
+  Network, SlidersHorizontal, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui.store';
 import { useAuthStore } from '@/stores/auth.store';
@@ -10,43 +10,43 @@ import { cn } from '@/lib/utils';
 const NAV_LINKS = [
   {
     to: '/',
-    icon: LayoutDashboard,
+    icon: Gauge,
     label: 'Dashboard',
-    color: 'text-blue-500',
-    activeBg: 'bg-blue-500/10',
+    color: 'text-sky-400',
+    activeBg: 'bg-sky-400/10',
     end: true,
   },
   {
     to: '/generate',
-    icon: Sparkles,
+    icon: Wand2,
     label: 'Generate',
-    color: 'text-violet-500',
-    activeBg: 'bg-violet-500/10',
+    color: 'text-fuchsia-400',
+    activeBg: 'bg-fuchsia-400/10',
   },
   {
     to: '/documents',
-    icon: FileText,
+    icon: ScrollText,
     label: 'Documents',
-    color: 'text-emerald-500',
-    activeBg: 'bg-emerald-500/10',
+    color: 'text-teal-400',
+    activeBg: 'bg-teal-400/10',
   },
   {
     to: '/templates',
-    icon: LayoutTemplate,
+    icon: Layers,
     label: 'Templates',
-    color: 'text-amber-500',
-    activeBg: 'bg-amber-500/10',
+    color: 'text-amber-400',
+    activeBg: 'bg-amber-400/10',
   },
   {
     to: '/organization',
-    icon: Building2,
+    icon: Network,
     label: 'Organization',
-    color: 'text-pink-500',
-    activeBg: 'bg-pink-500/10',
+    color: 'text-rose-400',
+    activeBg: 'bg-rose-400/10',
   },
   {
     to: '/settings',
-    icon: Settings,
+    icon: SlidersHorizontal,
     label: 'Settings',
     color: 'text-slate-400',
     activeBg: 'bg-slate-500/10',
@@ -66,18 +66,24 @@ export function Sidebar() {
       {/* Logo */}
       <div className="h-14 flex items-center px-4 border-b border-[var(--border)] shrink-0">
         <div className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-primary)] to-violet-600 flex items-center justify-center shrink-0 shadow-sm">
-            <Zap size={16} className="text-white" />
-          </div>
           {!sidebarCollapsed && (
             <div className="overflow-hidden">
-              <span className="font-bold text-sm tracking-tight whitespace-nowrap text-[var(--text-primary)]">
+              <span className="font-bold text-sm tracking-tight whitespace-nowrap" style={{
+                background: 'linear-gradient(135deg, #38bdf8 0%, #a78bfa 50%, #f472b6 100%)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+              }}>
                 DocuFlow
               </span>
               <span className="block text-[9px] text-[var(--text-xmuted)] font-medium tracking-widest uppercase leading-none">
                 AI Documents
               </span>
             </div>
+          )}
+          {sidebarCollapsed && (
+            <span className="font-black text-base" style={{
+              background: 'linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+            }}>D</span>
           )}
         </div>
       </div>
@@ -121,7 +127,9 @@ export function Sidebar() {
         {/* User chip */}
         {!sidebarCollapsed && user && (
           <div className="flex items-center gap-2.5 px-2 py-2 mb-1">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[var(--color-primary)] to-violet-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" style={{
+              background: 'linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%)'
+            }}>
               {user.name?.[0] ?? 'U'}
             </div>
             <div className="flex-1 min-w-0">

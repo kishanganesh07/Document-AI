@@ -2,16 +2,27 @@ import { delay, generateId } from '@/lib/utils';
 import { DOCUMENT_SCHEMA_REGISTRY } from '@/lib/documentSchemas';
 
 // Real AI backend call
-export async function processUserPrompt(prompt, onProgress) {
+export async function processUserPrompt(prompt, file, onProgress) {
   onProgress('classifying');
   
   try {
+    let body;
+    let headers = {};
+
+    if (file) {
+      body = new FormData();
+      body.append('prompt', prompt);
+      body.append('document', file);
+      // FormData handles its own Content-Type boundary
+    } else {
+      body = JSON.stringify({ prompt });
+      headers['Content-Type'] = 'application/json';
+    }
+
     const response = await fetch('http://localhost:5000/api/generate', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ prompt })
+      headers,
+      body
     });
 
     if (!response.ok) {
