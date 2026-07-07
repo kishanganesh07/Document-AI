@@ -13,7 +13,7 @@ import { PostGenerationModal } from './PostGenerationModal';
 import { useNotificationStore } from '@/stores/notification.store';
 import { DOCUMENT_TYPE_LABELS, generateId } from '@/lib/utils';
 import { saveDocument } from '@/api/document.api';
-
+import { MOCK_TEMPLATES } from '@/mocks/templates.mock';
 import {
   Sparkles, RotateCcw, FileText, AlertCircle,
   CheckCircle2, Loader2, Save, Download, ShieldCheck } from
@@ -146,15 +146,16 @@ export function GeneratePage() {
       if (isDocReq) {
         setActiveTab('fields');
       }
-    } catch {
+    } catch (err) {
+      const errorMessage = err.message || 'Something went wrong. Please try again.';
       useGenerateStore.setState((s) => ({
         messages: s.messages.map((m, i) =>
         i === s.messages.length - 1 && m.isProcessing ?
-        { ...m, isProcessing: false, content: 'Something went wrong. Please try again.' } :
+        { ...m, isProcessing: false, content: errorMessage } :
         m
         )
       }));
-      error('AI processing failed', 'Please try again or type a different prompt.');
+      error('AI processing failed', errorMessage);
       store.setProcessing(null);
     }
   };
@@ -207,12 +208,10 @@ export function GeneratePage() {
   const activeSuggestions = store.suggestions.filter((s) => !s.applied && !s.dismissed);
 
   const handleTemplateSelect = (templateId) => {
-    import('@/mocks/templates.mock').then(({ MOCK_TEMPLATES }) => {
-      const template = MOCK_TEMPLATES.find((t) => t._id === templateId);
-      if (template) {
-        handleUserMessage(`Create a new ${template.documentType.replace('_', ' ')} using the "${template.name}" template.`);
-      }
-    });
+    const template = MOCK_TEMPLATES.find((t) => t._id === templateId);
+    if (template) {
+      handleUserMessage(`Create a new ${template.documentType.replace('_', ' ')} using the "${template.name}" template.`);
+    }
   };
 
   if (isEmpty) {

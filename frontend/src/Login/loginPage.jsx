@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff, FileText, Sparkles, Shield, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, FileText, Sparkles, Shield } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useNotificationStore } from '@/stores/notification.store';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import Ballpit from '@/components/ui/Ballpit';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -148,79 +149,19 @@ export function LoginPage() {
 
       {/* Right branding panel */}
       <div className="hidden lg:flex flex-col w-1/2 bg-[#0055FF] text-white p-12 relative overflow-hidden">
-        
-        {/* Floating Abstract Cards/UI */}
-        <div className="relative flex-grow flex items-center justify-center w-full h-full perspective-1000">
-          
-          {/* Card 1 (Background left) */}
-          <div className="absolute left-10 top-32 w-80 h-40 bg-[#dbeafe] bg-opacity-90 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6 transform -rotate-6 z-10 flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <div className="w-10 h-10 bg-blue-200 rounded-lg flex items-center justify-center text-blue-600">
-                <FileText size={20} />
-              </div>
-              <span className="px-3 py-1 bg-[#ffedd5] text-[#ea580c] text-[10px] font-bold tracking-wider rounded-full uppercase">
-                Automating
-              </span>
-            </div>
-            <div className="space-y-2 mt-4">
-              <div className="h-2 w-3/4 bg-blue-200 rounded-full"></div>
-              <div className="h-2 w-1/2 bg-blue-200 rounded-full"></div>
-            </div>
-            <div className="mt-4 p-2 bg-blue-100/50 rounded flex justify-between items-center text-xs text-blue-800 font-medium">
-              <span>$4,250.00 detected</span>
-            </div>
-          </div>
-
-          {/* Card 2 (Background top right) */}
-          <div className="absolute right-4 top-20 w-72 h-44 bg-gradient-to-br from-[#1e40af] to-[#1e3a8a] rounded-2xl shadow-2xl border border-white/10 p-4 transform rotate-12 z-0 overflow-hidden">
-            <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{backgroundImage: 'radial-gradient(circle at center, #3b82f6 1px, transparent 1px)', backgroundSize: '10px 10px'}}></div>
-            <div className="relative z-10 flex flex-col h-full items-center justify-center space-y-3 opacity-50">
-               <div className="w-16 h-16 rounded-full border-2 border-blue-400/30"></div>
-               <div className="w-32 h-2 bg-blue-400/30 rounded-full"></div>
-               <div className="w-24 h-2 bg-blue-400/30 rounded-full"></div>
-            </div>
-          </div>
-
-          {/* Card 3 (Foreground Main) */}
-          <div className="absolute z-20 w-[400px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-gray-100 p-8 transform translate-y-12">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-[#f0f5ff] flex items-center justify-center mb-4">
-                <div className="w-10 h-10 rounded-full bg-[#0055FF] flex items-center justify-center text-white relative">
-                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center">
-                      <div className="w-2.5 h-2.5 bg-[#0055FF] rounded-full"></div>
-                   </div>
-                   ★
-                </div>
-              </div>
-              <h3 className="text-[#0f172a] text-xl font-bold mb-2">Certificate of Completion</h3>
-              <p className="text-[#64748b] text-xs leading-relaxed mb-6">
-                This certifies that data has been verified<br/>by Docu-AI.
-              </p>
-              
-              <div className="w-full border-t border-dashed border-gray-200 my-4 relative">
-                <div className="absolute -left-10 -top-2 w-4 h-4 bg-[#0055FF] rounded-full"></div>
-                <div className="absolute -right-10 -top-2 w-4 h-4 bg-[#0055FF] rounded-full"></div>
-              </div>
-
-              <div className="w-full flex justify-between text-left mb-6">
-                <div>
-                  <div className="text-[10px] text-[#94a3b8] font-semibold uppercase mb-1">Issued To</div>
-                  <div className="text-sm font-bold text-[#0f172a]">Alex Thompson</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-[10px] text-[#94a3b8] font-semibold uppercase mb-1">Verification ID</div>
-                  <div className="text-sm font-bold text-[#0d52ff]">#AI-99421-XB</div>
-                </div>
-              </div>
-
-              <div className="w-full bg-[#f0f5ff] py-2.5 rounded-lg flex items-center justify-center gap-2 text-xs font-bold text-[#0055FF] uppercase tracking-wider">
-                <CheckCircle2 size={16} />
-                Validated by AI Engine
-              </div>
-            </div>
-          </div>
-
+        <div className="absolute inset-0 z-0 opacity-50 mix-blend-screen">
+          <Ballpit
+            count={150}
+            gravity={0.5}
+            friction={0.8}
+            wallBounce={0.95}
+            followCursor={true}
+            colors={['#ffffff', '#93c5fd', '#3b82f6']}
+          />
         </div>
+        
+        {/* Floating Abstract Cards/UI removed */}
+        <div className="relative z-10 flex-grow" />
 
         {/* Text Content */}
         <div className="relative z-30 flex flex-col items-center text-center mt-auto pb-12 pt-16">

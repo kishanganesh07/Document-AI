@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { HfInference } from '@huggingface/inference';
 
 const systemPrompt = `You are an AI Document Assistant for DocuFlow.
 Your primary role is to assist users in creating, modifying, and filling documents.
@@ -86,30 +86,63 @@ export const processPrompt = async (req, res) => {
       return res.status(400).json({ message: 'Prompt is required' });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.HF_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ message: 'GEMINI_API_KEY is not configured in the backend environment.' });
+      return res.status(500).json({ message: 'HF_API_KEY is not configured in the backend environment.' });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
-      systemInstruction: systemPrompt
-    });
+    const hf = new HfInference(apiKey);
+    
+    // We append a reminder to output strict JSON to help open source models
+    const promptWithJsonInstruction = prompt + '\n\nIMPORTANT: You must return ONLY a raw JSON object conforming strictly to the schema provided in the system instructions. Do not include markdown formatting or any other text.';
 
-    const result = await model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }]
-    });
+    const models = [
+      'meta-llama/Meta-Llama-3-8B-Instruct',
+      'google/gemma-1.1-7b-it',
+      'mistralai/Mixtral-8x7B-Instruct-v0.1'
+    ];
 
-    let rawText = result.response.text();
+    let result = null;
+    let lastError = null;
+
+    for (const model of models) {
+      try {
+        result = await hf.chatCompletion({
+          model: model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: promptWithJsonInstruction }
+          ]
+        });
+        // If we get here, it succeeded! Break out of the loop
+        console.log(`Successfully generated document using model: ${model}`);
+        break;
+      } catch (err) {
+        console.warn(`Model ${model} failed, trying backup... (${err.message})`);
+        lastError = err;
+      }
+    }
+
+    if (!result) {
+      throw lastError || new Error('All backup models failed to generate a response.');
+    }
+    let rawText = result.choices[0].message.content;
+    
     // Remove markdown code blocks if the model adds them despite instructions
     rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+    // Sometimes open models add extra text before the JSON starts
+    const firstBrace = rawText.indexOf('{');
+    const lastBrace = rawText.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      rawText = rawText.substring(firstBrace, lastBrace + 1);
+    }
 
     let jsonResponse;
     try {
       jsonResponse = JSON.parse(rawText);
     } catch (parseError) {
-      console.error('Failed to parse Gemini response as JSON:', rawText);
+      console.error('Failed to parse HuggingFace response as JSON:', rawText);
       return res.status(500).json({ message: 'Failed to parse AI response' });
     }
 

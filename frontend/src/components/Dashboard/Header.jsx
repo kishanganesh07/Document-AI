@@ -26,7 +26,7 @@ export function Header() {
   );
 
   return (
-    <header className="h-14 border-b border-[var(--border)] bg-[var(--bg-surface)] flex items-center px-4 gap-3 shrink-0 z-20">
+    <header className="h-16 border-b border-[var(--border)] bg-[var(--bg-surface)] flex items-center px-4 gap-3 shrink-0 z-20">
       {/* Page title */}
       <div className="hidden md:flex items-center gap-2 min-w-0">
         <span className="text-base">{meta.emoji}</span>
