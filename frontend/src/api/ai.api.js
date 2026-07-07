@@ -2,6 +2,8 @@ import { delay, generateId } from '@/lib/utils';
 import { DOCUMENT_SCHEMA_REGISTRY } from '@/lib/documentSchemas';
 
 // Real AI backend call
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export async function processUserPrompt(prompt, file, onProgress) {
   onProgress('classifying');
   
