@@ -14,6 +14,8 @@ const MOCK_ORG = {
   plan: 'pro'
 };
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export const useAuthStore = create()(
   persist(
     (set, get) => ({
@@ -26,7 +28,7 @@ export const useAuthStore = create()(
       register: async (name, email, orgName, password) => {
         try {
           set({ error: null });
-          const response = await fetch('/api/auth/register', {
+          const response = await fetch(`${API_BASE}/api/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password, orgName }),
@@ -53,7 +55,7 @@ export const useAuthStore = create()(
       login: async (email, password) => {
         try {
           set({ error: null });
-          const response = await fetch('/api/auth/login', {
+          const response = await fetch(`${API_BASE}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),

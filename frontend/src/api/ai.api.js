@@ -19,7 +19,7 @@ export async function processUserPrompt(prompt, file, onProgress) {
       headers['Content-Type'] = 'application/json';
     }
 
-    const response = await fetch('/api/generate', {
+    const response = await fetch(`${API_BASE}/api/generate`, {
       method: 'POST',
       headers,
       body
