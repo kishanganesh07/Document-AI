@@ -165,15 +165,22 @@ export function GeneratePage() {
   };
 
   useEffect(() => {
-    if (location.state?.template && isEmpty) {
+    if (location.state?.template) {
       const template = location.state.template;
       // Clear location state to prevent re-triggering
       navigate('.', { replace: true, state: {} });
       
+      // Reset workspace to clear any previous chat/document data
+      store.resetWorkspace();
+      
       const prompt = `Generate a new ${template.name}`;
-      handleUserMessage(prompt);
+      
+      // Add a small delay so state resets before processing the new prompt
+      setTimeout(() => {
+        handleUserMessage(prompt);
+      }, 50);
     }
-  }, [location.state, isEmpty, navigate]);
+  }, [location.state, navigate]);
 
   const handleFieldChange = (key, value) => {
     store.updateDocumentData({ [key]: value });
