@@ -1,8 +1,8 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { AppShell } from '@/components/Navigation/AppShell';
 import { ProtectedRoute, PublicRoute } from './guards';
 
-// Lazy loading or direct imports - direct for now in Phase 1/2
+import { LandingPage } from '@/pages/landing/LandingPage';
 import { HomePage } from '@/Home/HomePage';
 import { GeneratePage } from '@/pages/generate/GeneratePage';
 import { DocumentsPage } from '@/pages/documents/DocumentsPage';
@@ -16,65 +16,71 @@ import { LoginPage } from '@/Login/loginPage';
 import { RegisterPage } from '@/Register/registerPage';
 
 const router = createBrowserRouter([
-// Always Public - Verification
-{
-  path: '/verify/:verificationId',
-  element: <VerifyPage />
-},
-
-// Auth Routes (Only accessible when NOT logged in)
-{
-  element: <PublicRoute />,
-  children: [
-  { path: '/auth/login', element: <LoginPage /> },
-  { path: '/auth/register', element: <RegisterPage /> }]
-
-},
-
-// Protected App Routes
-{
-  element: <ProtectedRoute />,
-  children: [
+  // Always Public - Verification
   {
-    element: <AppShell />,
+    path: '/verify/:verificationId',
+    element: <VerifyPage />,
+  },
+
+  // Public Landing Page (always accessible)
+  {
+    path: '/',
+    element: <LandingPage />,
+  },
+
+  // Auth Routes (Only accessible when NOT logged in)
+  {
+    element: <PublicRoute />,
     children: [
-    { path: '/', element: <HomePage /> },
+      { path: '/auth/login', element: <LoginPage /> },
+      { path: '/auth/register', element: <RegisterPage /> },
+    ],
+  },
 
-    {
-      path: '/generate',
-      element: <ProtectedRoute requiredPermission="generate:docs" />,
-      children: [{ index: true, element: <GeneratePage /> }]
-    },
+  // Protected App Routes
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <AppShell />,
+        children: [
+          { path: '/dashboard', element: <HomePage /> },
 
-    {
-      path: '/documents',
-      element: <ProtectedRoute requiredPermission="view:docs" />,
-      children: [
-      { index: true, element: <DocumentsPage /> },
-      { path: ':documentId', element: <DocumentDetailPage /> }]
+          {
+            path: '/generate',
+            element: <ProtectedRoute requiredPermission="generate:docs" />,
+            children: [{ index: true, element: <GeneratePage /> }],
+          },
 
-    },
+          {
+            path: '/documents',
+            element: <ProtectedRoute requiredPermission="view:docs" />,
+            children: [
+              { index: true, element: <DocumentsPage /> },
+              { path: ':documentId', element: <DocumentDetailPage /> },
+            ],
+          },
 
-    {
-      path: '/templates',
-      element: <ProtectedRoute requiredPermission="manage:templates" />,
-      children: [{ index: true, element: <TemplatesPage /> }]
-    },
+          {
+            path: '/templates',
+            element: <ProtectedRoute requiredPermission="manage:templates" />,
+            children: [{ index: true, element: <TemplatesPage /> }],
+          },
 
-    { path: '/batch', element: <BatchPage /> },
+          { path: '/batch', element: <BatchPage /> },
 
-    {
-      path: '/organization',
-      element: <ProtectedRoute requiredPermission="manage:org" />,
-      children: [{ index: true, element: <OrganizationPage /> }]
-    },
+          {
+            path: '/organization',
+            element: <ProtectedRoute requiredPermission="manage:org" />,
+            children: [{ index: true, element: <OrganizationPage /> }],
+          },
 
-    { path: '/settings', element: <SettingsPage /> }]
-
-  }]
-
-}]
-);
+          { path: '/settings', element: <SettingsPage /> },
+        ],
+      },
+    ],
+  },
+]);
 
 export function AppRouter() {
   return <RouterProvider router={router} />;
