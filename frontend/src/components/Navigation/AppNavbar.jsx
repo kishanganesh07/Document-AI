@@ -28,11 +28,11 @@ export function AppNavbar() {
   return (
     <>
       <style>{`
-        /* ── Midnight Emerald App Navbar ── */
+        /* ── Theme-Responsive App Navbar ── */
         .me-navbar {
           height: 52px;
-          background: #191c1e;
-          border-bottom: 1px solid rgba(255,255,255,0.07);
+          background: var(--bg-sidebar);
+          border-bottom: 1px solid var(--border);
           display: flex;
           align-items: center;
           padding: 0 20px;
@@ -46,20 +46,20 @@ export function AppNavbar() {
           display: flex; align-items: center; gap: 10px;
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 15px; font-weight: 800; letter-spacing: -0.04em;
-          color: #e0e3e5; text-decoration: none;
+          color: var(--text-primary); text-decoration: none;
           padding-right: 20px;
-          border-right: 1px solid rgba(255,255,255,0.07);
+          border-right: 1px solid var(--border);
           flex-shrink: 0; white-space: nowrap;
         }
         .me-logo-dot {
           width: 7px; height: 7px; border-radius: 50%;
-          background: #00e476;
-          box-shadow: 0 0 8px rgba(0,228,118,0.8);
+          background: var(--color-primary);
+          box-shadow: 0 0 8px var(--color-primary);
           flex-shrink: 0;
         }
         .me-logo-sub {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 8px; font-weight: 500; color: #3b4b3d;
+          font-size: 8px; font-weight: 500; color: var(--text-xmuted);
           letter-spacing: 0.1em; text-transform: uppercase;
           display: block; line-height: 1; margin-top: 1px;
         }
@@ -75,65 +75,65 @@ export function AppNavbar() {
           font-family: 'Inter', sans-serif;
           text-decoration: none; white-space: nowrap;
           transition: all 0.15s ease;
-          color: #849584;
+          color: var(--text-muted);
           letter-spacing: -0.01em;
           position: relative;
         }
         .me-nav-item:hover {
-          background: rgba(255,255,255,0.05);
-          color: #e0e3e5;
+          background: var(--bg-hover);
+          color: var(--text-primary);
         }
         .me-nav-item.active {
-          color: #00e476;
-          background: rgba(0,228,118,0.08);
+          color: var(--color-primary);
+          background: var(--color-primary-subtle);
         }
         .me-nav-item.active::after {
           content: '';
           position: absolute; bottom: -1px; left: 10px; right: 10px;
           height: 1px; border-radius: 1px;
-          background: #00e476;
-          box-shadow: 0 0 6px rgba(0,228,118,0.6);
+          background: var(--color-primary);
+          box-shadow: 0 0 6px var(--color-primary);
         }
         .me-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
         .me-icon-btn {
           width: 32px; height: 32px; border-radius: 6px;
           display: flex; align-items: center; justify-content: center;
-          color: #849584; background: transparent; border: none;
+          color: var(--text-muted); background: transparent; border: none;
           cursor: pointer; transition: all 0.15s; position: relative;
         }
         .me-icon-btn:hover {
-          background: rgba(255,255,255,0.06);
-          color: #e0e3e5;
+          background: var(--bg-hover);
+          color: var(--text-primary);
         }
         .me-search-btn {
           display: flex; align-items: center; gap: 8px;
           padding: 6px 12px; border-radius: 6px;
-          border: 1px solid rgba(255,255,255,0.08);
-          background: rgba(11,15,16,0.6);
+          border: 1px solid var(--border);
+          background: var(--bg-deep);
           cursor: pointer; height: 32px;
-          color: #849584; font-size: 12px;
+          color: var(--text-muted); font-size: 12px;
           font-family: 'JetBrains Mono', monospace;
           letter-spacing: 0.02em;
           min-width: 160px;
           transition: all 0.2s;
         }
         .me-search-btn:hover {
-          border-color: rgba(0,228,118,0.3);
-          background: rgba(0,228,118,0.04);
-          color: #b9cbb9;
+          border-color: var(--border-mint);
+          background: var(--color-primary-subtle);
+          color: var(--text-primary);
         }
         .me-kbd {
           display: flex; align-items: center; gap: 2px;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 9px; color: #3b4b3d;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.08);
+          font-size: 9px; color: var(--text-xmuted);
+          background: var(--bg-hover);
+          border: 1px solid var(--border);
           border-radius: 4px; padding: 2px 5px;
         }
         .me-generate-btn {
           display: flex; align-items: center; gap: 6px;
           padding: 7px 14px; border-radius: 6px;
-          background: #00e476; color: #001a0b;
+          background: var(--color-primary); color: #001a0b;
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 12px; font-weight: 800;
           border: none; cursor: pointer; white-space: nowrap;
@@ -142,33 +142,33 @@ export function AppNavbar() {
           margin-left: 6px;
         }
         .me-generate-btn:hover {
-          background: #00ff85;
+          background: var(--color-primary-hover);
           box-shadow: 0 0 20px rgba(0,228,118,0.4);
           transform: translateY(-1px);
         }
         .me-user-btn {
           display: flex; align-items: center; gap: 8px;
           padding: 4px 8px 4px 4px; border-radius: 8px;
-          border: 1px solid rgba(255,255,255,0.08);
+          border: 1px solid var(--border);
           background: transparent; cursor: pointer;
-          transition: all 0.15s; color: #e0e3e5;
+          transition: all 0.15s; color: var(--text-primary);
         }
         .me-user-btn:hover {
-          background: rgba(255,255,255,0.05);
-          border-color: rgba(255,255,255,0.14);
+          background: var(--bg-hover);
+          border-color: var(--border-strong);
         }
         .me-avatar {
           width: 26px; height: 26px; border-radius: 6px;
           overflow: hidden; flex-shrink: 0;
-          border: 1px solid rgba(0,228,118,0.2);
+          border: 1px solid var(--color-primary-subtle);
         }
         .me-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .me-dropdown {
           position: absolute; right: 0; top: calc(100% + 8px);
           width: 220px; border-radius: 12px;
-          background: #1d2022;
-          border: 1px solid rgba(255,255,255,0.08);
-          box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
+          box-shadow: var(--shadow-lg);
           overflow: hidden; z-index: 100;
           animation: dropFade 0.15s ease;
         }
@@ -178,28 +178,28 @@ export function AppNavbar() {
         }
         .me-dropdown-header {
           padding: 14px 16px;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-          background: rgba(0,228,118,0.04);
+          border-bottom: 1px solid var(--border);
+          background: var(--color-primary-subtle);
         }
         .me-dropdown-item {
           display: flex; align-items: center; gap: 10px;
           padding: 9px 14px; font-size: 13px; font-weight: 500;
           font-family: 'Inter', sans-serif;
-          color: #b9cbb9; cursor: pointer; border: none;
+          color: var(--text-secondary); cursor: pointer; border: none;
           background: transparent; width: 100%; text-align: left;
           transition: all 0.15s;
         }
-        .me-dropdown-item:hover { background: rgba(255,255,255,0.05); color: #e0e3e5; }
-        .me-dropdown-item.danger { color: #ffb4ab; }
-        .me-dropdown-item.danger:hover { background: rgba(255,180,171,0.08); }
+        .me-dropdown-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .me-dropdown-item.danger { color: var(--color-error); }
+        .me-dropdown-item.danger:hover { background: var(--color-error-bg); }
         .me-mobile-overlay {
           position: fixed; inset: 0; background: rgba(0,0,0,0.7);
           backdrop-filter: blur(4px); z-index: 200;
         }
         .me-mobile-menu {
           position: fixed; top: 0; left: 0; bottom: 0; width: 280px;
-          background: #1d2022;
-          border-right: 1px solid rgba(255,255,255,0.07);
+          background: var(--bg-surface);
+          border-right: 1px solid var(--border);
           z-index: 201; display: flex; flex-direction: column;
           animation: slideLeft 0.25s ease;
         }
@@ -267,7 +267,7 @@ export function AppNavbar() {
             <span style={{
               position: 'absolute', top: 6, right: 6,
               width: 5, height: 5, borderRadius: '50%',
-              background: '#00e476', boxShadow: '0 0 6px #00e476',
+              background: 'var(--color-primary)', boxShadow: '0 0 6px var(--color-primary)',
             }} />
           </button>
 
@@ -284,11 +284,11 @@ export function AppNavbar() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 12, fontWeight: 600,
                 maxWidth: 72, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                color: '#b9cbb9',
+                color: 'var(--text-secondary)',
               }}>
                 {user?.name?.split(' ')[0] || 'User'}
               </span>
-              <ChevronDown size={12} style={{ color: '#849584', flexShrink: 0 }} />
+              <ChevronDown size={12} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
             </button>
 
             {profileOpen && (
@@ -298,11 +298,11 @@ export function AppNavbar() {
                   <div className="me-dropdown-header">
                     <p style={{
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontSize: 13, fontWeight: 700, color: '#e0e3e5',
+                      fontSize: 13, fontWeight: 700, color: 'var(--text-primary)',
                     }}>
                       {user?.name || 'User'}
                     </p>
-                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#849584', marginTop: 3, letterSpacing: '0.03em' }}>
+                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--text-muted)', marginTop: 3, letterSpacing: '0.03em' }}>
                       {user?.email || ''}
                     </p>
                   </div>
@@ -310,7 +310,7 @@ export function AppNavbar() {
                     <button className="me-dropdown-item" onClick={() => { navigate('/settings'); setProfileOpen(false); }}>
                       <SlidersHorizontal size={13} /> Settings
                     </button>
-                    <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '4px 0' }} />
+                    <div style={{ height: 1, background: 'var(--border)', margin: '4px 0' }} />
                     <button className="me-dropdown-item danger" onClick={() => { logout(); navigate('/auth/login'); }}>
                       <LogOut size={13} /> Log out
                     </button>
@@ -333,14 +333,14 @@ export function AppNavbar() {
           <div className="me-mobile-overlay" onClick={() => setMobileOpen(false)} />
           <div className="me-mobile-menu">
             <div style={{
-              padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.07)',
+              padding: '16px 20px', borderBottom: '1px solid var(--border)',
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 800, color: '#e0e3e5' }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e476', boxShadow: '0 0 6px #00e476' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 15, fontWeight: 800, color: 'var(--text-primary)' }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--color-primary)', boxShadow: '0 0 6px var(--color-primary)' }} />
                 DocuFlow
               </div>
-              <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#849584' }}>
+              <button onClick={() => setMobileOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
                 <X size={16} />
               </button>
             </div>
@@ -358,15 +358,15 @@ export function AppNavbar() {
                 </NavLink>
               ))}
             </nav>
-            <div style={{ padding: '12px 14px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ padding: '12px 14px', borderTop: '1px solid var(--border)' }}>
               <button
                 onClick={() => { logout(); navigate('/auth/login'); }}
                 style={{
                   width: '100%', display: 'flex', alignItems: 'center', gap: 8,
                   padding: '10px 14px', borderRadius: 8,
-                  border: '1px solid rgba(255,180,171,0.15)',
-                  background: 'rgba(255,180,171,0.06)',
-                  color: '#ffb4ab', fontWeight: 600, cursor: 'pointer', fontSize: 13,
+                  border: '1px solid var(--color-error-border)',
+                  background: 'var(--color-error-bg)',
+                  color: 'var(--color-error)', fontWeight: 600, cursor: 'pointer', fontSize: 13,
                   fontFamily: "'Inter', sans-serif",
                 }}
               >

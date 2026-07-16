@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Wand2, Sparkles, BadgeCheck, Zap } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useNotificationStore } from '@/stores/notification.store';
-import Ballpit from '@/components/ui/Ballpit';
+import { AmbientParticles } from '@/components/Navigation/AppShell';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -38,247 +38,123 @@ export function LoginPage() {
   ];
 
   return (
-    <>
-      <style>{`
-        .login-root {
-          min-height: 100vh;
-          display: flex;
-          background: #F0F2F8;
-        }
-        .login-left {
-          width: 100%;
-          max-width: 520px;
-          flex-shrink: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 48px 56px;
-          background: #ffffff;
-          box-shadow: 4px 0 40px rgba(108,99,255,0.08);
-        }
-        .login-right {
-          display: none;
-          flex: 1;
-          position: relative;
-          overflow: hidden;
-          background: linear-gradient(145deg, #1E3A8A 0%, #2563EB 40%, #3B82F6 100%);
-          flex-direction: column;
-        }
-        @media (min-width: 1024px) {
-          .login-right { display: flex; }
-        }
-        .login-input {
-          width: 100%;
-          padding: 11px 14px;
-          font-size: 14px;
-          border: 1.5px solid #E0E4F0;
-          border-radius: 10px;
-          background: #F6F8FC;
-          color: #0D1117;
-          outline: none;
-          transition: border-color 0.15s;
-          font-family: inherit;
-        }
-        .login-input:focus { border-color: var(--color-primary); }
-        .login-input-pw {
-          padding-right: 40px;
-        }
-        .login-btn {
-          width: 100%;
-          padding: 13px;
-          border-radius: 12px;
-          border: none;
-          background: var(--color-primary);
-          color: white;
-          font-size: 15px;
-          font-weight: 700;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-          transition: all 0.2s;
-          margin-top: 4px;
-          font-family: inherit;
-        }
-        .login-btn:disabled {
-          background: #9AA3B4;
-          box-shadow: none;
-          cursor: not-allowed;
-        }
-        .login-btn:not(:disabled):hover {
-          transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-          background: var(--color-primary-hover);
-        }
-        .feature-pill {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 12px 16px;
-          border-radius: 12px;
-          background: rgba(255,255,255,0.12);
-          border: 1px solid rgba(255,255,255,0.2);
-          backdrop-filter: blur(8px);
-        }
-      `}</style>
+    <div className="min-h-screen flex bg-[var(--bg-base)] relative overflow-hidden">
+      {/* Ambient Background */}
+      <AmbientParticles />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--color-primary-dim)_0%,_transparent_70%)] opacity-20 pointer-events-none" />
 
-      <div className="login-root">
-
-        {/* ===== LEFT: Login Form ===== */}
-        <div className="login-left">
-
-          {/* Brand */}
-          <div style={{ marginBottom: '48px' }}>
-            <span style={{
-              fontSize: '22px', fontWeight: '800', letterSpacing: '-0.03em',
-              color: 'var(--text-primary)'
-            }}>
-              DocuFlow
-            </span>
+      {/* Left panel - Branding (Visible on lg) */}
+      <div className="hidden lg:flex flex-col justify-between w-1/2 p-16 relative z-10">
+        <div className="anim-fade-in-down" style={{ animationDelay: '0.1s' }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[var(--color-primary)] flex items-center justify-center shadow-[0_0_20px_var(--color-primary-dim)]">
+              <Sparkles size={20} className="text-white" />
+            </div>
+            <span className="font-bold text-2xl tracking-tight text-[var(--text-primary)]">DocuFlow</span>
           </div>
+        </div>
 
-          {/* Heading */}
-          <div style={{ marginBottom: '32px' }}>
-            <h1 style={{ fontSize: '30px', fontWeight: '800', color: '#0D1117', letterSpacing: '-0.03em', marginBottom: '8px' }}>
-              Welcome back
-            </h1>
-            <p style={{ fontSize: '14px', color: '#5A6478', lineHeight: 1.6 }}>
-              Sign in to your workspace and continue creating.
-            </p>
+        <div className="anim-fade-right" style={{ animationDelay: '0.3s' }}>
+          <h1 className="text-5xl font-extrabold text-[var(--text-primary)] leading-tight tracking-tight mb-6">
+            Create professional documents <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-emerald-300">instantly.</span>
+          </h1>
+          <p className="text-lg text-[var(--text-secondary)] leading-relaxed max-w-md mb-12">
+            Automate your entire document pipeline with the power of AI. Intelligent parsing, smart validation, and instant export.
+          </p>
+
+          <div className="space-y-4">
+            {FEATURES.map(({ icon: Icon, text }, i) => (
+              <div key={i} className="glass-tile px-6 py-4 rounded-xl flex items-center gap-4 w-fit border border-[var(--border)] anim-fade-up" style={{ animationDelay: `${0.5 + i * 0.1}s` }}>
+                <div className="p-2 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+                  <Icon size={20} />
+                </div>
+                <span className="font-medium text-[var(--text-primary)]">{text}</span>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <div className="text-sm text-[var(--text-muted)] anim-fade-up" style={{ animationDelay: '0.8s' }}>
+          © {new Date().getFullYear()} DocuFlow Inc. All rights reserved.
+        </div>
+      </div>
 
-            {/* Email */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '13px', fontWeight: '600', color: '#2D3748' }}>Email Address</label>
-              <input
-                className="login-input"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com"
-                required
-              />
+      {/* Right panel - Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10">
+        <div className="w-full max-w-[420px] glass-tile p-10 rounded-3xl border border-[var(--border)] shadow-2xl relative overflow-hidden anim-scale-up">
+          {/* Subtle glow behind form */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-[var(--color-primary)]/20 blur-[60px] rounded-full pointer-events-none" />
+          
+          <div className="relative">
+            {/* Mobile Branding */}
+            <div className="lg:hidden flex items-center gap-3 mb-10 justify-center">
+              <div className="w-10 h-10 rounded-xl bg-[var(--color-primary)] flex items-center justify-center shadow-[0_0_20px_var(--color-primary-dim)]">
+                <Sparkles size={20} className="text-white" />
+              </div>
+              <span className="font-bold text-2xl tracking-tight text-[var(--text-primary)]">DocuFlow</span>
             </div>
 
-            {/* Password */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <label style={{ fontSize: '13px', fontWeight: '600', color: '#2D3748' }}>Password</label>
-                <Link to="#" style={{ fontSize: '12px', fontWeight: '600', color: '#6C63FF', textDecoration: 'none' }}>
-                  Forgot password?
-                </Link>
-              </div>
-              <div style={{ position: 'relative' }}>
+            <div className="mb-10 text-center lg:text-left">
+              <h2 className="text-3xl font-bold text-[var(--text-primary)] tracking-tight mb-3">Welcome back</h2>
+              <p className="text-[var(--text-secondary)]">Sign in to your workspace and continue creating.</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-[var(--text-secondary)]">Email Address</label>
                 <input
-                  className="login-input login-input-pw"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@company.com"
+                  className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-3.5 text-[var(--text-primary)] placeholder:text-[var(--text-xmuted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer', color: '#9AA3B4',
-                    display: 'flex', alignItems: 'center', padding: 0,
-                  }}
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
               </div>
-            </div>
 
-            {/* Submit */}
-            <button type="submit" className="login-btn" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
-              {!loading && <ArrowRight size={17} />}
-            </button>
-          </form>
-
-          {/* Sign up link */}
-          <p style={{ marginTop: '28px', textAlign: 'center', fontSize: '13px', color: '#5A6478' }}>
-            Don't have an account?{' '}
-            <Link to="/auth/register" style={{ fontWeight: '700', color: '#6C63FF', textDecoration: 'none' }}>
-              Start free trial
-            </Link>
-          </p>
-
-          {/* Footer */}
-          <p style={{ marginTop: 'auto', paddingTop: '40px', fontSize: '11px', color: '#9AA3B4', textAlign: 'center' }}>
-            © {new Date().getFullYear()} DocuFlow. All rights reserved.
-          </p>
-        </div>
-
-        {/* ===== RIGHT: Branding Panel ===== */}
-        <div className="login-right">
-          {/* Ballpit background animation */}
-          <div style={{ position: 'absolute', inset: 0, opacity: 0.6, zIndex: 0 }}>
-            <Ballpit
-              count={120}
-              gravity={0.4}
-              friction={0.82}
-              wallBounce={0.95}
-              followCursor={true}
-              colors={['#93C5FD', '#BFDBFE', '#FFFFFF', '#60A5FA', '#DBEAFE']}
-            />
-          </div>
-
-          {/* Gradient depth overlays */}
-          <div style={{
-            position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
-            background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 60%)',
-          }} />
-          <div style={{
-            position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
-            background: 'radial-gradient(ellipse at 80% 80%, rgba(30,58,138,0.4) 0%, transparent 55%)',
-          }} />
-
-          {/* Content */}
-          <div style={{
-            position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', flex: 1, padding: '48px', textAlign: 'center',
-          }}>
-
-              <div style={{
-                width: '64px', height: '64px', borderRadius: '20px', background: 'white',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-              }}>
-                <span style={{ fontSize: '28px' }}>🚀</span>
-              </div>
-              <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#FFFFFF', marginBottom: '16px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
-                Create professional documents instantly.
-              </h2>
-              <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.6, maxWidth: '400px', marginBottom: '36px' }}>
-              Automate documents with the power of AI. Intelligent parsing, smart validation, and instant export.
-            </p>
-
-            {/* Feature pills */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', maxWidth: '280px' }}>
-              {FEATURES.map(({ icon: Icon, text }) => (
-                <div key={text} className="feature-pill">
-                  <div style={{
-                    width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0,
-                    background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Icon size={14} color="white" />
-                  </div>
-                  <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)', fontWeight: '500' }}>{text}</span>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-sm font-semibold text-[var(--text-secondary)]">Password</label>
+                  <a href="#" className="text-xs font-semibold text-[var(--color-primary)] hover:text-emerald-400 transition-colors">Forgot password?</a>
                 </div>
-              ))}
-            </div>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-3.5 text-[var(--text-primary)] placeholder:text-[var(--text-xmuted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all pr-12"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[var(--color-primary)] text-emerald-950 font-bold text-base py-4 rounded-xl shadow-[0_0_20px_var(--color-primary-dim)] hover:shadow-[0_0_30px_var(--color-primary)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Signing in...' : 'Sign In'}
+                {!loading && <ArrowRight size={18} />}
+              </button>
+            </form>
+
+            <p className="mt-8 text-center text-[var(--text-secondary)]">
+              Don't have an account?{' '}
+              <Link to="/auth/register" className="font-semibold text-[var(--color-primary)] hover:text-emerald-400 transition-colors">
+                Start free trial
+              </Link>
+            </p>
           </div>
         </div>
-
       </div>
-    </>
+    </div>
   );
 }

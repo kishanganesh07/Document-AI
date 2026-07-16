@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Sparkles, ArrowRight, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useNotificationStore } from '@/stores/notification.store';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { AmbientParticles } from '@/components/Navigation/AppShell';
 
 export function RegisterPage() {
   const [name, setName] = useState('');
@@ -29,7 +28,7 @@ export function RegisterPage() {
     try {
       await register(name, email, orgName, password);
       success('Workspace created!', 'Welcome to DocuFlow.');
-      navigate('/generate', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       error('Registration failed', err.message || 'Please try again later.');
     } finally {
@@ -37,116 +36,151 @@ export function RegisterPage() {
     }
   };
 
+  const BENEFITS = [
+    'Invite unlimited team members',
+    'Custom branding and white-labeling',
+    'API access for programmatic generation',
+    'Enterprise-grade security and compliance'
+  ];
+
   return (
-    <div className="min-h-screen flex bg-[var(--bg-base)]">
+    <div className="min-h-screen flex bg-[var(--bg-base)] relative overflow-hidden">
+      {/* Ambient Background */}
+      <AmbientParticles />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-primary-dim)_0%,_transparent_60%)] opacity-20 pointer-events-none" />
+
       {/* Left branding panel */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 bg-[var(--bg-surface)] border-r border-[var(--border)] p-12">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[var(--color-primary)] flex items-center justify-center">
-            <Sparkles size={16} className="text-white" />
+      <div className="hidden lg:flex flex-col justify-between w-1/2 p-16 relative z-10">
+        <div className="anim-fade-in-down" style={{ animationDelay: '0.1s' }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[var(--color-primary)] flex items-center justify-center shadow-[0_0_20px_var(--color-primary-dim)]">
+              <Sparkles size={20} className="text-white" />
+            </div>
+            <span className="font-bold text-2xl tracking-tight text-[var(--text-primary)]">DocuFlow</span>
           </div>
-          <span className="font-bold text-base text-[var(--text-primary)]">DocuFlow</span>
         </div>
 
-        <div>
-          <blockquote className="text-2xl font-semibold text-[var(--text-primary)] leading-snug mb-6">
-            "Automate your entire document pipeline. Setup takes seconds."
+        <div className="anim-fade-right" style={{ animationDelay: '0.3s' }}>
+          <blockquote className="text-4xl font-extrabold text-[var(--text-primary)] leading-tight tracking-tight mb-10">
+            "Automate your entire document pipeline. Setup takes <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-emerald-300">seconds.</span>"
           </blockquote>
-          <div className="flex flex-col gap-4 mt-8">
-            {[
-            'Invite unlimited team members',
-            'Custom branding and white-labeling',
-            'API access for programmatic generation',
-            'Enterprise-grade security and compliance'].
-            map((feature, i) =>
-            <div key={i} className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
-                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
+          
+          <div className="flex flex-col gap-5">
+            {BENEFITS.map((feature, i) => (
+              <div key={i} className="flex items-center gap-4 text-lg text-[var(--text-secondary)] anim-fade-up" style={{ animationDelay: `${0.5 + i * 0.1}s` }}>
+                <div className="w-6 h-6 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] flex items-center justify-center shrink-0">
+                  <CheckCircle2 size={16} />
+                </div>
                 {feature}
               </div>
-            )}
+            ))}
           </div>
         </div>
 
-        <div className="text-xs text-[var(--text-muted)]">
-          (C) {new Date().getFullYear()} DocuFlow Inc. All rights reserved.
+        <div className="text-sm text-[var(--text-muted)] anim-fade-up" style={{ animationDelay: '0.9s' }}>
+          © {new Date().getFullYear()} DocuFlow Inc. All rights reserved.
         </div>
       </div>
 
       {/* Right register panel */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm space-y-8">
-          <div>
-            <h2 className="text-2xl font-bold text-[var(--text-primary)]">Create workspace</h2>
-            <p className="text-sm text-[var(--text-muted)] mt-2">Start generating AI-powered documents today.</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Full Name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Jane Doe"
-              required />
-            
-            
-            <Input
-              label="Organization Name"
-              type="text"
-              value={orgName}
-              onChange={(e) => setOrgName(e.target.value)}
-              placeholder="Acme Corp"
-              required />
-            
-
-            <Input
-              label="Work Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="jane@company.com"
-              required />
-            
-            
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-[var(--text-secondary)] block">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-colors pr-10"
-                  required />
-                
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)]">
-                  
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10 h-screen overflow-y-auto">
+        <div className="w-full max-w-[460px] glass-tile p-10 rounded-3xl border border-[var(--border)] shadow-2xl relative overflow-hidden anim-scale-up my-auto">
+          {/* Subtle glow behind form */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-primary)]/10 blur-[80px] rounded-full pointer-events-none" />
+          
+          <div className="relative">
+            {/* Mobile Branding */}
+            <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
+              <div className="w-10 h-10 rounded-xl bg-[var(--color-primary)] flex items-center justify-center shadow-[0_0_20px_var(--color-primary-dim)]">
+                <Sparkles size={20} className="text-white" />
               </div>
+              <span className="font-bold text-2xl tracking-tight text-[var(--text-primary)]">DocuFlow</span>
             </div>
 
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-full justify-center mt-2"
-              disabled={loading}
-              iconRight={!loading && <ArrowRight size={16} />}>
-              
-              {loading ? 'Creating...' : 'Create Account'}
-            </Button>
-          </form>
+            <div className="mb-8 text-center lg:text-left">
+              <h2 className="text-3xl font-bold text-[var(--text-primary)] tracking-tight mb-2">Create workspace</h2>
+              <p className="text-[var(--text-secondary)]">Start generating AI-powered documents today.</p>
+            </div>
 
-          <p className="text-center text-sm text-[var(--text-secondary)]">
-            Already have an account?{' '}
-            <Link to="/auth/login" className="font-medium text-[var(--color-primary)] hover:underline">
-              Sign in
-            </Link>
-          </p>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2 col-span-2 sm:col-span-1">
+                  <label className="text-sm font-semibold text-[var(--text-secondary)]">Full Name</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Jane Doe"
+                    className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder:text-[var(--text-xmuted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2 col-span-2 sm:col-span-1">
+                  <label className="text-sm font-semibold text-[var(--text-secondary)]">Organization</label>
+                  <input
+                    type="text"
+                    value={orgName}
+                    onChange={(e) => setOrgName(e.target.value)}
+                    placeholder="Acme Corp"
+                    className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder:text-[var(--text-xmuted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-[var(--text-secondary)]">Work Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="jane@company.com"
+                  className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder:text-[var(--text-xmuted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-[var(--text-secondary)] block">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder:text-[var(--text-xmuted)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all pr-12"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[var(--color-primary)] text-emerald-950 font-bold text-base py-4 rounded-xl shadow-[0_0_20px_var(--color-primary-dim)] hover:shadow-[0_0_30px_var(--color-primary)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Creating...' : 'Create Account'}
+                {!loading && <ArrowRight size={18} />}
+              </button>
+            </form>
+
+            <p className="mt-8 text-center text-[var(--text-secondary)]">
+              Already have an account?{' '}
+              <Link to="/auth/login" className="font-semibold text-[var(--color-primary)] hover:text-emerald-400 transition-colors">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
-    </div>);
-
+    </div>
+  );
 }

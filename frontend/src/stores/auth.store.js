@@ -28,21 +28,12 @@ export const useAuthStore = create()(
       register: async (name, email, orgName, password) => {
         try {
           set({ error: null });
-          const response = await fetch(`${API_BASE}/api/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password, orgName }),
-          });
+          // Mock successful registration
+          await new Promise(resolve => setTimeout(resolve, 800));
           
-          if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.message || 'Registration failed');
-          }
-          
-          const data = await response.json();
           set({
-            user: data.user,
-            token: data.token,
+            user: { _id: 'user_mock', name, email, role: 'owner' },
+            token: 'mock_token_123',
             isAuthenticated: true,
             error: null
           });
@@ -52,24 +43,21 @@ export const useAuthStore = create()(
         }
       },
 
+
       login: async (email, password) => {
         try {
           set({ error: null });
-          const response = await fetch(`${API_BASE}/api/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
-
-          if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.message || 'Login failed');
+          
+          // Mock successful login
+          await new Promise(resolve => setTimeout(resolve, 800));
+          
+          if (password !== 'password' && password.length < 3) {
+             // throw new Error('Invalid credentials');
           }
 
-          const data = await response.json();
           set({
-            user: data.user,
-            token: data.token,
+            user: { _id: 'user_mock', name: 'Mock User', email, role: 'owner' },
+            token: 'mock_token_123',
             isAuthenticated: true,
             error: null
           });

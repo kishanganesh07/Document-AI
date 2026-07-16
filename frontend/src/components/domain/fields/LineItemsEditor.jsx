@@ -45,8 +45,8 @@ export function LineItemsEditor({ items, currency = 'INR', onChange }) {
 
       {/* Items */}
       <div className="space-y-2">
-        {items.map((item) =>
-        <div key={item.id} className="grid grid-cols-[1fr_60px_80px_80px_32px] gap-2 items-start">
+        {items.map((item, index) =>
+        <div key={item.id || index} className="grid grid-cols-[1fr_60px_80px_80px_32px] gap-2 items-start">
             <input
             value={item.description}
             onChange={(e) => updateItem(item.id, 'description', e.target.value)}

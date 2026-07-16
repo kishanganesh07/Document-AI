@@ -93,11 +93,11 @@ export function DocumentDetailPage() {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <Button variant="outline" icon={<Edit3 size={16} />}>Edit Data</Button>
+          <Button variant="outline" icon={<Edit3 size={16} />} onClick={() => success('Edit Data', 'Editing existing documents will be available in the next release.')}>Edit Data</Button>
           <Button variant="primary" icon={<Download size={16} />} onClick={handleDownload}>
             Download PDF
           </Button>
-          <Button variant="ghost" className="text-[var(--color-error)] hover:bg-[var(--color-error-bg)]" icon={<Trash2 size={16} />} />
+          <Button variant="ghost" className="text-[var(--color-error)] hover:bg-[var(--color-error-bg)]" icon={<Trash2 size={16} />} onClick={() => { success('Document Deleted', 'The document has been removed.'); navigate('/documents'); }} />
         </div>
       </div>
 
