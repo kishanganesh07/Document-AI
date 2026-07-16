@@ -1,213 +1,331 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/* ============================================================
+   MIDNIGHT EMERALD DESIGN SYSTEM
+   ============================================================ */
+
 @theme {
-  /* Primary Accent: Indigo */
-  --color-primary: #4F46E5;
-  --color-primary-hover: #4338CA;
-  --color-primary-subtle: rgba(79, 70, 229, 0.08);
-  --color-primary-muted: rgba(79, 70, 229, 0.12);
+  /* === PRIMARY NEON MINT === */
+  --color-primary: #00e476;
+  --color-primary-hover: #00ff85;
+  --color-primary-subtle: rgba(0, 228, 118, 0.08);
+  --color-primary-muted: rgba(0, 228, 118, 0.14);
 
-  /* Success */
-  --color-success: #16A34A;
-  --color-success-bg: rgba(22, 163, 74, 0.1);
-  --color-success-border: rgba(22, 163, 74, 0.2);
+  /* === SUCCESS === */
+  --color-success: #00e476;
+  --color-success-bg: rgba(0, 228, 118, 0.1);
+  --color-success-border: rgba(0, 228, 118, 0.2);
 
-  /* Warning */
-  --color-warning: #D97706;
-  --color-warning-bg: rgba(217, 119, 6, 0.1);
-  --color-warning-border: rgba(217, 119, 6, 0.2);
+  /* === WARNING (Tertiary Gold) === */
+  --color-warning: #e5c364;
+  --color-warning-bg: rgba(229, 195, 100, 0.1);
+  --color-warning-border: rgba(229, 195, 100, 0.2);
 
-  /* Error */
-  --color-error: #DC2626;
-  --color-error-bg: rgba(220, 38, 38, 0.1);
-  --color-error-border: rgba(220, 38, 38, 0.2);
+  /* === ERROR === */
+  --color-error: #ffb4ab;
+  --color-error-bg: rgba(255, 180, 171, 0.1);
+  --color-error-border: rgba(255, 180, 171, 0.2);
 
-  /* Info */
-  --color-info: #2563EB;
-  --color-info-bg: rgba(37, 99, 235, 0.1);
-  --color-info-border: rgba(37, 99, 235, 0.2);
+  /* === INFO === */
+  --color-info: #b1ccc3;
+  --color-info-bg: rgba(177, 204, 195, 0.1);
+  --color-info-border: rgba(177, 204, 195, 0.2);
 
-  /* AI/Special */
-  --color-ai: #4F46E5;
-  --color-ai-bg: rgba(79, 70, 229, 0.1);
-  --color-ai-border: rgba(79, 70, 229, 0.2);
+  /* === AI / SPECIAL === */
+  --color-ai: #00e476;
+  --color-ai-bg: rgba(0, 228, 118, 0.08);
+  --color-ai-border: rgba(0, 228, 118, 0.2);
 
-  /* Verify */
-  --color-verify: #16A34A;
-  --color-verify-bg: rgba(22, 163, 74, 0.1);
-  --color-verify-border: rgba(22, 163, 74, 0.2);
+  /* === VERIFY === */
+  --color-verify: #00e476;
+  --color-verify-bg: rgba(0, 228, 118, 0.1);
+  --color-verify-border: rgba(0, 228, 118, 0.25);
+
+  /* === CONFIDENCE SCORES === */
+  --color-confidence-high: #00FF85;
+  --color-confidence-medium: #FFD600;
+  --color-confidence-low: #FF4D4D;
 }
 
 @layer base {
+  /* ===== MIDNIGHT EMERALD (Always Dark) ===== */
   :root {
-    --bg-app: #F7F8FA;
-    --bg-base: #F7F8FA;
-    --bg-surface: #FFFFFF;
-    --bg-surface-el: #F9FAFB;
-    --bg-hover: #F3F4F6;
-    --bg-sidebar: #FCFCFD;
+    /* Surfaces */
+    --bg-app:          #101415;
+    --bg-base:         #101415;
+    --bg-surface:      #1d2022;
+    --bg-surface-el:   #272a2c;
+    --bg-hover:        #323537;
+    --bg-sidebar:      #191c1e;
+    --bg-deep:         #0b0f10;
 
-    --text-primary: #111827;
-    --text-secondary: #6B7280;
-    --text-muted: #9CA3AF;
-    --text-xmuted: #D1D5DB;
+    /* Text */
+    --text-primary:    #e0e3e5;
+    --text-secondary:  #b9cbb9;
+    --text-muted:      #849584;
+    --text-xmuted:     #3b4b3d;
 
-    --border: #E5E7EB;
-    --border-strong: #D1D5DB;
+    /* Borders */
+    --border:          rgba(255, 255, 255, 0.08);
+    --border-strong:   rgba(255, 255, 255, 0.14);
+    --border-mint:     rgba(0, 228, 118, 0.3);
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.06);
+    /* Shadows / Glows */
+    --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.6);
+    --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.7);
+    --shadow-lg:  0 8px 40px rgba(0, 0, 0, 0.85);
+    --glow-mint:  0 0 24px rgba(0, 228, 118, 0.25);
+    --glow-mint-sm: 0 0 12px rgba(0, 228, 118, 0.18);
+
+    /* Glass */
+    --glass-bg:     rgba(29, 32, 34, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.08);
+
+    /* Semantic overrides for dark */
+    --color-success-bg:    rgba(0, 228, 118, 0.1);
+    --color-success-border: rgba(0, 228, 118, 0.2);
+    --color-warning-bg:    rgba(229, 195, 100, 0.1);
+    --color-warning-border: rgba(229, 195, 100, 0.2);
+    --color-error-bg:      rgba(255, 180, 171, 0.1);
+    --color-error-border:  rgba(255, 180, 171, 0.2);
+    --color-ai-bg:         rgba(0, 228, 118, 0.08);
+    --color-ai-border:     rgba(0, 228, 118, 0.2);
+    --color-verify-bg:     rgba(0, 228, 118, 0.1);
+    --color-verify-border: rgba(0, 228, 118, 0.25);
   }
 
+  /* Force dark class (always on) */
   :root.dark {
-    --bg-app: #111315;
-    --bg-base: #111315;
-    --bg-surface: #1B1E23;
-    --bg-surface-el: #20242A;
-    --bg-hover: #252932;
-    --bg-sidebar: #16181C;
-
-    --text-primary: #F3F4F6;
-    --text-secondary: #9CA3AF;
-    --text-muted: #6B7280;
-    --text-xmuted: #4B5563;
-
-    --border: #2F333A;
-    --border-strong: #374151;
-
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.8);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.9);
-
-    --color-success-bg: rgba(22, 163, 74, 0.15);
-    --color-success-border: rgba(22, 163, 74, 0.25);
-
-    --color-warning-bg: rgba(217, 119, 6, 0.15);
-    --color-warning-border: rgba(217, 119, 6, 0.25);
-
-    --color-error-bg: rgba(220, 38, 38, 0.15);
-    --color-error-border: rgba(220, 38, 38, 0.25);
-
-    --color-info-bg: rgba(37, 99, 235, 0.15);
-    --color-info-border: rgba(37, 99, 235, 0.25);
-
-    --color-ai-bg: rgba(79, 70, 229, 0.15);
-    --color-ai-border: rgba(79, 70, 229, 0.25);
-
-    --color-verify-bg: rgba(22, 163, 74, 0.15);
-    --color-verify-border: rgba(22, 163, 74, 0.25);
+    /* same as :root — inherits above */
   }
 
-  * {
-    box-sizing: border-box;
+  /* Light mode override (if user switches) */
+  :root:not(.dark) {
+    --bg-app:         #f0f4f1;
+    --bg-base:        #f0f4f1;
+    --bg-surface:     #ffffff;
+    --bg-surface-el:  #f2f7f4;
+    --bg-hover:       #e6ede9;
+    --bg-sidebar:     #eaf2ec;
+    --bg-deep:        #e0ede4;
+
+    --text-primary:   #0f1f13;
+    --text-secondary: #2d4a33;
+    --text-muted:     #4d6e55;
+    --text-xmuted:    #849584;
+
+    --border:         rgba(0, 0, 0, 0.1);
+    --border-strong:  rgba(0, 0, 0, 0.18);
+    --border-mint:    rgba(0, 109, 53, 0.3);
+
+    --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-md:  0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.1);
+    --glow-mint:  0 0 20px rgba(0, 109, 53, 0.15);
+    --glow-mint-sm: 0 0 8px rgba(0, 109, 53, 0.12);
+
+    --color-primary:       #006d35;
+    --color-primary-hover: #005227;
+    --color-primary-subtle: rgba(0, 109, 53, 0.08);
+    --color-primary-muted:  rgba(0, 109, 53, 0.14);
+    --color-ai:            #006d35;
+    --color-ai-bg:         rgba(0, 109, 53, 0.08);
+    --color-ai-border:     rgba(0, 109, 53, 0.2);
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
 
   body {
     background-color: var(--bg-app);
     color: var(--text-primary);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
   }
 
-  button {
-    cursor: pointer;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    line-height: 1.2;
   }
 
-  button:disabled {
-    cursor: not-allowed;
-  }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
+  /* ===== Midnight Scrollbar ===== */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
     background: var(--border-strong);
-    border-radius: 3px;
+    border-radius: 4px;
   }
-
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-xmuted);
+    background: rgba(0, 228, 118, 0.3);
   }
 }
 
-/* Animation utilities */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(14px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-
-  100% {
-    background-position: 200% 0;
-  }
+/* Midnight Emerald skeleton: deep → slate scan */
+@keyframes scanShimmer {
+  0%   { background-position: -300% 0; }
+  100% { background-position: 300% 0; }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.25s ease-out forwards;
+/* Neon mint pulse for active/focus glows */
+@keyframes mintPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 228, 118, 0); }
+  50%       { box-shadow: 0 0 0 4px rgba(0, 228, 118, 0.12); }
 }
 
-.animate-slide-in {
-  animation: slideInRight 0.2s ease-out forwards;
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33%       { transform: translateY(-10px) rotate(0.8deg); }
+  66%       { transform: translateY(-5px) rotate(-0.8deg); }
 }
 
+@keyframes gradShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.75; transform: scale(1.06); }
+}
+
+@keyframes wordFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in   { animation: fadeIn 0.3s ease-out forwards; }
+.animate-slide-in  { animation: slideInRight 0.25s ease-out forwards; }
+.animate-float     { animation: float 5s ease-in-out infinite; }
+
+/* ============================================================
+   SKELETON LOADER — "Scanning" Midnight Emerald variant
+   ============================================================ */
 .skeleton-pulse {
-  background: linear-gradient(90deg, var(--bg-surface-el) 25%, var(--bg-hover) 50%, var(--bg-surface-el) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  background: linear-gradient(
+    90deg,
+    #1d2022 0%,
+    #272a2c 30%,
+    rgba(0, 228, 118, 0.04) 50%,
+    #272a2c 70%,
+    #1d2022 100%
+  );
+  background-size: 300% 100%;
+  animation: scanShimmer 2s ease-in-out infinite;
+  border-radius: 6px;
 }
 
-/* Focus ring utility */
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+/* Glass tile — Bento middleground layer */
+.glass-tile {
+  background: rgba(29, 32, 34, 0.85);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+}
+
+/* Glass tile hover */
+.glass-tile:hover {
+  border-color: rgba(255, 255, 255, 0.13);
+  background: rgba(39, 42, 44, 0.9);
+}
+
+/* Focus ring — mint */
 .focus-ring:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+  box-shadow: var(--glow-mint-sm);
 }
 
-/* Page container utility */
+/* Mint glow on primary elements */
+.mint-glow { box-shadow: var(--glow-mint); }
+.mint-glow-sm { box-shadow: var(--glow-mint-sm); }
+
+/* Mono label style */
+.label-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+/* Display font */
+.font-display {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Page container */
 .page-container {
-  padding: 2rem;
-  max-width: 80rem;
+  padding: 2rem 2rem 3rem;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 @media (max-width: 768px) {
-  .page-container {
-    padding: 1rem;
-  }
+  .page-container { padding: 1.25rem 1rem 2rem; }
+}
+
+/* ============================================================
+   BUTTON BASE STYLES
+   ============================================================ */
+
+/* Primary: Solid Neon Mint, black text */
+.btn-mint {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: 8px;
+  background: var(--color-primary);
+  color: #001a0b;
+  font-size: 14px; font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  border: none; cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.btn-mint:hover {
+  background: #00ff85;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 228, 118, 0.35);
+}
+
+/* Ghost button */
+.btn-ghost-me {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-ghost-me:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
 }

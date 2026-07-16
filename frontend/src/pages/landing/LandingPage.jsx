@@ -2,498 +2,684 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import {
   Wand2, FileText, Layers, ShieldCheck, Zap, Users,
-  ArrowRight, ChevronRight, Star, CheckCircle, BarChart3,
-  Clock, Globe, Lock, Download, Sparkles, Bot, FileCheck
+  ArrowRight, CheckCircle, Download, Sparkles, Bot, FileCheck,
+  BarChart3, Globe, Lock, ChevronRight, Terminal
 } from 'lucide-react';
+
+/* ─────────────────────────────────────────────
+   Data
+───────────────────────────────────────────── */
+const DOC_TYPES = ['Invoice', 'Offer Letter', 'Certificate', 'Quotation', 'Report', 'Resume'];
 
 const FEATURES = [
   {
-    icon: Wand2,
+    icon: Bot,
     title: 'AI Document Generation',
-    desc: 'Describe any document in plain English. Our AI extracts, validates, and structures it instantly.',
-    gradient: 'from-violet-500 to-indigo-600',
-    glow: 'rgba(139,92,246,0.3)',
-  },
-  {
-    icon: FileCheck,
-    title: 'Smart Auto-fill & Validation',
-    desc: 'Intelligent field detection catches errors before they happen. Every document is verified.',
-    gradient: 'from-emerald-500 to-teal-600',
-    glow: 'rgba(16,185,129,0.3)',
-  },
-  {
-    icon: Layers,
-    title: 'Template Library',
-    desc: 'Start from curated professional templates — invoices, offer letters, certificates, and more.',
-    gradient: 'from-blue-500 to-cyan-600',
-    glow: 'rgba(59,130,246,0.3)',
-  },
-  {
-    icon: Download,
-    title: 'Instant PDF Export',
-    desc: 'One click to export pixel-perfect PDFs ready to send, sign, or archive.',
-    gradient: 'from-orange-500 to-amber-600',
-    glow: 'rgba(245,158,11,0.3)',
+    desc: 'Describe any document in plain language. LLM extracts entities, relationships, and industry standards to craft perfect documents in seconds.',
+    accent: '#00e476',
+    tag: 'Core',
   },
   {
     icon: ShieldCheck,
     title: 'QR Verification',
-    desc: 'Every document gets a unique QR code. Recipients can verify authenticity in seconds.',
-    gradient: 'from-rose-500 to-pink-600',
-    glow: 'rgba(244,63,94,0.3)',
+    desc: 'Every PDF generated carries a unique QR code for instant authenticity verification by any recipient.',
+    accent: '#00e476',
+    tag: 'Trust',
   },
   {
-    icon: Users,
-    title: 'Team & Organization',
-    desc: 'Invite your team, manage permissions, and collaborate on documents together.',
-    gradient: 'from-purple-500 to-violet-600',
-    glow: 'rgba(168,85,247,0.3)',
+    icon: Layers,
+    title: 'Template Library',
+    desc: 'Access 100+ pre-verified templates for HR, Finance, and Legal. Customised to your brand identity automatically.',
+    accent: '#e5c364',
+    tag: 'Library',
+    wide: true,
+  },
+  {
+    icon: FileCheck,
+    title: 'Smart Auto-fill',
+    desc: 'Sync with your CRM to automatically populate fields across contracts with own internal data.',
+    accent: '#b1ccc3',
+    tag: 'Smart',
+  },
+  {
+    icon: BarChart3,
+    title: 'Analytics & Insights',
+    desc: 'Track document creation velocity, approval rates, and team productivity in real time.',
+    accent: '#e5c364',
+    tag: 'Analytics',
+  },
+  {
+    icon: Globe,
+    title: 'Multi-language Export',
+    desc: 'Generate documents in 40+ languages. Auto-detect locale from client data and apply formatting.',
+    accent: '#b1ccc3',
+    tag: 'Global',
   },
 ];
 
 const STEPS = [
   {
     num: '01',
-    icon: Bot,
-    title: 'Describe in plain English',
-    desc: 'Type what document you need, just like texting. Our AI understands context, names, amounts, dates.',
-    color: '#6C63FF',
+    icon: Terminal,
+    title: 'Structural Analysis',
+    desc: 'Breaking down the input into semantic components: entities, attributes, and their aliases.',
+    accent: '#00e476',
+    tag: 'NATURAL_LANGUAGE_INPUT',
   },
   {
     num: '02',
-    icon: FileCheck,
-    title: 'AI extracts & validates',
-    desc: 'All fields are structured automatically. Errors are caught, missing info is flagged instantly.',
-    color: '#10B981',
+    icon: Lock,
+    title: 'Compliance Engine',
+    desc: 'Cross-referencing with legal and fiscal jurisdiction-specific company policy guidelines.',
+    accent: '#e5c364',
+    tag: 'VALIDATION_LAYER',
   },
   {
     num: '03',
-    icon: Download,
-    title: 'Export & verify',
-    desc: 'Download your PDF in one click. Share the QR code so anyone can verify authenticity.',
-    color: '#F59E0B',
+    icon: FileCheck,
+    title: 'Semantic Styling',
+    desc: 'Mapping the structured data to your brand specific typography and professional layout.',
+    accent: '#b1ccc3',
+    tag: 'GENERATION_OUTPUT',
   },
 ];
 
 const STATS = [
   { value: '10,000+', label: 'Documents Generated' },
   { value: '6', label: 'Document Types' },
-  { value: '100%', label: 'AI-Powered' },
-  { value: '< 5s', label: 'Avg Generation Time' },
+  { value: '100%', label: 'AI-Validated' },
+  { value: '<5s', label: 'Avg Generation' },
 ];
 
-const DOC_TYPES = ['Invoice', 'Offer Letter', 'Certificate', 'Quotation', 'Report', 'Resume'];
-
-function AnimatedWords() {
+/* ─────────────────────────────────────────────
+   Animated cycling word
+───────────────────────────────────────────── */
+function AnimatedWord() {
   const [idx, setIdx] = useState(0);
   useEffect(() => {
-    const t = setInterval(() => setIdx(i => (i + 1) % DOC_TYPES.length), 2000);
+    const t = setInterval(() => setIdx(i => (i + 1) % DOC_TYPES.length), 2200);
     return () => clearInterval(t);
   }, []);
   return (
-    <span key={idx} style={{
-      display: 'inline-block',
-      background: 'linear-gradient(135deg, #818CF8 0%, #6C63FF 40%, #A78BFA 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
-      animation: 'wordFadeIn 0.4s ease forwards',
-    }}>
+    <span
+      key={idx}
+      style={{
+        display: 'inline-block',
+        color: '#00e476',
+        animation: 'wordFadeIn 0.35s ease forwards',
+        fontStyle: 'italic',
+      }}
+    >
       {DOC_TYPES[idx]}
     </span>
   );
 }
 
+/* ─────────────────────────────────────────────
+   AI terminal demo (hero right panel)
+───────────────────────────────────────────── */
+const DEMO_LINES = [
+  { t: 200,  text: '> Parsing input...', color: '#849584' },
+  { t: 600,  text: 'ENTITY: client_name = "Acme Tech"', color: '#00e476' },
+  { t: 900,  text: 'ENTITY: amount = ₹45,000', color: '#00e476' },
+  { t: 1200, text: 'ENTITY: due_date = "Aug 15"', color: '#00e476' },
+  { t: 1600, text: 'FIELD: gst_18% = ₹8,100', color: '#e5c364' },
+  { t: 2000, text: 'COMPLIANCE: GST_ACT ✓', color: '#b1ccc3' },
+  { t: 2400, text: 'CONFIDENCE: 97.4%', color: '#00ff85' },
+  { t: 2800, text: '✓ Invoice ready — exporting PDF', color: '#00e476' },
+];
+
+function AITerminal() {
+  const [visible, setVisible] = useState([]);
+  useEffect(() => {
+    const timers = DEMO_LINES.map((line, i) =>
+      setTimeout(() => setVisible(v => [...v, i]), line.t)
+    );
+    const loop = setTimeout(() => { setVisible([]); }, 4000);
+    return () => { timers.forEach(clearTimeout); clearTimeout(loop); };
+  }, []);
+
+  useEffect(() => {
+    if (visible.length === 0 && visible !== undefined) {
+      // restart loop
+    }
+  }, [visible]);
+
+  // Auto-restart
+  useEffect(() => {
+    let restarted = false;
+    const check = setInterval(() => {
+      if (!restarted) {
+        setVisible([]);
+        restarted = true;
+      }
+    }, 5500);
+    return () => clearInterval(check);
+  }, []);
+
+  return (
+    <div style={{
+      background: '#0b0f10',
+      border: '1px solid rgba(0,228,118,0.2)',
+      borderRadius: 14,
+      padding: '20px 22px',
+      fontFamily: "'JetBrains Mono', monospace",
+      fontSize: 12,
+      minHeight: 220,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
+        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF5F57' }} />
+        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FEBC2E' }} />
+        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#28C840' }} />
+        <span style={{ marginLeft: 8, color: '#3b4b3d', fontSize: 11 }}>docuflow — ai-engine v2.4</span>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {DEMO_LINES.map((line, i) => (
+          <div
+            key={i}
+            style={{
+              color: line.color,
+              opacity: visible.includes(i) ? 1 : 0,
+              transform: visible.includes(i) ? 'translateX(0)' : 'translateX(-6px)',
+              transition: 'all 0.3s ease',
+              letterSpacing: '0.02em',
+            }}
+          >
+            {line.text}
+          </div>
+        ))}
+        <span style={{ display: 'inline-block', width: 8, height: 14, background: '#00e476', animation: 'mintPulse 1s infinite', borderRadius: 1 }} />
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Main Landing Page
+───────────────────────────────────────────── */
 export function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handler);
-    return () => window.removeEventListener('scroll', handler);
+    const h = () => setScrolled(window.scrollY > 24);
+    window.addEventListener('scroll', h);
+    return () => window.removeEventListener('scroll', h);
   }, []);
 
   return (
     <>
       <style>{`
-        @keyframes wordFadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          33% { transform: translateY(-12px) rotate(1deg); }
-          66% { transform: translateY(-6px) rotate(-1deg); }
-        }
-        @keyframes gradShift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        @keyframes pulseGlow {
-          0%, 100% { opacity: 0.4; transform: scale(1); }
-          50% { opacity: 0.7; transform: scale(1.05); }
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(32px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .lp-root {
+        /* ── Midnight Emerald Landing ── */
+        .lp {
           min-height: 100vh;
-          background: #06070A;
-          color: #F1F5F9;
-          font-family: 'Inter', -apple-system, sans-serif;
+          background: #101415;
+          color: #e0e3e5;
+          font-family: 'Inter', sans-serif;
           overflow-x: hidden;
         }
+
+        /* ── Navbar ── */
         .lp-nav {
           position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-          transition: all 0.3s ease;
+          transition: all 0.3s;
         }
         .lp-nav.scrolled {
-          background: rgba(6, 7, 10, 0.85);
+          background: rgba(16, 20, 21, 0.88);
           backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
           border-bottom: 1px solid rgba(255,255,255,0.07);
-          box-shadow: 0 4px 32px rgba(0,0,0,0.4);
         }
         .lp-nav-inner {
-          max-width: 1200px; margin: 0 auto;
-          padding: 20px 32px;
+          max-width: 1280px; margin: 0 auto;
+          padding: 18px 32px;
           display: flex; align-items: center; justify-content: space-between;
         }
         .lp-logo {
-          font-size: 20px; font-weight: 800; letter-spacing: -0.04em;
-          background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text; text-decoration: none;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 18px; font-weight: 800; letter-spacing: -0.04em;
+          color: #e0e3e5; text-decoration: none;
+          display: flex; align-items: center; gap: 10px;
+        }
+        .lp-logo-dot {
+          width: 8px; height: 8px; border-radius: 50%;
+          background: #00e476;
+          box-shadow: 0 0 10px #00e476;
         }
         .lp-nav-links { display: flex; align-items: center; gap: 32px; }
         .lp-nav-link {
-          font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.6);
-          text-decoration: none; transition: color 0.2s; letter-spacing: -0.01em;
+          font-size: 13px; font-weight: 500; color: #849584;
+          text-decoration: none; letter-spacing: 0.01em;
+          transition: color 0.2s;
         }
-        .lp-nav-link:hover { color: #ffffff; }
-        .btn-primary {
-          display: inline-flex; align-items: center; gap: 8px;
-          padding: 11px 22px; border-radius: 10px;
-          background: linear-gradient(135deg, #6C63FF, #818CF8);
-          color: white; font-size: 14px; font-weight: 700;
+        .lp-nav-link:hover { color: #e0e3e5; }
+        .lp-cta-nav {
+          display: flex; align-items: center; gap: 8px;
+          padding: 9px 18px; border-radius: 6px;
+          background: #00e476; color: #001a0b;
+          font-size: 13px; font-weight: 700;
+          font-family: 'Plus Jakarta Sans', sans-serif;
           text-decoration: none; border: none; cursor: pointer;
-          transition: all 0.2s ease;
-          box-shadow: 0 4px 20px rgba(108,99,255,0.4);
-          letter-spacing: -0.01em;
+          transition: all 0.2s;
         }
-        .btn-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 32px rgba(108,99,255,0.5);
+        .lp-cta-nav:hover {
+          background: #00ff85;
+          box-shadow: 0 0 20px rgba(0,228,118,0.4);
+          transform: translateY(-1px);
         }
-        .btn-ghost {
-          display: inline-flex; align-items: center; gap: 8px;
-          padding: 11px 22px; border-radius: 10px;
-          background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-          color: white; font-size: 14px; font-weight: 600;
-          text-decoration: none; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-ghost:hover {
-          background: rgba(255,255,255,0.1);
-          border-color: rgba(255,255,255,0.2);
-        }
-        .hero-section {
+
+        /* ── Hero ── */
+        .hero {
           min-height: 100vh;
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          text-align: center; padding: 120px 32px 80px;
-          position: relative; overflow: hidden;
-        }
-        .hero-glow-1 {
-          position: absolute; top: 10%; left: 20%;
-          width: 600px; height: 600px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
-          filter: blur(60px); animation: pulseGlow 6s ease-in-out infinite;
-          pointer-events: none;
-        }
-        .hero-glow-2 {
-          position: absolute; bottom: 10%; right: 10%;
-          width: 500px; height: 500px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
-          filter: blur(60px); animation: pulseGlow 8s ease-in-out infinite 2s;
-          pointer-events: none;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          gap: 60px;
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 120px 32px 80px;
         }
         .hero-badge {
           display: inline-flex; align-items: center; gap: 8px;
-          padding: 7px 16px; border-radius: 100px;
-          background: rgba(108,99,255,0.15); border: 1px solid rgba(108,99,255,0.35);
-          font-size: 12px; font-weight: 600; color: #a5b4fc;
-          letter-spacing: 0.02em; margin-bottom: 28px;
-          animation: slideUp 0.6s ease 0.1s both;
+          padding: 6px 14px; border-radius: 100px;
+          background: rgba(0,228,118,0.08);
+          border: 1px solid rgba(0,228,118,0.25);
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px; font-weight: 500; color: #00e476;
+          letter-spacing: 0.05em; margin-bottom: 24px;
+          width: fit-content;
         }
         .hero-title {
-          font-size: clamp(48px, 7vw, 88px);
-          font-weight: 900; letter-spacing: -0.04em; line-height: 1.0;
-          color: #ffffff; margin-bottom: 24px;
-          animation: slideUp 0.6s ease 0.2s both;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: clamp(40px, 5.5vw, 72px);
+          font-weight: 700; letter-spacing: -0.03em;
+          line-height: 1.1; color: #e0e3e5;
+          margin-bottom: 24px;
         }
         .hero-sub {
-          font-size: 18px; color: rgba(255,255,255,0.55); line-height: 1.7;
-          max-width: 520px; margin: 0 auto 48px;
-          animation: slideUp 0.6s ease 0.3s both;
+          font-size: 17px; color: #849584; line-height: 1.7;
+          max-width: 480px; margin-bottom: 40px;
         }
-        .hero-ctas {
-          display: flex; align-items: center; gap: 16px; justify-content: center;
-          flex-wrap: wrap;
-          animation: slideUp 0.6s ease 0.4s both;
+        .hero-ctas { display: flex; align-items: center; gap: 14px; }
+        .btn-primary-lp {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 13px 26px; border-radius: 8px;
+          background: #00e476; color: #001a0b;
+          font-size: 15px; font-weight: 800;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          text-decoration: none; border: none; cursor: pointer;
+          letter-spacing: -0.01em;
+          transition: all 0.25s;
         }
-        .hero-doc-preview {
-          margin-top: 80px; width: 100%; max-width: 900px;
-          border-radius: 20px; overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.08);
-          box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,99,255,0.2);
-          animation: slideUp 0.8s ease 0.5s both;
+        .btn-primary-lp:hover {
+          background: #00ff85;
+          box-shadow: 0 0 32px rgba(0,228,118,0.45);
+          transform: translateY(-2px);
+        }
+        .btn-ghost-lp {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 13px 26px; border-radius: 8px;
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.12);
+          color: #e0e3e5; font-size: 15px; font-weight: 600;
+          text-decoration: none; cursor: pointer;
+          transition: all 0.2s;
+        }
+        .btn-ghost-lp:hover {
+          background: rgba(255,255,255,0.05);
+          border-color: rgba(255,255,255,0.2);
+        }
+        .hero-right {
           position: relative;
         }
-        .preview-bar {
-          background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07);
-          padding: 14px 20px; display: flex; align-items: center; gap: 8px;
+        .hero-glass-card {
+          background: rgba(29,32,34,0.7);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 20px;
+          padding: 28px;
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          box-shadow: 0 40px 80px rgba(0,0,0,0.5);
         }
-        .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .preview-content {
-          background: #0D0F14;
-          padding: 32px 32px 40px;
-          display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+        .hero-glass-card:hover {
+          border-color: rgba(0,228,118,0.25);
+          box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 40px rgba(0,228,118,0.06);
+          transition: all 0.4s ease;
         }
-        .preview-chat-bubble {
-          padding: 14px 18px; border-radius: 14px; font-size: 13px; line-height: 1.5;
-          max-width: 90%; text-align: left;
+        .doc-preview-mini {
+          background: #0b0f10;
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 10px;
+          padding: 16px 18px;
+          margin-top: 16px;
         }
-        .preview-ai { background: rgba(108,99,255,0.15); border: 1px solid rgba(108,99,255,0.2); color: #c4b5fd; }
-        .preview-user { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); margin-left: auto; }
-        .stats-section {
-          padding: 60px 32px;
+
+        /* ── Stats ── */
+        .stats-bar {
           border-top: 1px solid rgba(255,255,255,0.06);
           border-bottom: 1px solid rgba(255,255,255,0.06);
-          background: rgba(255,255,255,0.02);
+          background: rgba(11,15,16,0.6);
+          padding: 0;
         }
-        .stats-grid {
-          max-width: 900px; margin: 0 auto;
-          display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+        .stats-inner {
+          max-width: 1280px; margin: 0 auto;
+          display: grid; grid-template-columns: repeat(4, 1fr);
         }
         .stat-item {
-          text-align: center; padding: 24px;
-          border-right: 1px solid rgba(255,255,255,0.07);
+          padding: 36px 24px; text-align: center;
+          border-right: 1px solid rgba(255,255,255,0.06);
         }
         .stat-item:last-child { border-right: none; }
         .stat-val {
-          font-size: 42px; font-weight: 900; letter-spacing: -0.04em;
-          background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-          margin-bottom: 6px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 44px; font-weight: 800; letter-spacing: -0.05em;
+          color: #e0e3e5; line-height: 1; margin-bottom: 8px;
         }
-        .stat-label { font-size: 13px; color: rgba(255,255,255,0.45); font-weight: 500; }
-        .features-section { padding: 100px 32px; max-width: 1200px; margin: 0 auto; }
-        .section-label {
-          font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-          text-transform: uppercase; color: #6C63FF; margin-bottom: 16px;
+        .stat-label {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+          color: #849584; text-transform: uppercase;
+        }
+
+        /* ── Section common ── */
+        .section { padding: 96px 32px; max-width: 1280px; margin: 0 auto; }
+        .section-tag {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+          color: #00e476; text-transform: uppercase; margin-bottom: 14px;
         }
         .section-title {
-          font-size: clamp(32px, 4vw, 52px); font-weight: 900;
-          letter-spacing: -0.04em; line-height: 1.1; color: #ffffff; margin-bottom: 16px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: clamp(30px, 3.5vw, 48px);
+          font-weight: 700; letter-spacing: -0.03em;
+          line-height: 1.15; color: #e0e3e5; margin-bottom: 16px;
         }
-        .section-sub { font-size: 16px; color: rgba(255,255,255,0.5); max-width: 480px; line-height: 1.7; }
-        .features-grid {
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-          background: rgba(255,255,255,0.06); border-radius: 20px;
-          overflow: hidden; margin-top: 60px;
-          border: 1px solid rgba(255,255,255,0.06);
+        .section-title em {
+          font-style: normal; color: #00e476;
         }
-        .feature-card {
-          padding: 36px 32px; background: #0D0F14;
-          transition: background 0.3s;
-          cursor: default;
+        .section-sub {
+          font-size: 16px; color: #849584; line-height: 1.7;
+          max-width: 500px;
         }
-        .feature-card:hover { background: #111318; }
-        .feature-icon {
-          width: 48px; height: 48px; border-radius: 14px;
-          display: flex; align-items: center; justify-content: center;
-          margin-bottom: 20px; flex-shrink: 0;
+
+        /* ── Bento Feature Grid ── */
+        .bento-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.05);
+          border-radius: 20px;
+          overflow: hidden;
+          margin-top: 56px;
         }
-        .feature-title { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 10px; letter-spacing: -0.02em; }
-        .feature-desc { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.7; }
-        .steps-section { padding: 100px 32px; background: rgba(255,255,255,0.015); }
-        .steps-inner { max-width: 900px; margin: 0 auto; text-align: center; }
-        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 64px; position: relative; }
-        .steps-connector {
-          position: absolute; top: 32px; left: calc(50% - 400px); right: calc(50% - 400px);
+        .bento-card {
+          background: #1d2022;
+          padding: 32px 28px;
+          transition: background 0.25s, border-color 0.25s;
+          position: relative;
+          overflow: hidden;
+        }
+        .bento-card.wide { grid-column: span 2; }
+        .bento-card::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0;
           height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(108,99,255,0.4), rgba(108,99,255,0.4), transparent);
+          background: transparent;
+          transition: background 0.25s;
         }
-        .step-card { text-align: center; position: relative; }
-        .step-num {
-          font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
-          color: rgba(255,255,255,0.25); margin-bottom: 20px;
+        .bento-card:hover { background: #252829; }
+        .bento-card:hover::before {
+          background: linear-gradient(90deg, transparent, rgba(0,228,118,0.4), transparent);
         }
-        .step-icon-wrap {
-          width: 64px; height: 64px; border-radius: 20px;
+        .bento-icon {
+          width: 44px; height: 44px; border-radius: 12px;
           display: flex; align-items: center; justify-content: center;
-          margin: 0 auto 20px;
-          border: 1px solid rgba(255,255,255,0.1);
+          margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(255,255,255,0.03);
         }
-        .step-title { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 10px; letter-spacing: -0.02em; }
-        .step-desc { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.7; }
+        .bento-tag {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10px; letter-spacing: 0.08em;
+          color: #3b4b3d; text-transform: uppercase;
+          margin-bottom: 10px;
+        }
+        .bento-title {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 17px; font-weight: 700;
+          color: #e0e3e5; margin-bottom: 10px;
+          letter-spacing: -0.02em;
+        }
+        .bento-desc {
+          font-size: 14px; color: #849584; line-height: 1.7;
+        }
+
+        /* ── How AI Thinks ── */
+        .ai-section {
+          padding: 96px 32px;
+          background: rgba(11,15,16,0.5);
+          border-top: 1px solid rgba(255,255,255,0.04);
+          border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .ai-inner { max-width: 1280px; margin: 0 auto; }
+        .ai-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 64px;
+          align-items: start;
+          margin-top: 56px;
+        }
+        .ai-step {
+          display: flex; gap: 20px;
+          padding: 20px 0;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .ai-step:last-child { border-bottom: none; }
+        .ai-step-num {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px; color: #3b4b3d;
+          letter-spacing: 0.05em; flex-shrink: 0; padding-top: 2px;
+        }
+        .ai-step-body {}
+        .ai-step-tag {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10px; letter-spacing: 0.1em;
+          margin-bottom: 6px; text-transform: uppercase;
+        }
+        .ai-step-title {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 16px; font-weight: 700;
+          color: #e0e3e5; margin-bottom: 8px;
+          letter-spacing: -0.02em;
+        }
+        .ai-step-desc { font-size: 14px; color: #849584; line-height: 1.7; }
+
+        /* ── CTA ── */
         .cta-section {
-          padding: 100px 32px; text-align: center;
+          padding: 96px 32px; text-align: center;
           position: relative; overflow: hidden;
         }
-        .cta-bg {
-          position: absolute; inset: 0;
-          background: radial-gradient(ellipse at 50% 50%, rgba(108,99,255,0.12) 0%, transparent 70%);
-          pointer-events: none;
+        .cta-glow {
+          position: absolute; inset: 0; pointer-events: none;
+          background: radial-gradient(ellipse at 50% 80%, rgba(0,228,118,0.07) 0%, transparent 65%);
         }
         .cta-card {
-          max-width: 700px; margin: 0 auto;
+          max-width: 680px; margin: 0 auto;
           padding: 64px 48px;
-          border-radius: 28px;
-          border: 1px solid rgba(108,99,255,0.25);
-          background: linear-gradient(135deg, rgba(108,99,255,0.08) 0%, rgba(129,140,248,0.04) 100%);
+          background: rgba(29,32,34,0.85);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 24px;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
           position: relative; z-index: 1;
         }
-        .footer { padding: 40px 32px; border-top: 1px solid rgba(255,255,255,0.06); }
-        .footer-inner {
-          max-width: 1200px; margin: 0 auto;
-          display: flex; align-items: center; justify-content: space-between;
+        .cta-card:hover {
+          border-color: rgba(0,228,118,0.2);
+          box-shadow: 0 0 40px rgba(0,228,118,0.06);
+          transition: all 0.4s ease;
         }
-        .footer-copy { font-size: 13px; color: rgba(255,255,255,0.3); }
-        .footer-links { display: flex; gap: 24px; }
-        .footer-link { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
-        .footer-link:hover { color: rgba(255,255,255,0.7); }
-        @media (max-width: 768px) {
-          .lp-nav-links { display: none; }
-          .lp-nav-inner { padding: 16px 20px; }
-          .hero-section { padding: 100px 20px 60px; }
-          .features-grid { grid-template-columns: 1fr; }
-          .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .cta-title {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: clamp(28px, 4vw, 44px);
+          font-weight: 800; letter-spacing: -0.04em;
+          color: #e0e3e5; margin-bottom: 16px;
+          line-height: 1.15;
+        }
+        .cta-title em { font-style: normal; color: #00e476; }
+        .cta-sub { font-size: 16px; color: #849584; margin-bottom: 40px; line-height: 1.7; }
+        .cta-trust {
+          display: flex; gap: 28px; justify-content: center; flex-wrap: wrap;
+          margin-top: 32px;
+        }
+        .cta-trust-item {
+          display: flex; align-items: center; gap: 6px;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px; color: #849584; letter-spacing: 0.04em;
+        }
+
+        /* ── Footer ── */
+        .lp-footer {
+          padding: 32px 32px;
+          border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .lp-footer-inner {
+          max-width: 1280px; margin: 0 auto;
+          display: flex; align-items: center; justify-content: space-between;
+          flex-wrap: wrap; gap: 16px;
+        }
+        .lp-footer-copy {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px; color: #3b4b3d; letter-spacing: 0.04em;
+        }
+        .lp-footer-links { display: flex; gap: 24px; }
+        .lp-footer-link {
+          font-size: 12px; color: #849584; text-decoration: none;
+          transition: color 0.2s;
+        }
+        .lp-footer-link:hover { color: #00e476; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+          .hero { grid-template-columns: 1fr; padding: 100px 20px 60px; gap: 40px; }
+          .hero-right { display: none; }
+          .stats-inner { grid-template-columns: repeat(2, 1fr); }
           .stat-item:nth-child(2) { border-right: none; }
-          .steps-grid { grid-template-columns: 1fr; gap: 32px; }
-          .steps-connector { display: none; }
-          .preview-content { grid-template-columns: 1fr; }
+          .bento-grid { grid-template-columns: 1fr; }
+          .bento-card.wide { grid-column: span 1; }
+          .ai-grid { grid-template-columns: 1fr; gap: 40px; }
           .cta-card { padding: 40px 24px; }
-          .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+          .lp-nav-links { display: none; }
+          .section { padding: 64px 20px; }
         }
       `}</style>
 
-      <div className="lp-root">
-        {/* ===== NAVBAR ===== */}
+      <div className="lp">
+        {/* ══════ NAVBAR ══════ */}
         <nav className={`lp-nav ${scrolled ? 'scrolled' : ''}`}>
           <div className="lp-nav-inner">
-            <Link to="/" className="lp-logo">DocuFlow</Link>
+            <Link to="/" className="lp-logo">
+              <div className="lp-logo-dot" />
+              DocuFlow
+            </Link>
             <div className="lp-nav-links">
               <a href="#features" className="lp-nav-link">Features</a>
-              <a href="#how-it-works" className="lp-nav-link">How it works</a>
+              <a href="#how-it-works" className="lp-nav-link">How the AI Thinks</a>
               <Link to="/auth/login" className="lp-nav-link">Sign In</Link>
-              <Link to="/auth/register" className="btn-primary" style={{ padding: '9px 18px', fontSize: '13px' }}>
-                Get Started <ArrowRight size={14} />
+              <Link to="/auth/register" className="lp-cta-nav">
+                Get Started <ArrowRight size={13} />
               </Link>
             </div>
           </div>
         </nav>
 
-        {/* ===== HERO ===== */}
-        <section className="hero-section">
-          <div className="hero-glow-1" />
-          <div className="hero-glow-2" />
+        {/* ══════ HERO ══════ */}
+        <section>
+          <div className="hero">
+            {/* Left */}
+            <div>
+              <div className="hero-badge">
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e476', boxShadow: '0 0 8px #00e476', flexShrink: 0 }} />
+                AI_DOCUMENT_INTELLIGENCE — V2.4
+              </div>
 
-          <div className="hero-badge">
-            <Sparkles size={12} />
-            AI-Powered Document Intelligence
-          </div>
+              <h1 className="hero-title">
+                Generate any<br />
+                <AnimatedWord /><br />
+                in seconds
+              </h1>
 
-          <h1 className="hero-title">
-            Generate any<br />
-            <AnimatedWords /><br />
-            in seconds
-          </h1>
+              <p className="hero-sub">
+                Describe your document in natural language. DocuFlow's AI extracts
+                entities, validates against regulations, and exports a perfect PDF instantly.
+              </p>
 
-          <p className="hero-sub">
-            Describe your document in plain English. DocuFlow's AI extracts,
-            validates, and structures it — then exports a perfect PDF instantly.
-          </p>
-
-          <div className="hero-ctas">
-            <Link to="/auth/register" className="btn-primary" style={{ fontSize: '15px', padding: '14px 28px' }}>
-              Start for free <ArrowRight size={16} />
-            </Link>
-            <Link to="/auth/login" className="btn-ghost" style={{ fontSize: '15px', padding: '14px 28px' }}>
-              Sign in
-            </Link>
-          </div>
-
-          {/* App preview mockup */}
-          <div className="hero-doc-preview">
-            <div className="preview-bar">
-              <div className="preview-dot" style={{ background: '#FF5F57' }} />
-              <div className="preview-dot" style={{ background: '#FEBC2E' }} />
-              <div className="preview-dot" style={{ background: '#28C840' }} />
-              <span style={{ marginLeft: 12, fontSize: 12, color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace' }}>
-                docuflow.app/generate
-              </span>
+              <div className="hero-ctas">
+                <Link to="/auth/register" className="btn-primary-lp">
+                  Start for free <ArrowRight size={16} />
+                </Link>
+                <Link to="/auth/login" className="btn-ghost-lp">
+                  Watch Demo
+                </Link>
+              </div>
             </div>
-            <div className="preview-content">
-              {/* Left: AI chat */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>
-                  ✦ AI Assistant
+
+            {/* Right — glass card with AI terminal */}
+            <div className="hero-right">
+              <div className="hero-glass-card">
+                <div style={{
+                  display: 'flex', justifyContent: 'space-between',
+                  alignItems: 'center', marginBottom: 18,
+                }}>
+                  <span style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontSize: 13, fontWeight: 700, color: '#e0e3e5',
+                    letterSpacing: '-0.02em',
+                  }}>
+                    AI Processing
+                  </span>
+                  <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                    <span style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 10, color: '#00e476', letterSpacing: '0.05em',
+                    }}>● LIVE</span>
+                  </div>
                 </div>
-                <div className="preview-chat-bubble preview-user">
-                  Create an invoice for Acme Tech for ₹45,000 due August 15th
-                </div>
-                <div className="preview-chat-bubble preview-ai">
-                  ✓ Invoice detected with 98% confidence. I've extracted all fields — client name, amount, due date, and tax. Ready to generate!
-                </div>
-                <div className="preview-chat-bubble preview-user">
-                  Add GST 18%
-                </div>
-                <div className="preview-chat-bubble preview-ai">
-                  Done! GST calculated: ₹8,100. Total updated to ₹53,100. Your document is validated and ready.
+
+                <AITerminal />
+
+                {/* Mini document preview */}
+                <div className="doc-preview-mini">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <div>
+                      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#3b4b3d', marginBottom: 4 }}>INVOICE / INV-2024-0847</div>
+                      <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#e0e3e5' }}>Acme Technologies</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#3b4b3d', marginBottom: 4 }}>TOTAL</div>
+                      <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 800, color: '#00e476' }}>₹53,100</div>
+                    </div>
+                  </div>
+                  <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 12 }} />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e476', boxShadow: '0 0 8px #00e476' }} />
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#00e476', letterSpacing: '0.04em' }}>
+                      CONFIDENCE: 97.4% — QR VERIFIED
+                    </span>
+                  </div>
                 </div>
               </div>
-              {/* Right: Document preview */}
+
+              {/* Ambient glow behind card */}
               <div style={{
-                background: 'white', borderRadius: 12, padding: '20px 20px',
-                border: '1px solid rgba(255,255,255,0.06)',
-              }}>
-                <div style={{ borderBottom: '2px solid #6C63FF', paddingBottom: 12, marginBottom: 14 }}>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: '#1a1a2e', letterSpacing: '-0.02em' }}>INVOICE</div>
-                  <div style={{ fontSize: 10, color: '#9ca3af' }}>INV-2024-0847</div>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
-                  <div>
-                    <div style={{ fontSize: 9, color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase' }}>Bill To</div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#1a1a2e' }}>Acme Technologies</div>
-                    <div style={{ fontSize: 10, color: '#6b7280' }}>acme@tech.com</div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: 9, color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase' }}>Due Date</div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#dc2626' }}>Aug 15, 2024</div>
-                  </div>
-                </div>
-                <div style={{ background: '#f9fafb', borderRadius: 8, padding: '10px 12px', marginBottom: 12 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <span style={{ fontSize: 10, color: '#374151' }}>Software License (Annual)</span>
-                    <span style={{ fontSize: 10, fontWeight: 600, color: '#374151' }}>₹45,000</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: 10, color: '#6b7280' }}>GST 18%</span>
-                    <span style={{ fontSize: 10, color: '#6b7280' }}>₹8,100</span>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ fontSize: 9, color: '#9ca3af' }}>✓ Verified by DocuFlow</div>
-                  <div style={{ fontSize: 13, fontWeight: 900, color: '#6C63FF' }}>₹53,100</div>
-                </div>
-              </div>
+                position: 'absolute', bottom: -40, left: '10%', right: '10%',
+                height: 80, background: 'rgba(0,228,118,0.08)',
+                filter: 'blur(40px)', borderRadius: '50%', pointerEvents: 'none',
+              }} />
             </div>
           </div>
         </section>
 
-        {/* ===== STATS ===== */}
-        <section className="stats-section">
-          <div className="stats-grid">
+        {/* ══════ STATS ══════ */}
+        <div className="stats-bar">
+          <div className="stats-inner">
             {STATS.map((s) => (
               <div key={s.label} className="stat-item">
                 <div className="stat-val">{s.value}</div>
@@ -501,114 +687,177 @@ export function LandingPage() {
               </div>
             ))}
           </div>
-        </section>
+        </div>
 
-        {/* ===== FEATURES ===== */}
-        <section className="features-section" id="features">
-          <div className="section-label">Features</div>
-          <h2 className="section-title">Everything you need<br />to automate documents</h2>
+        {/* ══════ FEATURES ══════ */}
+        <section className="section" id="features">
+          <div className="section-tag">// CAPABILITIES</div>
+          <h2 className="section-title">
+            Everything you need to<br />
+            <em>automate</em> documents
+          </h2>
           <p className="section-sub">
-            From generation to verification — DocuFlow handles the full document lifecycle with AI precision.
+            From idea to pixel-perfect PDF, our proprietary model handles the full lifecycle with surgical precision.
           </p>
 
-          <div className="features-grid">
+          <div className="bento-grid">
             {FEATURES.map((f) => (
-              <div key={f.title} className="feature-card">
-                <div
-                  className="feature-icon"
-                  style={{ background: `linear-gradient(135deg, ${f.glow.replace('0.3', '0.2')}, ${f.glow.replace('0.3', '0.08')})`, border: `1px solid ${f.glow}` }}
-                >
-                  <f.icon size={20} style={{ color: '#fff' }} />
+              <div key={f.title} className={`bento-card${f.wide ? ' wide' : ''}`}>
+                <div className="bento-tag">{f.tag}</div>
+                <div className="bento-icon" style={{ border: `1px solid ${f.accent}22` }}>
+                  <f.icon size={20} style={{ color: f.accent }} />
                 </div>
-                <div className="feature-title">{f.title}</div>
-                <div className="feature-desc">{f.desc}</div>
+                <div className="bento-title">{f.title}</div>
+                <div className="bento-desc">{f.desc}</div>
+
+                {f.wide && (
+                  <Link
+                    to="/auth/register"
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                      marginTop: 20, fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: 13, fontWeight: 700, color: '#00e476',
+                      textDecoration: 'none', letterSpacing: '-0.01em',
+                    }}
+                  >
+                    Browse library <ChevronRight size={14} />
+                  </Link>
+                )}
               </div>
             ))}
           </div>
         </section>
 
-        {/* ===== HOW IT WORKS ===== */}
-        <section className="steps-section" id="how-it-works">
-          <div className="steps-inner">
-            <div className="section-label">How it works</div>
-            <h2 className="section-title">From idea to PDF<br />in under 30 seconds</h2>
-            <p className="section-sub" style={{ margin: '0 auto' }}>
-              No forms to fill, no templates to wrestle with. Just describe what you need.
+        {/* ══════ HOW THE AI THINKS ══════ */}
+        <div className="ai-section" id="how-it-works">
+          <div className="ai-inner">
+            <div className="section-tag">// PROCESS</div>
+            <h2 className="section-title">How the AI <em>"Thinks"</em></h2>
+            <p className="section-sub">
+              DocuFlow doesn't just generate text. It analyzes complex structures to ensure real-time accuracy.
             </p>
 
-            <div className="steps-grid">
-              <div className="steps-connector" />
-              {STEPS.map((s) => (
-                <div key={s.num} className="step-card">
-                  <div className="step-num">{s.num}</div>
-                  <div
-                    className="step-icon-wrap"
-                    style={{ background: `rgba(${s.color === '#6C63FF' ? '108,99,255' : s.color === '#10B981' ? '16,185,129' : '245,158,11'}, 0.12)` }}
-                  >
-                    <s.icon size={24} style={{ color: s.color }} />
+            <div className="ai-grid">
+              {/* Steps */}
+              <div>
+                {STEPS.map((s) => (
+                  <div key={s.num} className="ai-step">
+                    <div className="ai-step-num">{s.num}</div>
+                    <div className="ai-step-body">
+                      <div className="ai-step-tag" style={{ color: s.accent }}>
+                        {s.tag}
+                      </div>
+                      <div className="ai-step-title">{s.title}</div>
+                      <div className="ai-step-desc">{s.desc}</div>
+                    </div>
                   </div>
-                  <div className="step-title">{s.title}</div>
-                  <div className="step-desc">{s.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+                ))}
+              </div>
 
-        {/* ===== CTA ===== */}
-        <section className="cta-section">
-          <div className="cta-bg" />
-          <div className="cta-card">
-            <div style={{
-              width: 56, height: 56, borderRadius: 16,
-              background: 'linear-gradient(135deg, #6C63FF, #818CF8)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              margin: '0 auto 24px',
-              boxShadow: '0 8px 32px rgba(108,99,255,0.5)',
-              animation: 'float 4s ease-in-out infinite',
-            }}>
-              <Wand2 size={24} color="white" />
-            </div>
-            <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, letterSpacing: '-0.04em', color: '#ffffff', marginBottom: 16 }}>
-              Ready to win your workflow?
-            </h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', marginBottom: 40, lineHeight: 1.7 }}>
-              Join teams already generating invoices, offer letters, certificates,
-              and more — in seconds, not hours.
-            </p>
-            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link to="/auth/register" className="btn-primary" style={{ fontSize: '15px', padding: '14px 32px' }}>
-                Get started free <ArrowRight size={16} />
-              </Link>
-              <Link to="/auth/login" className="btn-ghost" style={{ fontSize: '15px', padding: '14px 32px' }}>
-                Sign in
-              </Link>
-            </div>
-            <div style={{ display: 'flex', gap: 24, justifyContent: 'center', marginTop: 36, flexWrap: 'wrap' }}>
-              {['No credit card required', 'Setup in 30 seconds', 'Free to start'].map(t => (
-                <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <CheckCircle size={14} style={{ color: '#10B981' }} />
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>{t}</span>
+              {/* Terminal live */}
+              <div>
+                <div style={{
+                  background: '#0b0f10',
+                  border: '1px solid rgba(0,228,118,0.15)',
+                  borderRadius: 16, overflow: 'hidden',
+                }}>
+                  <div style={{
+                    padding: '14px 18px',
+                    borderBottom: '1px solid rgba(255,255,255,0.05)',
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    background: 'rgba(255,255,255,0.02)',
+                  }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#3b4b3d', letterSpacing: '0.06em' }}>
+                      ● AI_REAL_TIME_PROCESSING
+                    </span>
+                  </div>
+                  <div style={{ padding: '20px 20px' }}>
+                    {[
+                      { label: 'PARSING', val: 'INVOICE_STANDARD_IND', color: '#00e476' },
+                      { label: 'ENTITY', val: 'ACME_TECHNOLOGIES_LTD', color: '#00e476' },
+                      { label: 'COMPLIANCE', val: 'GST_ACT_2017 ✓', color: '#b1ccc3' },
+                      { label: 'CONFIDENCE', val: '97.4%', color: '#00ff85' },
+                      { label: 'GENERATION_LATENCY', val: '2.3s', color: '#e5c364' },
+                    ].map((row) => (
+                      <div key={row.label} style={{
+                        display: 'flex', justifyContent: 'space-between',
+                        alignItems: 'center', padding: '8px 0',
+                        borderBottom: '1px solid rgba(255,255,255,0.04)',
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                      }}>
+                        <span style={{ color: '#3b4b3d', letterSpacing: '0.04em' }}>{row.label}</span>
+                        <span style={{ color: row.color, letterSpacing: '0.02em' }}>{row.val}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ===== FOOTER ===== */}
-        <footer className="footer">
-          <div className="footer-inner">
-            <div>
-              <span className="lp-logo" style={{ fontSize: '16px' }}>DocuFlow</span>
-              <div className="footer-copy" style={{ marginTop: 6 }}>
-                © {new Date().getFullYear()} DocuFlow. All rights reserved.
               </div>
             </div>
-            <div className="footer-links">
-              <Link to="/auth/login" className="footer-link">Sign In</Link>
-              <Link to="/auth/register" className="footer-link">Register</Link>
-              <a href="#features" className="footer-link">Features</a>
-              <a href="#how-it-works" className="footer-link">How it works</a>
+          </div>
+        </div>
+
+        {/* ══════ CTA ══════ */}
+        <section className="cta-section">
+          <div className="cta-glow" />
+          <div className="cta-card">
+            <div style={{
+              width: 52, height: 52, borderRadius: 14,
+              background: 'rgba(0,228,118,0.12)',
+              border: '1px solid rgba(0,228,118,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 24px',
+              animation: 'float 4s ease-in-out infinite',
+            }}>
+              <Wand2 size={22} style={{ color: '#00e476' }} />
+            </div>
+
+            <h2 className="cta-title">
+              Ready to <em>evolve</em><br />your workflow?
+            </h2>
+            <p className="cta-sub">
+              Join over 2,000+ fin-tech teams already using DocuFlow to innovate 3× more a month in document and contract overhead.
+            </p>
+
+            <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link to="/auth/register" className="btn-primary-lp">
+                Get Started Free <ArrowRight size={16} />
+              </Link>
+              <Link to="/auth/login" className="btn-ghost-lp">
+                Schedule Demo
+              </Link>
+            </div>
+
+            <div className="cta-trust">
+              {['No credit card', 'GDPR Compliant', 'SOC Certified'].map((t) => (
+                <div key={t} className="cta-trust-item">
+                  <CheckCircle size={12} style={{ color: '#00e476' }} />
+                  {t.toUpperCase()}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══════ FOOTER ══════ */}
+        <footer className="lp-footer">
+          <div className="lp-footer-inner">
+            <div>
+              <div style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: 15, fontWeight: 800, color: '#e0e3e5',
+                letterSpacing: '-0.03em', marginBottom: 6,
+                display: 'flex', alignItems: 'center', gap: 8,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e476', boxShadow: '0 0 8px #00e476' }} />
+                DocuFlow
+              </div>
+              <div className="lp-footer-copy">© {new Date().getFullYear()} DocuFlow. AI Secure Document Intelligence.</div>
+            </div>
+            <div className="lp-footer-links">
+              <a href="#features" className="lp-footer-link">FEATURES</a>
+              <a href="#" className="lp-footer-link">PRIVACY POLICY</a>
+              <a href="#" className="lp-footer-link">TERMS OF SERVICE</a>
+              <Link to="/auth/login" className="lp-footer-link">APP LOGIN</Link>
             </div>
           </div>
         </footer>
