@@ -223,18 +223,18 @@ export function HomePage() {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: clamp(22px, 3vw, 32px);
           font-weight: 800; letter-spacing: -0.04em;
-          color: #e0e3e5; line-height: 1.1;
+          color: var(--text-primary); line-height: 1.1;
         }
-        .me-greeting em { font-style: normal; color: #00e476; }
+        .me-greeting em { font-style: normal; color: var(--color-primary); }
         .me-sub {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 11px; color: #849584;
+          font-size: 11px; color: var(--text-muted);
           letter-spacing: 0.04em; margin-top: 8px; text-transform: uppercase;
         }
         .me-gen-btn {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 11px 20px; border-radius: 8px;
-          background: #00e476; color: #001a0b;
+          background: var(--color-primary); color: #001a0b;
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 13px; font-weight: 800;
           border: none; cursor: pointer; white-space: nowrap;
@@ -251,8 +251,8 @@ export function HomePage() {
         }
         .me-gen-btn:hover::before { animation: mintBeam 0.6s ease forwards; }
         .me-gen-btn:hover {
-          background: #00ff85;
-          box-shadow: 0 0 32px rgba(0,228,118,0.5);
+          background: var(--color-primary-hover);
+          box-shadow: var(--glow-mint);
           transform: translateY(-2px) scale(1.02);
         }
         .me-gen-btn:active { transform: translateY(0) scale(1); }
@@ -265,8 +265,8 @@ export function HomePage() {
           gap: 12px; margin-bottom: 20px;
         }
         .me-metric-card {
-          background: #1d2022;
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 14px;
           padding: 22px 20px 18px;
           position: relative; overflow: hidden;
@@ -275,9 +275,9 @@ export function HomePage() {
           transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease;
         }
         .me-metric-card:hover {
-          border-color: rgba(var(--accent-rgb, 0,228,118), 0.25);
+          border-color: var(--border-mint);
           transform: translateY(-5px) scale(1.01);
-          box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+          box-shadow: var(--shadow-hover);
         }
         /* Scan-line sweep on hover */
         .me-scan-line {
@@ -306,19 +306,18 @@ export function HomePage() {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 38px; font-weight: 900;
           letter-spacing: -0.06em; line-height: 1;
-          color: #e0e3e5; margin-bottom: 4px;
+          color: var(--text-primary); margin-bottom: 4px;
           animation: counterUp 0.4s ease both;
         }
         .me-metric-label {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 9px; font-weight: 500; color: #849584;
+          font-size: 9px; font-weight: 500; color: var(--text-muted);
           text-transform: uppercase; letter-spacing: 0.07em;
         }
         .me-metric-trend {
           font-family: 'JetBrains Mono', monospace;
           font-size: 10px; margin-top: 12px;
           display: flex; align-items: center; gap: 4px;
-          letter-spacing: 0.03em;
         }
 
         /* Bento grid */
@@ -327,48 +326,48 @@ export function HomePage() {
           gap: 12px;
         }
         .me-card {
-          background: #1d2022;
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 14px; overflow: hidden;
           transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .me-card:hover { border-color: rgba(255,255,255,0.12); }
+        .me-card:hover { border-color: var(--border-strong); }
         .me-card-header {
           padding: 16px 20px 13px;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
+          border-bottom: 1px solid var(--border);
           display: flex; align-items: center; justify-content: space-between;
         }
         .me-card-title {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 13px; font-weight: 700;
-          color: #e0e3e5; letter-spacing: -0.02em;
+          color: var(--text-primary); letter-spacing: -0.02em;
           display: flex; align-items: center; gap: 8px;
         }
         .me-card-link {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 10px; color: #00e476; text-decoration: none;
+          font-size: 10px; color: var(--color-primary); text-decoration: none;
           letter-spacing: 0.04em; display: flex; align-items: center; gap: 4px;
           transition: color 0.2s, gap 0.2s;
         }
-        .me-card-link:hover { color: #00ff85; gap: 8px; }
+        .me-card-link:hover { color: var(--color-primary-hover); gap: 8px; }
 
         /* Document rows */
         .me-doc-row {
           display: flex; align-items: center; gap: 14px;
           padding: 13px 20px;
-          border-bottom: 1px solid rgba(255,255,255,0.04);
+          border-bottom: 1px solid var(--border);
           transition: background 0.2s ease, transform 0.2s ease;
           cursor: pointer;
           position: relative; overflow: hidden;
         }
         .me-doc-row::before {
           content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-          width: 2px; background: #00e476;
+          width: 2px; background: var(--color-primary);
           transform: scaleY(0); transform-origin: top;
           transition: transform 0.25s ease;
         }
         .me-doc-row:last-child { border-bottom: none; }
-        .me-doc-row:hover { background: rgba(255,255,255,0.025); transform: translateX(4px); }
+        .me-doc-row:hover { background: var(--bg-hover); transform: translateX(4px); }
         .me-doc-row:hover::before { transform: scaleY(1); }
         .me-doc-icon {
           width: 34px; height: 34px; border-radius: 9px;
@@ -379,24 +378,24 @@ export function HomePage() {
         .me-doc-row:hover .me-doc-icon { transform: scale(1.1) rotate(-5deg); }
         .me-doc-title {
           font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 13px; font-weight: 600; color: #e0e3e5;
+          font-size: 13px; font-weight: 600; color: var(--text-primary);
           overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
           transition: color 0.2s;
         }
-        .me-doc-row:hover .me-doc-title { color: #f0f3f5; }
+        .me-doc-row:hover .me-doc-title { color: var(--color-primary); }
         .me-doc-meta {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 10px; color: #849584; margin-top: 2px; letter-spacing: '0.03em';
+          font-size: 10px; color: var(--text-muted); margin-top: 2px; letter-spacing: 0.03em;
         }
         .me-doc-date {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 10px; color: #3b4b3d; flex-shrink: 0;
+          font-size: 10px; color: var(--text-xmuted); flex-shrink: 0;
         }
         .me-doc-arrow {
-          color: #3b4b3d; flex-shrink: 0;
+          color: var(--text-xmuted); flex-shrink: 0;
           transition: color 0.2s, transform 0.2s;
         }
-        .me-doc-row:hover .me-doc-arrow { color: #00e476; transform: translate(2px, -2px); }
+        .me-doc-row:hover .me-doc-arrow { color: var(--color-primary); transform: translate(2px, -2px); }
 
         /* Quick actions */
         .me-quick-grid {
@@ -405,22 +404,22 @@ export function HomePage() {
         .me-quick-btn {
           display: flex; align-items: center; gap: 10px;
           padding: 12px 14px; border-radius: 10px;
-          border: 1px solid rgba(255,255,255,0.07);
-          background: rgba(255,255,255,0.02);
+          border: 1px solid var(--border);
+          background: var(--bg-surface-el);
           cursor: pointer; width: 100%;
           transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
           position: relative; overflow: hidden;
         }
         .me-quick-btn::after {
           content: ''; position: absolute; inset: 0;
-          background: linear-gradient(135deg, transparent 40%, rgba(0,228,118,0.04) 100%);
+          background: linear-gradient(135deg, transparent 40%, var(--color-primary-subtle) 100%);
           opacity: 0; transition: opacity 0.3s;
         }
         .me-quick-btn:hover {
-          border-color: rgba(0,228,118,0.2);
-          background: rgba(0,228,118,0.04);
+          border-color: var(--border-mint);
+          background: var(--color-primary-subtle);
           transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+          box-shadow: var(--shadow-sm);
         }
         .me-quick-btn:hover::after { opacity: 1; }
         .me-quick-btn:active { transform: translateY(0) scale(1); }
@@ -433,8 +432,8 @@ export function HomePage() {
 
         /* AI insight card */
         .me-ai-card {
-          background: rgba(0,228,118,0.05);
-          border: 1px solid rgba(0,228,118,0.15);
+          background: var(--color-ai-bg);
+          border: 1px solid var(--color-ai-border);
           border-radius: 14px; padding: 18px;
           transition: all 0.35s ease;
           position: relative; overflow: hidden;
@@ -442,20 +441,20 @@ export function HomePage() {
         .me-ai-card::before {
           content: ''; position: absolute;
           top: -50%; left: -50%; width: 200%; height: 200%;
-          background: radial-gradient(circle, rgba(0,228,118,0.05) 0%, transparent 60%);
+          background: radial-gradient(circle, var(--color-primary-subtle) 0%, transparent 60%);
           animation: orbPulse 4s ease-in-out infinite;
           pointer-events: none;
         }
         .me-ai-card:hover {
-          border-color: rgba(0,228,118,0.3);
-          background: rgba(0,228,118,0.08);
-          box-shadow: 0 0 30px rgba(0,228,118,0.08);
+          border-color: var(--color-primary);
+          background: var(--color-primary-subtle);
+          box-shadow: var(--glow-mint-sm);
           transform: translateY(-2px);
         }
         .me-ai-auto-btn {
           width: 100%; padding: 9px 14px; border-radius: 8px;
-          border: 1px solid rgba(0,228,118,0.2);
-          background: rgba(0,228,118,0.08); color: #00e476;
+          border: 1px solid var(--color-ai-border);
+          background: var(--color-ai-bg); color: var(--color-primary);
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 12px; font-weight: 700; cursor: pointer;
           display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -464,15 +463,16 @@ export function HomePage() {
           position: relative; overflow: hidden;
         }
         .me-ai-auto-btn:hover {
-          background: rgba(0,228,118,0.16);
-          box-shadow: 0 0 20px rgba(0,228,118,0.2);
+          background: var(--color-primary-subtle);
+          color: var(--color-primary-hover);
+          box-shadow: var(--glow-mint-sm);
           transform: translateY(-1px);
         }
 
         /* Expiry */
         .me-expiry-item {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+          padding: 10px 0; border-bottom: 1px solid var(--border);
           font-size: 13px;
           transition: background 0.2s, padding-left 0.2s;
           border-radius: 4px;
@@ -484,7 +484,7 @@ export function HomePage() {
         .me-bar-row { margin-bottom: 12px; }
         .me-bar-labels { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .me-bar-track {
-          height: 4px; background: rgba(255,255,255,0.07);
+          height: 4px; background: var(--border);
           border-radius: 3px; overflow: hidden;
           position: relative;
         }
@@ -635,8 +635,8 @@ export function HomePage() {
                   AI_INSIGHT
                 </span>
               </div>
-              <p style={{ fontSize: 13, color: '#b9cbb9', lineHeight: 1.65, marginBottom: 14, position: 'relative', zIndex: 1 }}>
-                Automate your recruitment process by routing <strong style={{ color: '#e0e3e5' }}>LinkedIn profiles</strong> through the AI Workflow Builder to generate instant Professional Resumes.
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: 14, position: 'relative', zIndex: 1 }}>
+                Automate your recruitment process by routing <strong style={{ color: 'var(--text-primary)' }}>LinkedIn profiles</strong> through the AI Workflow Builder to generate instant Professional Resumes.
               </p>
               <button className="me-ai-auto-btn" onClick={() => navigate('/workflows')}>
                 <Zap size={12} /> Open Workflow Builder
@@ -667,18 +667,18 @@ export function HomePage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{
                         width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
-                        background: item.danger ? '#ffb4ab' : '#e5c364',
-                        boxShadow: item.danger ? '0 0 8px rgba(255,180,171,0.7)' : '0 0 8px rgba(229,195,100,0.5)',
+                        background: item.danger ? 'var(--color-error)' : 'var(--color-warning)',
+                        boxShadow: item.danger ? '0 0 8px var(--color-error-border)' : '0 0 8px var(--color-warning-border)',
                         animation: item.danger ? 'mintPulse 1.5s ease-in-out infinite' : 'none',
                       }} />
-                      <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 13, fontWeight: 500, color: '#b9cbb9' }}>
+                      <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
                         {item.name}
                       </span>
                     </div>
                     <span style={{
                       fontFamily: "'JetBrains Mono',monospace",
                       fontSize: 10, fontWeight: 600, letterSpacing: '0.04em',
-                      color: item.danger ? '#ffb4ab' : '#849584',
+                      color: item.danger ? 'var(--color-error)' : 'var(--text-muted)',
                     }}>
                       {item.when}
                     </span>
