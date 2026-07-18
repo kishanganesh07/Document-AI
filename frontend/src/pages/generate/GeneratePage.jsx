@@ -82,7 +82,10 @@ export function GeneratePage() {
     store.setProcessing('understanding');
 
     try {
-      const result = await processUserPrompt(prompt, attachedFile, (stage) => {
+      const currentType = useGenerateStore.getState().detectedType;
+      const currentData = useGenerateStore.getState().documentData;
+      
+      const result = await processUserPrompt(prompt, attachedFile, currentType, currentData, (stage) => {
         store.setProcessing(stage);
         // Update the last message's processing stage
         useGenerateStore.setState((s) => ({

@@ -4,7 +4,7 @@ import { DOCUMENT_SCHEMA_REGISTRY } from '@/lib/documentSchemas';
 // Real AI backend call
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
-export async function processUserPrompt(prompt, file, onProgress) {
+export async function processUserPrompt(prompt, file, currentType, currentData, onProgress) {
   onProgress('classifying');
   
   try {
@@ -15,11 +15,13 @@ export async function processUserPrompt(prompt, file, onProgress) {
     if (file) {
       body = new FormData();
       body.append('prompt', prompt);
+      if (currentType) body.append('currentType', currentType);
+      if (currentData) body.append('currentData', JSON.stringify(currentData));
       body.append('document', file);
       isFormData = true;
       // FormData handles its own Content-Type boundary
     } else {
-      body = JSON.stringify({ prompt });
+      body = JSON.stringify({ prompt, currentType, currentData });
       headers['Content-Type'] = 'application/json';
     }
 

@@ -100,7 +100,7 @@ Return ONLY a valid JSON object matching this exact schema:
 
 export const processPrompt = async (req, res) => {
   try {
-    const { prompt } = req.body;
+    const { prompt, currentType, currentData } = req.body;
     
     if (!prompt) {
       return res.status(400).json({ message: 'Prompt is required' });
@@ -111,6 +111,10 @@ export const processPrompt = async (req, res) => {
     // We append a reminder to output strict JSON
     let promptWithJsonInstruction = prompt +
       '\n\nIMPORTANT: Return ONLY a raw JSON object conforming strictly to the schema. No markdown, no extra text.';
+
+    if (currentType && currentData) {
+      promptWithJsonInstruction += `\n\n--- CURRENT DOCUMENT STATE ---\nThe user is currently editing a document of type: "${currentType}".\nCurrent Document Data (JSON):\n${currentData}\n\nInstructions: Please APPLY the user's request to this existing data. Retain all existing fields unless the user specifically asked to remove or change them. Return the full, updated document data.\n------------------------------`;
+    }
 
     // If a file was uploaded, extract its text
     if (req.file) {
