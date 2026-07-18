@@ -10,16 +10,51 @@ import { cn } from '@/lib/utils';
 const TABS = [
   { id: 'profile', label: 'Profile', icon: User, emoji: '👤' },
   { id: 'appearance', label: 'Appearance', icon: Moon, emoji: '🎨' },
+  { id: 'security', label: 'Security', icon: Key, emoji: '🔐' },
 ];
 
 export function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
-  const { user } = useAuthStore();
-  const { success } = useNotificationStore();
+  const { user, changePassword } = useAuthStore();
+  const { success, error } = useNotificationStore();
   const { theme, setTheme } = useUIStore();
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [updating, setUpdating] = useState(false);
 
   const handleSave = () => {
     success('Settings saved', 'Your preferences have been updated successfully.');
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      error('Input required', 'All password fields are required.');
+      return;
+    }
+    if (newPassword.length < 8) {
+      error('Password length', 'New password must be at least 8 characters long.');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      error('Password mismatch', 'New passwords do not match.');
+      return;
+    }
+
+    setUpdating(true);
+    try {
+      await changePassword(currentPassword, newPassword);
+      success('Password Updated', 'Your account password has been successfully updated.');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      error('Update failed', err.message || 'Could not change password.');
+    } finally {
+      setUpdating(false);
+    }
   };
 
   return (
@@ -118,6 +153,46 @@ export function SettingsPage() {
                   <Button variant="primary" onClick={handleSave}>Apply Appearance</Button>
                 </div>
               </div>
+            </div>
+          )}
+          {/* Security */}
+          {activeTab === 'security' && (
+            <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl shadow-[var(--shadow-sm)] overflow-hidden animate-fade-in">
+              <div className="px-6 py-5 border-b border-[var(--border)] bg-gradient-to-r from-amber-500/5 to-transparent">
+                <h2 className="text-base font-bold text-[var(--text-primary)]">Security</h2>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">Secure your account by updating your credentials.</p>
+              </div>
+              <form onSubmit={handleChangePassword} className="p-6 space-y-6">
+                <div className="space-y-4">
+                  <Input 
+                    type="password" 
+                    label="Current Password" 
+                    value={currentPassword} 
+                    onChange={e => setCurrentPassword(e.target.value)} 
+                  />
+                  <Input 
+                    type="password" 
+                    label="New Password" 
+                    value={newPassword} 
+                    onChange={e => setNewPassword(e.target.value)} 
+                  />
+                  <Input 
+                    type="password" 
+                    label="Confirm New Password" 
+                    value={confirmPassword} 
+                    onChange={e => setConfirmPassword(e.target.value)} 
+                  />
+                </div>
+                <div className="pt-4 border-t border-[var(--border)] flex justify-end">
+                  <Button 
+                    type="submit" 
+                    variant="primary" 
+                    loading={updating}
+                  >
+                    Change Password
+                  </Button>
+                </div>
+              </form>
             </div>
           )}
 

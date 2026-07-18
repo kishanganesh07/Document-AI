@@ -82,6 +82,27 @@ export const useAuthStore = create()(
         set({ user: null, token: null, isAuthenticated: false });
       },
 
+      changePassword: async (currentPassword, newPassword) => {
+        try {
+          const token = get().token;
+          const response = await fetch(`${API_BASE}/api/auth/change-password`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ currentPassword, newPassword })
+          });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(data.message || 'Failed to update password');
+          }
+          return data;
+        } catch (error) {
+          throw error;
+        }
+      },
+
       hasPermission: (permission) => {
         const user = get().user;
         if (!user || !user.role) return false;
