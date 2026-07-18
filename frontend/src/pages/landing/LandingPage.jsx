@@ -3,10 +3,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Wand2, FileText, Layers, ShieldCheck, Zap, Users,
   ArrowRight, CheckCircle, Download, Sparkles, Bot, FileCheck,
-  BarChart3, Globe, Lock, ChevronRight, Terminal
+  BarChart3, Globe, Lock, ChevronRight, Terminal, SunMedium, MoonStar
 } from 'lucide-react';
-import Particles from '@/components/ui/Particles';
 import MetallicPaint from '@/components/ui/MetallicPaint';
+import { useUIStore } from '@/stores/ui.store';
 
 
 
@@ -68,16 +68,16 @@ function useMouseParallax(strength = 20) {
 const DOC_TYPES = ['Invoice', 'Offer Letter', 'Certificate', 'Quotation', 'Report', 'Resume'];
 
 const FEATURES = [
-  { icon: Bot, title: 'AI Document Generation', desc: 'Describe any document in plain language. LLM extracts entities, relationships, and industry standards to craft perfect documents in seconds.', accent: '#00e476', tag: 'CORE' },
-  { icon: ShieldCheck, title: 'QR Verification', desc: 'Every PDF generated carries a unique QR code for instant authenticity verification by any recipient.', accent: '#00e476', tag: 'TRUST' },
-  { icon: Layers, title: 'Template Library', desc: 'Access 100+ pre-verified templates for HR, Finance, and Legal. Customised to your brand identity automatically.', accent: '#e5c364', tag: 'LIBRARY', wide: true },
-  { icon: FileCheck, title: 'Smart Auto-fill', desc: 'Sync with your CRM to automatically populate fields across contracts with own internal data.', accent: '#b1ccc3', tag: 'SMART' },
-  { icon: BarChart3, title: 'Analytics & Insights', desc: 'Track document creation velocity, approval rates, and team productivity in real time.', accent: '#e5c364', tag: 'ANALYTICS' },
+  { icon: Bot, title: 'AI Document Generation', desc: 'Describe any document in plain language. LLM extracts entities, relationships, and industry standards to craft perfect documents in seconds.', accent: 'var(--color-primary)', tag: 'CORE', wide: true },
+  { icon: ShieldCheck, title: 'QR Verification', desc: 'Every PDF generated carries a unique QR code for instant authenticity verification by any recipient.', accent: 'var(--color-primary)', tag: 'TRUST' },
+  { icon: Layers, title: 'Template Library', desc: 'Access 100+ pre-verified templates for HR, Finance, and Legal. Customised to your brand identity automatically.', accent: '#e5c364', tag: 'LIBRARY' },
+  { icon: FileCheck, title: 'Smart Auto-fill', desc: 'Sync with your CRM to automatically populate fields across contracts with own internal data.', accent: '#b1ccc3', tag: 'SMART', wide: true },
+  { icon: BarChart3, title: 'Analytics & Insights', desc: 'Track document creation velocity, approval rates, and team productivity in real time.', accent: '#e5c364', tag: 'ANALYTICS', wide: true },
   { icon: Globe, title: 'Multi-language Export', desc: 'Generate documents in 40+ languages. Auto-detect locale from client data and apply formatting.', accent: '#b1ccc3', tag: 'GLOBAL' },
 ];
 
 const STEPS = [
-  { num: '01', icon: Terminal, title: 'Structural Analysis', desc: 'Breaking down the input into semantic components: entities, attributes, and their aliases.', accent: '#00e476', tag: 'NATURAL_LANGUAGE_INPUT' },
+  { num: '01', icon: Terminal, title: 'Structural Analysis', desc: 'Breaking down the input into semantic components: entities, attributes, and their aliases.', accent: 'var(--color-primary)', tag: 'NATURAL_LANGUAGE_INPUT' },
   { num: '02', icon: Lock, title: 'Compliance Engine', desc: 'Cross-referencing with legal and fiscal jurisdiction-specific company policy guidelines.', accent: '#e5c364', tag: 'VALIDATION_LAYER' },
   { num: '03', icon: FileCheck, title: 'Semantic Styling', desc: 'Mapping the structured data to your brand specific typography and professional layout.', accent: '#b1ccc3', tag: 'GENERATION_OUTPUT' },
 ];
@@ -90,14 +90,14 @@ const STATS = [
 ];
 
 const DEMO_LINES = [
-  { t: 300,  text: '> Parsing input query...', color: '#3b4b3d' },
-  { t: 700,  text: 'ENTITY: client_name = "Acme Tech"', color: '#00e476' },
-  { t: 1050, text: 'ENTITY: amount = ₹45,000', color: '#00e476' },
-  { t: 1350, text: 'ENTITY: due_date = "Aug 15"', color: '#00e476' },
+  { t: 300,  text: '> Parsing input query...', color: 'var(--text-xmuted)' },
+  { t: 700,  text: 'ENTITY: client_name = "Acme Tech"', color: 'var(--color-primary)' },
+  { t: 1050, text: 'ENTITY: amount = ₹45,000', color: 'var(--color-primary)' },
+  { t: 1350, text: 'ENTITY: due_date = "Aug 15"', color: 'var(--color-primary)' },
   { t: 1700, text: 'FIELD: gst_18% = ₹8,100', color: '#e5c364' },
   { t: 2100, text: 'COMPLIANCE: GST_ACT_2017 ✓', color: '#b1ccc3' },
-  { t: 2500, text: 'CONFIDENCE_SCORE: 97.4%', color: '#00ff85' },
-  { t: 2900, text: '✓ Invoice ready — exporting PDF...', color: '#00e476' },
+  { t: 2500, text: 'CONFIDENCE_SCORE: 97.4%', color: 'var(--color-primary-hover)' },
+  { t: 2900, text: '✓ Invoice ready — exporting PDF...', color: 'var(--color-primary)' },
 ];
 
 /* ─────────────────────────────────────────────
@@ -114,7 +114,7 @@ function AnimatedWord() {
       key={idx}
       style={{
         display: 'inline-block',
-        color: '#00e476',
+        color: 'var(--color-primary)',
         fontStyle: 'italic',
         animation: 'wordFadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards',
         textShadow: '0 0 40px rgba(0,228,118,0.4)',
@@ -126,38 +126,43 @@ function AnimatedWord() {
 }
 
 function LiveTerminal() {
-  const [lines, setLines] = useState([]);
+  const [visibleLines, setVisibleLines] = useState([]);
   const [cursor, setCursor] = useState(true);
+  const timersRef = useRef([]);
 
   useEffect(() => {
-    setLines([]);
-    const timers = DEMO_LINES.map((line, i) =>
-      setTimeout(() => setLines(v => [...v, i]), line.t)
-    );
-    // blink cursor
+    const startLoop = () => {
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+      setVisibleLines([]);
+
+      // Schedule each line to slide in
+      DEMO_LINES.forEach((line, i) => {
+        const t = setTimeout(() => {
+          setVisibleLines(prev => [...prev, i]);
+        }, line.t);
+        timersRef.current.push(t);
+      });
+
+      // Restart after last line + 1.5s pause
+      const lastT = DEMO_LINES[DEMO_LINES.length - 1].t + 1500;
+      const restart = setTimeout(startLoop, lastT);
+      timersRef.current.push(restart);
+    };
+
+    startLoop();
     const blink = setInterval(() => setCursor(c => !c), 530);
-    // restart loop
-    const restart = setTimeout(() => {
-      setLines([]);
-    }, 5200);
-    return () => { timers.forEach(clearTimeout); clearInterval(blink); clearTimeout(restart); };
-  }, [lines.length === 0 ? 0 : null]);
 
-  // restart trigger
-  useEffect(() => {
-    if (lines.length === 0) {
-      const timers = DEMO_LINES.map((line, i) =>
-        setTimeout(() => setLines(v => [...v, i]), line.t)
-      );
-      const restart = setTimeout(() => setLines([]), 5500);
-      return () => { timers.forEach(clearTimeout); clearTimeout(restart); };
-    }
-  }, [lines.length]);
+    return () => {
+      timersRef.current.forEach(clearTimeout);
+      clearInterval(blink);
+    };
+  }, []);
 
   return (
     <div style={{
-      background: '#0b0f10',
-      border: '1px solid rgba(0,228,118,0.15)',
+      background: 'var(--bg-deep)',
+      border: '1px solid var(--color-success-bg)',
       borderRadius: 14, padding: '18px 20px',
       fontFamily: "'JetBrains Mono', monospace",
       fontSize: 11.5, minHeight: 210,
@@ -166,7 +171,7 @@ function LiveTerminal() {
         <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF5F57' }} />
         <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FEBC2E' }} />
         <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#28C840' }} />
-        <span style={{ marginLeft: 10, color: '#3b4b3d', fontSize: 10, letterSpacing: '0.06em' }}>docuflow — ai-engine v2.4</span>
+        <span style={{ marginLeft: 10, color: 'var(--text-xmuted)', fontSize: 10, letterSpacing: '0.06em' }}>docuflow — ai-engine v2.4</span>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
         {DEMO_LINES.map((line, i) => (
@@ -174,9 +179,9 @@ function LiveTerminal() {
             key={i}
             style={{
               color: line.color,
-              opacity: lines.includes(i) ? 1 : 0,
-              transform: lines.includes(i) ? 'translateX(0)' : 'translateX(-8px)',
-              transition: 'opacity 0.3s ease, transform 0.3s ease',
+              opacity: visibleLines.includes(i) ? 1 : 0,
+              transform: visibleLines.includes(i) ? 'translateX(0)' : 'translateX(-8px)',
+              transition: 'opacity 0.35s ease, transform 0.35s ease',
               letterSpacing: '0.02em',
             }}
           >
@@ -185,7 +190,7 @@ function LiveTerminal() {
         ))}
         <span style={{
           display: 'inline-block', width: 7, height: 14,
-          background: '#00e476', borderRadius: 1,
+          background: 'var(--color-primary)', borderRadius: 1,
           opacity: cursor ? 1 : 0,
           transition: 'opacity 0.1s',
           boxShadow: '0 0 8px rgba(0,228,118,0.8)',
@@ -261,7 +266,7 @@ function FeatureCard({ feature, delay = 0 }) {
         <Link to="/auth/register" style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           marginTop: 20, fontFamily: "'Plus Jakarta Sans', sans-serif",
-          fontSize: 13, fontWeight: 700, color: '#00e476',
+          fontSize: 13, fontWeight: 700, color: 'var(--color-primary)',
           textDecoration: 'none', letterSpacing: '-0.01em',
           transition: 'gap 0.2s ease',
         }}
@@ -279,6 +284,7 @@ function FeatureCard({ feature, delay = 0 }) {
    Main Landing Page
 ───────────────────────────────────────────── */
 export function LandingPage() {
+  const { theme, toggleTheme } = useUIStore();
   const [scrolled, setScrolled] = useState(false);
   const [, parallaxOffset] = useMouseParallax(14);
   const [heroRef, heroVisible] = useScrollReveal(0.01);
@@ -299,8 +305,8 @@ export function LandingPage() {
         ═══════════════════════════════════════════ */
         .lp-root {
           min-height: 100vh;
-          background: #101415;
-          color: #e0e3e5;
+          background: var(--bg-app);
+          color: var(--text-primary);
           font-family: 'Inter', sans-serif;
           overflow-x: hidden;
           position: relative;
@@ -317,20 +323,20 @@ export function LandingPage() {
         }
         .lp-orb-1 {
           width: 700px; height: 700px;
-          background: radial-gradient(circle, rgba(0,228,118,0.09) 0%, transparent 70%);
+          background: radial-gradient(circle, var(--color-primary-subtle) 0%, transparent 70%);
           top: -150px; right: -150px;
           animation: orbDrift 22s ease-in-out infinite;
         }
         .lp-orb-2 {
           width: 500px; height: 500px;
-          background: radial-gradient(circle, rgba(177,204,195,0.05) 0%, transparent 70%);
+          background: radial-gradient(circle, var(--color-info-bg) 0%, transparent 70%);
           bottom: 10%; left: -120px;
           animation: orbDrift 28s ease-in-out infinite reverse;
           animation-delay: -10s;
         }
         .lp-orb-3 {
           width: 400px; height: 400px;
-          background: radial-gradient(circle, rgba(229,195,100,0.04) 0%, transparent 70%);
+          background: radial-gradient(circle, var(--color-warning-bg) 0%, transparent 70%);
           top: 40%; left: 40%;
           animation: floatSlow 20s ease-in-out infinite;
           animation-delay: -5s;
@@ -349,9 +355,9 @@ export function LandingPage() {
                       border-color 0.4s ease, box-shadow 0.4s ease;
         }
         .lp-nav.scrolled {
-          background: rgba(16,20,21,0.9);
+          background: var(--glass-bg);
           backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-          border-bottom: 1px solid rgba(255,255,255,0.07);
+          border-bottom: 1px solid var(--border);
           box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
         .lp-nav-inner {
@@ -363,14 +369,14 @@ export function LandingPage() {
         .lp-logo {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 18px; font-weight: 800; letter-spacing: -0.04em;
-          color: #e0e3e5; text-decoration: none;
+          color: var(--text-primary); text-decoration: none;
           display: flex; align-items: center; gap: 10px;
           transition: color 0.2s;
         }
-        .lp-logo:hover { color: #00e476; }
+        .lp-logo:hover { color: var(--color-primary); }
         .lp-logo-dot {
           width: 8px; height: 8px; border-radius: 50%;
-          background: #00e476; box-shadow: 0 0 10px #00e476;
+          background: var(--color-primary); box-shadow: 0 0 10px var(--color-primary);
           animation: mintPulse 2s ease-in-out infinite;
         }
         .lp-nav-links {
@@ -378,22 +384,22 @@ export function LandingPage() {
           animation: fadeDown 0.6s ease 0.1s both;
         }
         .lp-nav-link {
-          font-size: 13px; font-weight: 500; color: #849584;
+          font-size: 13px; font-weight: 500; color: var(--text-muted);
           text-decoration: none; letter-spacing: 0.01em;
           transition: color 0.2s, transform 0.2s;
           position: relative;
         }
         .lp-nav-link::after {
           content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
-          height: 1px; background: #00e476; transform: scaleX(0);
+          height: 1px; background: var(--color-primary); transform: scaleX(0);
           transition: transform 0.25s ease; transform-origin: left;
         }
-        .lp-nav-link:hover { color: #e0e3e5; transform: translateY(-1px); }
+        .lp-nav-link:hover { color: var(--text-primary); transform: translateY(-1px); }
         .lp-nav-link:hover::after { transform: scaleX(1); }
         .lp-cta-nav {
           display: flex; align-items: center; gap: 8px;
           padding: 9px 18px; border-radius: 6px;
-          background: #00e476; color: #001a0b;
+          background: var(--color-primary); color: var(--bg-app);
           font-size: 13px; font-weight: 700;
           font-family: 'Plus Jakarta Sans', sans-serif;
           text-decoration: none; cursor: pointer;
@@ -407,7 +413,7 @@ export function LandingPage() {
           opacity: 0; transition: opacity 0.2s;
         }
         .lp-cta-nav:hover {
-          background: #00ff85;
+          background: var(--color-primary-hover);
           box-shadow: 0 0 24px rgba(0,228,118,0.5);
           transform: translateY(-2px) scale(1.03);
         }
@@ -426,16 +432,16 @@ export function LandingPage() {
         .lp-hero-badge {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 6px 14px; border-radius: 100px;
-          background: rgba(0,228,118,0.08);
-          border: 1px solid rgba(0,228,118,0.25);
+          background: var(--color-primary-subtle);
+          border: 1px solid var(--color-primary-border, var(--border-mint));
           font-family: 'JetBrains Mono', monospace;
-          font-size: 11px; font-weight: 500; color: #00e476;
+          font-size: 11px; font-weight: 500; color: var(--color-primary);
           letter-spacing: 0.05em; width: fit-content;
           animation: scaleInBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
         }
         .lp-hero-badge-dot {
           width: 6px; height: 6px; border-radius: 50%;
-          background: #00e476; box-shadow: 0 0 8px #00e476;
+          background: var(--color-primary); box-shadow: 0 0 8px var(--color-primary);
           position: relative;
           animation: neonFlicker 4s ease-in-out infinite;
         }
@@ -449,12 +455,12 @@ export function LandingPage() {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: clamp(40px, 5.5vw, 72px);
           font-weight: 700; letter-spacing: -0.03em;
-          line-height: 1.1; color: #e0e3e5;
+          line-height: 1.1; color: var(--text-primary);
           margin: 24px 0 24px;
           animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.3s both;
         }
         .lp-hero-sub {
-          font-size: 17px; color: #849584; line-height: 1.7;
+          font-size: 17px; color: var(--text-muted); line-height: 1.7;
           max-width: 480px; margin-bottom: 40px;
           animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.45s both;
         }
@@ -465,7 +471,7 @@ export function LandingPage() {
         .lp-btn-primary {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 14px 28px; border-radius: 8px;
-          background: #00e476; color: #001a0b;
+          background: var(--color-primary); color: var(--bg-app);
           font-size: 15px; font-weight: 800;
           font-family: 'Plus Jakarta Sans', sans-serif;
           text-decoration: none; border: none; cursor: pointer;
@@ -482,7 +488,7 @@ export function LandingPage() {
         }
         .lp-btn-primary:hover::before { animation: mintBeam 0.6s ease forwards; }
         .lp-btn-primary:hover {
-          background: #00ff85;
+          background: var(--color-primary-hover);
           box-shadow: 0 0 40px rgba(0,228,118,0.5);
           transform: translateY(-3px) scale(1.02);
         }
@@ -496,14 +502,14 @@ export function LandingPage() {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 14px 28px; border-radius: 8px;
           background: transparent;
-          border: 1px solid rgba(255,255,255,0.12);
-          color: #e0e3e5; font-size: 15px; font-weight: 600;
+          border: 1px solid var(--border-strong);
+          color: var(--text-primary); font-size: 15px; font-weight: 600;
           text-decoration: none; cursor: pointer;
           transition: all 0.25s ease;
         }
         .lp-btn-ghost:hover {
-          background: rgba(255,255,255,0.05);
-          border-color: rgba(255,255,255,0.22);
+          background: var(--border);
+          border-color: var(--border-mint);
           transform: translateY(-2px);
         }
 
@@ -513,8 +519,8 @@ export function LandingPage() {
           animation: fadeLeft 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s both;
         }
         .lp-hero-glass {
-          background: rgba(29,32,34,0.7);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--glass-bg);
+          border: 1px solid var(--border);
           border-radius: 20px; padding: 28px;
           backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
           box-shadow: 0 40px 80px rgba(0,0,0,0.5);
@@ -522,30 +528,30 @@ export function LandingPage() {
           will-change: transform;
         }
         .lp-hero-glass:hover {
-          border-color: rgba(0,228,118,0.25);
-          box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 50px rgba(0,228,118,0.08);
+          border-color: var(--color-primary-border, var(--border-mint));
+          box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 50px var(--color-primary-subtle);
         }
         .lp-doc-mini {
-          background: #0b0f10;
-          border: 1px solid rgba(255,255,255,0.06);
+          background: var(--bg-deep);
+          border: 1px solid var(--border);
           border-radius: 10px; padding: 16px 18px; margin-top: 16px;
           transition: border-color 0.3s;
         }
         .lp-hero-glass:hover .lp-doc-mini {
-          border-color: rgba(0,228,118,0.15);
+          border-color: var(--color-success-bg);
         }
 
         /* ── Stats bar ── */
         .lp-stats-bar {
-          border-top: 1px solid rgba(255,255,255,0.06);
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-          background: rgba(11,15,16,0.6);
+          border-top: 1px solid var(--border);
+          border-bottom: 1px solid var(--border);
+          background: var(--bg-surface-el);
           position: relative; z-index: 1;
         }
         .lp-stats-bar::before {
           content: '';
           position: absolute; inset: 0;
-          background: linear-gradient(90deg, transparent, rgba(0,228,118,0.03), transparent);
+          background: linear-gradient(90deg, transparent, var(--color-primary-subtle), transparent);
           animation: gradientShift 6s ease infinite;
           background-size: 200% 100%;
         }
@@ -556,22 +562,22 @@ export function LandingPage() {
         }
         .lp-stat-item {
           padding: 36px 24px; text-align: center;
-          border-right: 1px solid rgba(255,255,255,0.06);
+          border-right: 1px solid var(--border);
           transition: background 0.3s;
         }
         .lp-stat-item:last-child { border-right: none; }
-        .lp-stat-item:hover { background: rgba(0,228,118,0.03); }
+        .lp-stat-item:hover { background: var(--color-primary-subtle); }
         .lp-stat-val {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 44px; font-weight: 800; letter-spacing: -0.05em;
-          color: #e0e3e5; line-height: 1; margin-bottom: 8px;
+          color: var(--text-primary); line-height: 1; margin-bottom: 8px;
           transition: color 0.3s;
         }
-        .lp-stat-item:hover .lp-stat-val { color: #00e476; }
+        .lp-stat-item:hover .lp-stat-val { color: var(--color-primary); }
         .lp-stat-label {
           font-family: 'JetBrains Mono', monospace;
           font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
-          color: #849584; text-transform: uppercase;
+          color: var(--text-muted); text-transform: uppercase;
         }
 
         /* ── Sections ── */
@@ -579,27 +585,27 @@ export function LandingPage() {
         .lp-section-tag {
           font-family: 'JetBrains Mono', monospace;
           font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
-          color: #00e476; text-transform: uppercase; margin-bottom: 14px;
+          color: var(--color-primary); text-transform: uppercase; margin-bottom: 14px;
         }
         .lp-section-title {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: clamp(30px, 3.5vw, 48px);
           font-weight: 700; letter-spacing: -0.03em;
-          line-height: 1.15; color: #e0e3e5; margin-bottom: 16px;
+          line-height: 1.15; color: var(--text-primary); margin-bottom: 16px;
         }
-        .lp-section-title em { font-style: normal; color: #00e476; }
-        .lp-section-sub { font-size: 16px; color: #849584; line-height: 1.7; max-width: 500px; }
+        .lp-section-title em { font-style: normal; color: var(--color-primary); }
+        .lp-section-sub { font-size: 16px; color: var(--text-muted); line-height: 1.7; max-width: 500px; }
 
         /* ── Bento grid ── */
         .lp-bento-grid {
           display: grid; grid-template-columns: repeat(3, 1fr);
-          gap: 1px; background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.05);
+          gap: 1px; background: var(--border);
+          border: 1px solid var(--border);
           border-radius: 20px; overflow: hidden;
           margin-top: 56px;
         }
         .lp-bento-card {
-          background: #1d2022; padding: 32px 28px;
+          background: var(--bg-surface); padding: 32px 28px;
           transition: background 0.3s ease, transform 0.3s ease;
           position: relative; overflow: hidden; cursor: default;
         }
@@ -613,7 +619,7 @@ export function LandingPage() {
           content: '';
           position: absolute; top: -50%; left: -50%;
           width: 200%; height: 200%;
-          background: radial-gradient(circle at 50% 50%, rgba(0,228,118,0.04) 0%, transparent 60%);
+          background: radial-gradient(circle at 50% 50%, var(--color-primary-subtle) 0%, transparent 60%);
           opacity: 0; transition: opacity 0.4s ease;
           pointer-events: none;
         }
@@ -640,18 +646,18 @@ export function LandingPage() {
         .lp-bento-title {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 17px; font-weight: 700;
-          color: #e0e3e5; margin-bottom: 10px; letter-spacing: -0.02em;
+          color: var(--text-primary); margin-bottom: 10px; letter-spacing: -0.02em;
           transition: color 0.2s;
         }
-        .lp-bento-card:hover .lp-bento-title { color: #f0f3f5; }
-        .lp-bento-desc { font-size: 14px; color: #849584; line-height: 1.7; }
+        .lp-bento-card:hover .lp-bento-title { color: var(--color-primary); }
+        .lp-bento-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
 
         /* ── AI Steps ── */
         .lp-ai-section {
           padding: 96px 32px; position: relative; z-index: 1;
-          background: rgba(11,15,16,0.4);
-          border-top: 1px solid rgba(255,255,255,0.04);
-          border-bottom: 1px solid rgba(255,255,255,0.04);
+          background: var(--bg-surface-el);
+          border-top: 1px solid var(--border);
+          border-bottom: 1px solid var(--border);
         }
         .lp-ai-inner { max-width: 1280px; margin: 0 auto; }
         .lp-ai-grid {
@@ -660,17 +666,17 @@ export function LandingPage() {
         }
         .lp-ai-step {
           display: flex; gap: 20px;
-          padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+          padding: 20px 0; border-bottom: 1px solid var(--border);
           transition: background 0.2s;
         }
         .lp-ai-step:last-child { border-bottom: none; }
         .lp-ai-step-num {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 11px; color: #3b4b3d;
+          font-size: 11px; color: var(--text-xmuted);
           letter-spacing: 0.05em; flex-shrink: 0; padding-top: 2px;
           transition: color 0.3s;
         }
-        .lp-ai-step:hover .lp-ai-step-num { color: #849584; }
+        .lp-ai-step:hover .lp-ai-step-num { color: var(--text-muted); }
         .lp-ai-step-tag {
           font-family: 'JetBrains Mono', monospace;
           font-size: 10px; letter-spacing: 0.1em;
@@ -679,11 +685,11 @@ export function LandingPage() {
         .lp-ai-step-title {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 16px; font-weight: 700;
-          color: #e0e3e5; margin-bottom: 8px; letter-spacing: -0.02em;
+          color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.02em;
           transition: color 0.2s;
         }
-        .lp-ai-step:hover .lp-ai-step-title { color: #f0f3f5; }
-        .lp-ai-step-desc { font-size: 14px; color: #849584; line-height: 1.7; }
+        .lp-ai-step:hover .lp-ai-step-title { color: var(--color-primary); }
+        .lp-ai-step-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
 
         /* ── CTA ── */
         .lp-cta-section {
@@ -697,30 +703,30 @@ export function LandingPage() {
         .lp-cta-card {
           max-width: 680px; margin: 0 auto;
           padding: 64px 48px;
-          background: rgba(29,32,34,0.85);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--glass-bg);
+          border: 1px solid var(--border);
           border-radius: 24px;
           backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
           position: relative; z-index: 1;
           transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
         }
         .lp-cta-card:hover {
-          border-color: rgba(0,228,118,0.25);
-          box-shadow: 0 0 60px rgba(0,228,118,0.08);
+          border-color: var(--color-primary-border, var(--border-mint));
+          box-shadow: 0 0 60px var(--color-primary-subtle);
           transform: translateY(-4px);
         }
         .lp-cta-title {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: clamp(28px, 4vw, 44px);
           font-weight: 800; letter-spacing: -0.04em;
-          color: #e0e3e5; margin-bottom: 16px; line-height: 1.15;
+          color: var(--text-primary); margin-bottom: 16px; line-height: 1.15;
         }
-        .lp-cta-title em { font-style: normal; color: #00e476; }
+        .lp-cta-title em { font-style: normal; color: var(--color-primary); }
 
         /* ── Footer ── */
         .lp-footer {
           padding: 32px 32px;
-          border-top: 1px solid rgba(255,255,255,0.05);
+          border-top: 1px solid var(--border);
           position: relative; z-index: 1;
         }
         .lp-footer-inner {
@@ -729,11 +735,11 @@ export function LandingPage() {
           flex-wrap: wrap; gap: 16px;
         }
         .lp-footer-link {
-          font-size: 12px; color: #849584; text-decoration: none;
+          font-size: 12px; color: var(--text-muted); text-decoration: none;
           transition: color 0.2s, transform 0.2s;
           display: inline-block;
         }
-        .lp-footer-link:hover { color: #00e476; transform: translateY(-1px); }
+        .lp-footer-link:hover { color: var(--color-primary); transform: translateY(-1px); }
 
         /* ── Responsive ── */
         @media (max-width: 900px) {
@@ -753,19 +759,7 @@ export function LandingPage() {
       `}</style>
 
       <div className="lp-root">
-        {/* 3D WebGL Particles Background Pattern */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-          <Particles
-            particleColors={["#00e476", "#b1ccc3", "#e5c364", "#00ff85"]}
-            particleCount={180}
-            particleSpread={12}
-            speed={0.08}
-            particleBaseSize={100}
-            moveParticlesOnHover={true}
-            alphaParticles={true}
-            disableRotation={false}
-          />
-        </div>
+        {/* Global background is now handled in App.jsx */}
 
         {/* ── Particle background ── */}
         <div className="lp-particle-bg" aria-hidden="true">
@@ -781,8 +775,8 @@ export function LandingPage() {
               '--drift': `${(i % 2 === 0 ? 1 : -1) * (10 + i * 4)}px`,
               width: i % 4 === 0 ? '3px' : '2px',
               height: i % 4 === 0 ? '3px' : '2px',
-              background: i % 5 === 0 ? '#e5c364' : i % 3 === 0 ? '#b1ccc3' : '#00e476',
-              boxShadow: i % 3 === 0 ? '0 0 6px #00e476' : 'none',
+              background: i % 5 === 0 ? '#e5c364' : i % 3 === 0 ? '#b1ccc3' : 'var(--color-primary)',
+              boxShadow: i % 3 === 0 ? '0 0 6px var(--color-primary)' : 'none',
             }} />
           ))}
         </div>
@@ -791,14 +785,37 @@ export function LandingPage() {
         <nav className={`lp-nav ${scrolled ? 'scrolled' : ''}`}>
           <div className="lp-nav-inner">
             <Link to="/" className="lp-logo" style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-              <span style={{ fontSize: '24px', fontWeight: 800, color: '#e0e3e5', letterSpacing: '-0.03em' }}>DocuFlow</span>
+              <span style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>DocuFlow</span>
               <span className="lp-logo-dot" style={{ width: '6px', height: '6px', alignSelf: 'flex-end', marginBottom: '8px' }}></span>
-              <span style={{ fontSize: '11px', fontWeight: 700, color: '#00e476', letterSpacing: '0.1em', alignSelf: 'flex-start', marginTop: '2px', marginLeft: '2px' }}>AI</span>
+              <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-primary)', letterSpacing: '0.1em', alignSelf: 'flex-start', marginTop: '2px', marginLeft: '2px' }}>AI</span>
             </Link>
             <div className="lp-nav-links">
               <a href="#features" className="lp-nav-link">Features</a>
               <a href="#how-it-works" className="lp-nav-link">How the AI Thinks</a>
+              <Link to="/about" className="lp-nav-link">About</Link>
               <Link to="/auth/login" className="lp-nav-link">Sign In</Link>
+              <button 
+                onClick={toggleTheme} 
+                className="lp-theme-btn" 
+                title="Toggle Theme"
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  width: 32, 
+                  height: 32, 
+                  borderRadius: 8, 
+                  background: 'transparent', 
+                  border: '1px solid var(--border)', 
+                  color: 'var(--text-muted)', 
+                  cursor: 'pointer', 
+                  transition: 'all 0.2s',
+                  marginLeft: 8,
+                  marginRight: 8
+                }}
+              >
+                {theme === 'dark' ? <MoonStar size={14} /> : <SunMedium size={14} />}
+              </button>
               <Link to="/auth/register" className="lp-cta-nav">
                 Get Started <ArrowRight size={13} className="btn-arrow" />
               </Link>
@@ -847,27 +864,27 @@ export function LandingPage() {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 13, fontWeight: 700, color: '#e0e3e5', letterSpacing: '-0.02em' }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
                     AI Processing
                   </span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#00e476', letterSpacing: '0.05em', animation: 'neonFlicker 5s ease-in-out infinite' }}>● LIVE</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: 'var(--color-primary)', letterSpacing: '0.05em', animation: 'neonFlicker 5s ease-in-out infinite' }}>● LIVE</span>
                 </div>
                 <LiveTerminal />
                 <div className="lp-doc-mini">
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
                     <div>
-                      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#3b4b3d', marginBottom: 4 }}>INVOICE / INV-2024-0847</div>
-                      <div style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 14, fontWeight: 700, color: '#e0e3e5' }}>Acme Technologies</div>
+                      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: 'var(--text-xmuted)', marginBottom: 4 }}>INVOICE / INV-2024-0847</div>
+                      <div style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Acme Technologies</div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#3b4b3d', marginBottom: 4 }}>TOTAL</div>
-                      <div style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 18, fontWeight: 800, color: '#00e476', animation: 'mintPulse 3s ease-in-out infinite' }}>₹53,100</div>
+                      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: 'var(--text-xmuted)', marginBottom: 4 }}>TOTAL</div>
+                      <div style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 18, fontWeight: 800, color: 'var(--color-primary)', animation: 'mintPulse 3s ease-in-out infinite' }}>₹53,100</div>
                     </div>
                   </div>
-                  <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 12 }} />
+                  <div style={{ height: 1, background: 'var(--border)', marginBottom: 12 }} />
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e476', boxShadow: '0 0 8px #00e476', animation: 'mintPulse 2s ease-in-out infinite' }} />
-                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#00e476', letterSpacing: '0.04em' }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--color-primary)', boxShadow: '0 0 8px var(--color-primary)', animation: 'mintPulse 2s ease-in-out infinite' }} />
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: 'var(--color-primary)', letterSpacing: '0.04em' }}>
                       CONFIDENCE: 97.4% — QR VERIFIED
                     </span>
                   </div>
@@ -876,7 +893,7 @@ export function LandingPage() {
               {/* Ambient glow behind card */}
               <div style={{
                 position: 'absolute', bottom: -40, left: '10%', right: '10%',
-                height: 80, background: 'rgba(0,228,118,0.08)',
+                height: 80, background: 'var(--color-primary-subtle)',
                 filter: 'blur(40px)', borderRadius: '50%', pointerEvents: 'none',
                 animation: 'orbPulse 4s ease-in-out infinite',
               }} />
@@ -977,36 +994,36 @@ export function LandingPage() {
                 transition: 'opacity 0.7s ease 0.4s, transform 0.7s cubic-bezier(0.22,1,0.36,1) 0.4s',
               }}>
                 <div style={{
-                  background: '#0b0f10',
-                  border: '1px solid rgba(0,228,118,0.15)',
+                  background: 'var(--bg-deep)',
+                  border: '1px solid var(--color-success-bg)',
                   borderRadius: 16, overflow: 'hidden',
                   transition: 'border-color 0.3s ease',
                 }}
                   onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(0,228,118,0.35)'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(0,228,118,0.15)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-success-bg)'}
                 >
-                  <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#3b4b3d', letterSpacing: '0.06em' }}>● AI_REAL_TIME_PROCESSING</span>
+                  <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: 'var(--text-xmuted)', letterSpacing: '0.06em' }}>● AI_REAL_TIME_PROCESSING</span>
                   </div>
                   <div style={{ padding: '20px' }}>
                     {[
-                      { label: 'PARSING', val: 'INVOICE_STANDARD_IND', color: '#00e476' },
-                      { label: 'ENTITY', val: 'ACME_TECHNOLOGIES_LTD', color: '#00e476' },
+                      { label: 'PARSING', val: 'INVOICE_STANDARD_IND', color: 'var(--color-primary)' },
+                      { label: 'ENTITY', val: 'ACME_TECHNOLOGIES_LTD', color: 'var(--color-primary)' },
                       { label: 'COMPLIANCE', val: 'GST_ACT_2017 ✓', color: '#b1ccc3' },
-                      { label: 'CONFIDENCE', val: '97.4%', color: '#00ff85' },
+                      { label: 'CONFIDENCE', val: '97.4%', color: 'var(--color-primary-hover)' },
                       { label: 'GENERATION_LATENCY', val: '2.3s', color: '#e5c364' },
                     ].map((row, ri) => (
                       <div
                         key={row.label}
                         style={{
                           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                          padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+                          padding: '8px 0', borderBottom: '1px solid var(--border)',
                           fontFamily: "'JetBrains Mono',monospace", fontSize: 11,
                           opacity: stepsVisible ? 1 : 0,
                           transition: `opacity 0.4s ease ${0.6 + ri * 0.1}s`,
                         }}
                       >
-                        <span style={{ color: '#3b4b3d', letterSpacing: '0.04em' }}>{row.label}</span>
+                        <span style={{ color: 'var(--text-xmuted)', letterSpacing: '0.04em' }}>{row.label}</span>
                         <span style={{ color: row.color, letterSpacing: '0.02em' }}>{row.val}</span>
                       </div>
                     ))}
@@ -1031,19 +1048,19 @@ export function LandingPage() {
           >
             <div style={{
               width: 52, height: 52, borderRadius: 14,
-              background: 'rgba(0,228,118,0.12)',
-              border: '1px solid rgba(0,228,118,0.25)',
+              background: 'var(--color-success-bg)',
+              border: '1px solid var(--color-primary-border, var(--border-mint))',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               margin: '0 auto 24px',
               animation: 'float 4s ease-in-out infinite',
             }}>
-              <Wand2 size={22} style={{ color: '#00e476' }} />
+              <Wand2 size={22} style={{ color: 'var(--color-primary)' }} />
             </div>
 
             <h2 className="lp-cta-title">
               Ready to <em>evolve</em><br />your workflow?
             </h2>
-            <p style={{ fontSize: 16, color: '#849584', marginBottom: 40, lineHeight: 1.7 }}>
+            <p style={{ fontSize: 16, color: 'var(--text-muted)', marginBottom: 40, lineHeight: 1.7 }}>
               Join over 2,000+ teams already using DocuFlow to generate documents 3× faster with AI.
             </p>
 
@@ -1060,12 +1077,12 @@ export function LandingPage() {
                   key={t}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 6,
-                    fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: '#849584', letterSpacing: '0.04em',
+                    fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.04em',
                     opacity: ctaVisible ? 1 : 0,
                     transition: `opacity 0.5s ease ${0.3 + i * 0.1}s`,
                   }}
                 >
-                  <CheckCircle size={12} style={{ color: '#00e476' }} />
+                  <CheckCircle size={12} style={{ color: 'var(--color-primary)' }} />
                   {t.toUpperCase()}
                 </div>
               ))}
@@ -1078,7 +1095,7 @@ export function LandingPage() {
           <div className="lp-footer-inner">
             <div>
               <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center' }}>
-                <div style={{ width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,228,118,0.15)', boxShadow: '0 0 15px rgba(0,228,118,0.08)' }}>
+                <div style={{ width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--color-success-bg)', boxShadow: '0 0 15px var(--color-primary-subtle)' }}>
                   <MetallicPaint
                     imageSrc="/logo-black.png"
                     seed={42}
@@ -1100,17 +1117,23 @@ export function LandingPage() {
                     contour={0.4}
                     lightColor="#ffffff"
                     darkColor="#031405"
-                    tintColor="#00e476"
+                    tintColor="var(--color-primary)"
                   />
                 </div>
               </div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: '#3b4b3d', letterSpacing: '0.04em' }}>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: 'var(--text-xmuted)', letterSpacing: '0.04em' }}>
                 © {new Date().getFullYear()} DocuFlow. AI Secure Document Intelligence.
               </div>
             </div>
             <div style={{ display: 'flex', gap: 24 }}>
-              {['FEATURES', 'PRIVACY POLICY', 'TERMS OF SERVICE', 'APP LOGIN'].map(l => (
-                <a key={l} href="#" className="lp-footer-link">{l}</a>
+              {['FEATURES', 'ABOUT US', 'PRIVACY POLICY', 'TERMS OF SERVICE', 'APP LOGIN'].map(l => (
+                <Link 
+                  key={l} 
+                  to={l === 'ABOUT US' ? "/about" : l === 'APP LOGIN' ? "/auth/login" : "#"} 
+                  className="lp-footer-link"
+                >
+                  {l}
+                </Link>
               ))}
             </div>
           </div>

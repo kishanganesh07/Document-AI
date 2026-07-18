@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { AppNavbar } from './AppNavbar';
 import { CommandPalette } from '@/components/global/CommandPalette';
 import { ToastContainer } from '@/components/ui/Toast';
@@ -84,33 +84,19 @@ export function AmbientParticles() {
 
 /* ── Page transition wrapper ── */
 function PageTransition({ children, locationKey }) {
-  const [displayKey, setDisplayKey] = useState(locationKey);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  useEffect(() => {
-    if (locationKey !== displayKey) {
-      setIsAnimating(true);
-      const t = setTimeout(() => {
-        setDisplayKey(locationKey);
-        setIsAnimating(false);
-      }, 120);
-      return () => clearTimeout(t);
-    }
-  }, [locationKey]);
-
   return (
-    <div
-      key={displayKey}
-      style={{
-        minHeight: '100%',
-        animation: 'pageEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards',
-        opacity: isAnimating ? 0 : 1,
-        transform: isAnimating ? 'translateY(8px)' : 'translateY(0)',
-        transition: 'opacity 0.12s ease, transform 0.12s ease',
-      }}
-    >
-      {children}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={locationKey}
+        initial={{ opacity: 0, y: 12, filter: 'blur(4px)' }}
+        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        exit={{ opacity: 0, y: -12, filter: 'blur(4px)' }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        style={{ minHeight: '100%' }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
@@ -121,24 +107,12 @@ export function AppShell() {
     <div style={{
       display: 'flex', flexDirection: 'column',
       height: '100vh', overflow: 'hidden',
-      background: 'var(--bg-app)',
+      background: 'transparent',
       position: 'relative',
     }}>
 
 
-      {/* 3D WebGL Particles Background Pattern */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-        <Particles
-          particleColors={["#00e476", "#b1ccc3", "#e5c364", "#00ff85"]}
-          particleCount={180}
-          particleSpread={12}
-          speed={0.08}
-          particleBaseSize={100}
-          moveParticlesOnHover={true}
-          alphaParticles={true}
-          disableRotation={false}
-        />
-      </div>
+      {/* Global background is now handled in App.jsx */}
 
       {/* Navbar is above the particle layer */}
       <div style={{ position: 'relative', zIndex: 50 }}>

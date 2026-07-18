@@ -9,7 +9,10 @@ import { formatDate } from '@/lib/utils';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { useAuthStore } from '@/stores/auth.store';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
+import { motion } from 'framer-motion';
+
+const HeroScene = lazy(() => import('@/components/ui/HeroScene'));
 
 /* ─────────────────────────────────────────────
    Hooks
@@ -503,31 +506,54 @@ export function HomePage() {
 
       <div className="me-dashboard">
         {/* ── Hero row ── */}
-        <div className="me-hero-row">
-          <div>
-            <h1 className="me-greeting">
-              {greeting()}, <em>{user?.name?.split(' ')[0] ?? 'there'}</em>
-            </h1>
-            <p className="me-sub">
-              WORKSPACE_OVERVIEW — {new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
-            </p>
+        <div className="me-hero-row" style={{ position: 'relative', overflow: 'hidden', padding: '32px', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '20px', minHeight: '180px' }}>
+          
+          <div style={{ position: 'absolute', right: 0, top: '-50%', width: '400px', height: '400px', pointerEvents: 'auto', zIndex: 0 }}>
+            <Suspense fallback={null}>
+              <HeroScene />
+            </Suspense>
           </div>
-          <button className="me-gen-btn" onClick={() => navigate('/generate')}>
-            <Sparkles size={14} className="btn-icon" />
-            Generate Document
-          </button>
+
+          <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+            <div>
+              <h1 className="me-greeting">
+                {greeting()}, <em>{user?.name?.split(' ')[0] ?? 'there'}</em>
+              </h1>
+              <p className="me-sub" style={{ marginBottom: '16px' }}>
+                WORKSPACE_OVERVIEW — {new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
+              </p>
+            </div>
+            <motion.button 
+              className="me-gen-btn" 
+              onClick={() => navigate('/generate')}
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Sparkles size={14} className="btn-icon" />
+              Generate Document
+            </motion.button>
+          </div>
         </div>
 
         {/* ── Metric cards (count-up) ── */}
-        <div className="me-metrics">
+        <motion.div 
+          className="me-metrics"
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1 }
+            }
+          }}
+        >
           {METRICS.map((m, i) => (
-            <MetricCard
-              key={m.label}
-              {...m}
-              delay={0.05 + i * 0.07}
-            />
+            <motion.div key={m.label} variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
+              <MetricCard {...m} delay={0} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* ── Bento grid ── */}
         <div className="me-bento">

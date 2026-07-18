@@ -7,7 +7,10 @@ import {
 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui.store';
 import { useAuthStore } from '@/stores/auth.store';
+import { useNotificationStore } from '@/stores/notification.store';
+import { NotificationDropdown } from './NotificationDropdown';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 import MetallicPaint from '@/components/ui/MetallicPaint';
 
 
@@ -22,9 +25,13 @@ const NAV_LINKS = [
 export function AppNavbar() {
   const { theme, toggleTheme, openCommandPalette } = useUIStore();
   const { user, logout } = useAuthStore();
+  const { notifications } = useNotificationStore();
   const navigate = useNavigate();
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
     <>
@@ -43,26 +50,19 @@ export function AppNavbar() {
           flex-shrink: 0;
         }
         .me-logo {
-          display: flex; align-items: center; gap: 10px;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 16px; font-weight: 800; letter-spacing: -0.04em;
-          color: var(--text-primary); text-decoration: none;
-          flex-shrink: 0; white-space: nowrap;
+          display: flex; align-items: center; gap: 3px;
+          text-decoration: none;
           transition: opacity 0.2s;
         }
         .me-logo:hover {
           opacity: 0.8;
         }
         .me-logo-dot {
-          width: 8px; height: 8px; border-radius: 50%;
+          width: 6px; height: 6px; border-radius: 50%;
           background: var(--color-primary);
           box-shadow: 0 0 10px var(--color-primary);
-          flex-shrink: 0;
-        }
-        .me-logo-sub {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 8px; font-weight: 600; color: var(--text-xmuted);
-          letter-spacing: 0.12em; text-transform: uppercase;
+          align-self: flex-end;
+          margin-bottom: 8px;
         }
         .logo-shine {
           position: absolute;
@@ -222,9 +222,10 @@ export function AppNavbar() {
 
       <header className="me-navbar">
         {/* Logo */}
-        <Link to="/dashboard" className="me-logo">
-          DocFlow<span className="me-logo-dot"></span>
-          <span className="me-logo-sub">AI</span>
+        <Link to="/" className="me-logo">
+          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>DocuFlow</span>
+          <span className="me-logo-dot"></span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', fontWeight: 700, color: 'var(--color-primary)', letterSpacing: '0.1em', alignSelf: 'flex-start', marginTop: '2px', marginLeft: '2px' }}>AI</span>
         </Link>
 
         {/* Floating Capsule containing Navigation & Actions */}
@@ -232,14 +233,15 @@ export function AppNavbar() {
           {/* Nav links */}
           <nav className="me-nav-links">
             {NAV_LINKS.map(({ to, label, end }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={end}
-                className={({ isActive }) => cn('me-nav-item', isActive && 'active')}
-              >
-                {label}
-              </NavLink>
+              <motion.div key={to} whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.95 }}>
+                <NavLink
+                  to={to}
+                  end={end}
+                  className={({ isActive }) => cn('me-nav-item', isActive && 'active')}
+                >
+                  {label}
+                </NavLink>
+              </motion.div>
             ))}
           </nav>
 
@@ -256,24 +258,48 @@ export function AppNavbar() {
             </button>
 
             {/* Notifications */}
-            <button className="me-icon-btn" title="Notifications" style={{ position: 'relative' }}>
-              <Bell size={14} />
-              <span style={{
-                position: 'absolute', top: 6, right: 6,
-                width: 5, height: 5, borderRadius: '50%',
-                background: 'var(--color-primary)', boxShadow: '0 0 6px var(--color-primary)',
-              }} />
-            </button>
+            <div style={{ position: 'relative' }}>
+              <button 
+                className="me-icon-btn" 
+                onClick={() => setNotificationsOpen(!notificationsOpen)} 
+                title="Notifications" 
+                style={{ position: 'relative' }}
+              >
+                <Bell size={14} />
+                {unreadCount > 0 && (
+                  <span style={{
+                    position: 'absolute', top: 3, right: 3,
+                    minWidth: 12, height: 12, padding: '0 2px',
+                    borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 8, fontWeight: 800,
+                    background: 'var(--color-primary)', color: '#001a0b',
+                    boxShadow: '0 0 6px var(--color-primary)',
+                  }}>
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              <NotificationDropdown 
+                isOpen={notificationsOpen} 
+                onClose={() => setNotificationsOpen(false)} 
+              />
+            </div>
           </div>
 
           {/* User Profile / Account Button OR Login/Sign up */}
           <div style={{ position: 'relative', display: 'flex', gap: '8px' }}>
             {user ? (
               <>
-                <button className="me-user-btn" onClick={() => setProfileOpen(p => !p)}>
-                  <span>{user.name || 'Account'}</span>
-                  <ChevronDown size={10} style={{ opacity: 0.8 }} />
-                </button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <button
+                    className="me-user-btn"
+                    onClick={() => setProfileOpen(!profileOpen)}
+                  >
+                    <span>{user.name ? user.name.split(' ')[0].slice(0,2) : 'US'}</span>
+                    <ChevronDown size={10} style={{ opacity: 0.8 }} />
+                  </button>
+                </motion.div>
 
                 {profileOpen && (
                   <>

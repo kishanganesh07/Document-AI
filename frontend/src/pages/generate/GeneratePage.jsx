@@ -263,105 +263,148 @@ export function GeneratePage() {
   }
 
   return (
-    <div className="flex h-full overflow-hidden">
-      {/* ===== MOBILE TABS ===== */}
-      <div className="md:hidden flex flex-col w-full">
-        <div className="flex border-b border-[var(--border)] bg-[var(--bg-surface)]">
-          {['chat', 'fields', 'preview'].map((tab) =>
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={cn(
-              'flex-1 py-3 text-xs font-medium capitalize transition-colors',
-              activeTab === tab ?
-              'text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]' :
-              'text-[var(--text-muted)]'
-            )}>
-            
-              {tab}
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', background: 'var(--bg-base)' }}>
+
+      {/* ── Top status bar ── */}
+      {store.detectedType && (
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '8px 20px', borderBottom: '1px solid var(--border)',
+          background: 'var(--bg-surface)', flexShrink: 0,
+          gap: 12,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{
+              padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700,
+              background: 'var(--color-primary-subtle)', color: 'var(--color-primary)',
+              border: '1px solid rgba(0,228,118,0.25)',
+            }}>
+              {DOCUMENT_TYPE_LABELS[store.detectedType] || store.detectedType}
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 56, height: 4, background: 'var(--border)', borderRadius: 2, overflow: 'hidden' }}>
+                <div style={{ height: '100%', background: 'var(--color-primary)', width: `${store.confidence * 100}%`, transition: 'width 0.4s ease', borderRadius: 2 }} />
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-primary)' }}>{Math.round(store.confidence * 100)}% confidence</span>
+            </div>
+            {errorCount > 0 && (
+              <span style={{ fontSize: 11, color: 'var(--color-error)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <AlertCircle size={11} /> {errorCount} error{errorCount !== 1 ? 's' : ''}
+              </span>
+            )}
+            {errorCount === 0 && warningCount === 0 && (
+              <span style={{ fontSize: 11, color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <CheckCircle2 size={11} /> All fields valid
+              </span>
+            )}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {store.isDirty && <span style={{ fontSize: 10, color: 'var(--color-warning)' }}>⚠ Unsaved changes</span>}
+            <button
+              onClick={handleSaveDraft}
+              style={{
+                padding: '5px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+                background: 'var(--bg-hover)', color: 'var(--text-secondary)',
+                border: '1px solid var(--border)', cursor: 'pointer',
+              }}>
+              Save Draft
             </button>
-          )}
+            <button
+              onClick={handleGeneratePdf}
+              disabled={errorCount > 0 || generating}
+              style={{
+                padding: '5px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700,
+                background: errorCount > 0 ? 'var(--bg-hover)' : 'var(--color-primary)',
+                color: errorCount > 0 ? 'var(--text-muted)' : '#001a0b',
+                border: 'none', cursor: errorCount > 0 ? 'not-allowed' : 'pointer',
+                display: 'flex', alignItems: 'center', gap: 6,
+              }}>
+              {generating ? <Loader2 size={13} className="animate-spin" /> : <FileDown size={13} />}
+              Generate PDF
+            </button>
+          </div>
         </div>
-        <div className="flex-1 overflow-hidden">
-          {activeTab === 'chat' && <ChatPanel onSend={handleUserMessage} onQuickAction={() => {}} />}
-          {activeTab === 'fields' && store.detectedType &&
-          <div className="h-full overflow-y-auto p-4">
+      )}
+
+      {/* ── 3-column body ── */}
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+
+        {/* Column 1: AI Chat (narrow, fixed width) */}
+        <div style={{
+          width: 320, flexShrink: 0, display: 'flex', flexDirection: 'column',
+          borderRight: '1px solid var(--border)', background: 'var(--bg-base)',
+          overflow: 'hidden',
+        }}>
+          <ChatPanel onSend={handleUserMessage} onQuickAction={() => {}} />
+        </div>
+
+        {/* Column 2: Document Form (scrollable) */}
+        <div style={{
+          flex: 1, display: 'flex', flexDirection: 'column',
+          borderRight: '1px solid var(--border)', overflow: 'hidden',
+          background: 'var(--bg-surface)',
+        }}>
+          {/* Panel header */}
+          <div style={{
+            padding: '12px 20px', borderBottom: '1px solid var(--border)',
+            background: 'var(--bg-surface)', flexShrink: 0,
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
+            <div style={{
+              width: 24, height: 24, borderRadius: 8,
+              background: 'var(--bg-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <ScrollText size={12} style={{ color: 'var(--text-muted)' }} />
+            </div>
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>Document Fields</span>
+            {store.detectedType && (
+              <span style={{ fontSize: 10, color: 'var(--text-xmuted)', marginLeft: 'auto' }}>
+                {Object.keys(store.documentData).length} fields
+              </span>
+            )}
+          </div>
+
+          {/* Scrollable form area */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+            {/* AI Suggestions */}
+            {activeSuggestions.length > 0 && (
+              <div style={{ marginBottom: 20, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Wand2 size={12} style={{ color: 'var(--color-ai)' }} /> AI Suggestions
+                </p>
+                {activeSuggestions.map((s) => (
+                  <SuggestionCard key={s.id} suggestion={s} onApply={store.applySuggestion} onDismiss={store.dismissSuggestion} />
+                ))}
+              </div>
+            )}
+
+            {/* Dynamic Fields */}
+            {store.detectedType ? (
               <DynamicFieldRenderer
-              documentType={store.detectedType}
-              documentData={store.documentData}
-              validationResults={store.validationResults}
-              aiGeneratedFields={aiGeneratedFields}
-              onChange={handleFieldChange} />
-            
-            </div>
-          }
-          {activeTab === 'preview' &&
-          <DocumentPreview html={store.previewHtml} isLoading={previewLoading} error={previewError} />
-          }
-        </div>
-      </div>
-
-      {/* ===== DESKTOP 2-PANEL (Linear Workflow) ===== */}
-      <div className="hidden md:flex flex-1 overflow-hidden">
-        {/* Panel 1: Workspace & AI (50%) */}
-        <div className="w-1/2 min-w-[400px] flex flex-col border-r border-[var(--border)] overflow-hidden bg-[var(--bg-base)] relative z-10 shadow-[var(--shadow-sm)]">
-          <WorkspacePanel
-            errorCount={errorCount}
-            warningCount={warningCount}
-            activeSuggestions={activeSuggestions.length}
-            onSaveDraft={handleSaveDraft}
-            onGenerate={handleGeneratePdf}
-            generating={generating}
-            isDirty={store.isDirty}>
-            
-            {/* Step 1: AI Prompt & Chat */}
-            <div className="mb-6 pb-6 border-b border-[var(--border)]">
-              <ChatPanel onSend={handleUserMessage} onQuickAction={() => {}} />
-            </div>
-
-            {/* Step 2: AI Suggestions */}
-            {activeSuggestions.length > 0 &&
-              <div className="space-y-3 mb-6 pb-6 border-b border-[var(--border)]">
-                <p className="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider flex items-center gap-1.5">
-                  <Wand2 size={13} className="text-[var(--color-ai)]" />
-                  AI Suggestions
-                </p>
-                {activeSuggestions.map((s) =>
-                  <SuggestionCard
-                    key={s.id}
-                    suggestion={s}
-                    onApply={store.applySuggestion}
-                    onDismiss={store.dismissSuggestion} />
-                )}
+                documentType={store.detectedType}
+                documentData={store.documentData}
+                validationResults={store.validationResults}
+                aiGeneratedFields={aiGeneratedFields}
+                onChange={handleFieldChange}
+              />
+            ) : (
+              <div style={{ textAlign: 'center', padding: '48px 20px', color: 'var(--text-xmuted)', fontSize: 13 }}>
+                <ScrollText size={32} style={{ margin: '0 auto 12px', opacity: 0.3 }} />
+                <p>Start a conversation in the chat to detect a document type.</p>
               </div>
-            }
+            )}
 
-            {/* Step 3: Editable Form */}
-            {store.detectedType &&
-              <div className="space-y-4">
-                <p className="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider">
-                  Document Content
-                </p>
-                <DynamicFieldRenderer
-                  documentType={store.detectedType}
-                  documentData={store.documentData}
-                  validationResults={store.validationResults}
-                  aiGeneratedFields={aiGeneratedFields}
-                  onChange={handleFieldChange} />
-              </div>
-            }
-
-            {/* Step 4: Validation Summary */}
-            {store.validationResults.length > 0 &&
-              <div className="mt-6">
+            {/* Validation Summary */}
+            {store.validationResults.length > 0 && (
+              <div style={{ marginTop: 20 }}>
                 <ValidationSummary results={store.validationResults} />
               </div>
-            }
-          </WorkspacePanel>
+            )}
+          </div>
         </div>
 
-        {/* Panel 2: Live Preview (50%) */}
-        <div className="w-1/2 flex flex-col overflow-hidden bg-[var(--bg-surface-el)]">
+        {/* Column 3: Live Preview */}
+        <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-surface-el)' }}>
           <DocumentPreview
             html={store.previewHtml}
             isLoading={previewLoading}
@@ -372,9 +415,7 @@ export function GeneratePage() {
                 try {
                   const html = await generateDocumentPreviewHtml(store.detectedType, store.documentData);
                   store.setPreviewHtml(html);
-                } finally {
-                  setPreviewLoading(false);
-                }
+                } finally { setPreviewLoading(false); }
               }
             }}
             onDownload={async () => {
@@ -387,42 +428,54 @@ export function GeneratePage() {
                   error('Download failed', 'Could not generate PDF. Please try again.');
                 }
               }
-            }} />
-          
-          {/* Bottom actions */}
-          <div className="border-t border-[var(--border)] bg-[var(--bg-surface)] px-6 py-4 space-y-4">
-            <ReadinessIndicator errorCount={errorCount} warningCount={warningCount} />
-            <div className="flex gap-3">
-              <Button
-                variant="secondary"
-                size="md"
-                icon={<CloudUpload size={16} />}
-                onClick={handleSaveDraft}
-                className="flex-1">
-                Save Draft
-              </Button>
-              <Button
-                variant="primary"
-                size="md"
-                icon={generating ? <Loader2 size={16} className="animate-spin" /> : <FileDown size={16} />}
-                onClick={handleGeneratePdf}
-                loading={generating}
-                disabled={errorCount > 0}
-                className="flex-1">
-                Generate PDF
-              </Button>
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Mobile Tabs */}
+      <div className="md:hidden flex flex-col w-full h-full overflow-hidden">
+        <div className="flex border-b border-[var(--border)] bg-[var(--bg-surface)] flex-shrink-0">
+          {['chat', 'fields', 'preview'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={cn(
+                'flex-1 py-3 text-xs font-medium capitalize transition-colors',
+                activeTab === tab ?
+                'text-[var(--color-primary)] border-b-2 border-[var(--color-primary)]' :
+                'text-[var(--text-muted)]'
+              )}>
+              {tab}
+            </button>
+          ))}
+        </div>
+        <div className="flex-1 overflow-hidden">
+          {activeTab === 'chat' && <ChatPanel onSend={handleUserMessage} onQuickAction={() => {}} />}
+          {activeTab === 'fields' && store.detectedType && (
+            <div className="h-full overflow-y-auto p-4">
+              <DynamicFieldRenderer
+                documentType={store.detectedType}
+                documentData={store.documentData}
+                validationResults={store.validationResults}
+                aiGeneratedFields={aiGeneratedFields}
+                onChange={handleFieldChange}
+              />
             </div>
-          </div>
+          )}
+          {activeTab === 'preview' && (
+            <DocumentPreview html={store.previewHtml} isLoading={previewLoading} error={previewError} />
+          )}
         </div>
       </div>
 
       <PostGenerationModal
         open={showSuccessModal}
-        onClose={() => {setShowSuccessModal(false);store.resetWorkspace();}}
+        onClose={() => { setShowSuccessModal(false); store.resetWorkspace(); }}
         documentId={generatedDocId}
         documentType={store.detectedType} />
-      
-    </div>);
+    </div>
+  );
 
 }
 

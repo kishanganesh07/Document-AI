@@ -1,8 +1,10 @@
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { AppShell } from '@/components/Navigation/AppShell';
 import { ProtectedRoute, PublicRoute } from './guards';
 
 import { LandingPage } from '@/pages/landing/LandingPage';
+import { AboutPage } from '@/pages/landing/AboutPage';
 import { HomePage } from '@/Home/HomePage';
 import { GeneratePage } from '@/pages/generate/GeneratePage';
 import { DocumentsPage } from '@/pages/documents/DocumentsPage';
@@ -19,7 +21,32 @@ import { WorkflowBuilderPage } from '@/pages/workflows/WorkflowBuilderPage';
 
 
 
+function GlobalLayout() {
+  const location = useLocation();
+  // We use the root path segment as the animation key so it animates when moving
+  // between top-level sections (e.g., Landing -> Auth -> AppShell)
+  const animKey = location.pathname === '/' ? 'landing' : location.pathname.split('/')[1];
+  
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={animKey}
+        initial={{ opacity: 0, filter: 'blur(10px)', scale: 0.98 }}
+        animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
+        exit={{ opacity: 0, filter: 'blur(10px)', scale: 1.02 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%' }}
+      >
+        <Outlet />
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 const router = createBrowserRouter([
+  {
+    element: <GlobalLayout />,
+    children: [
   // Always Public - Verification
   {
     path: '/verify/:verificationId',
@@ -30,6 +57,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <LandingPage />,
+  },
+  {
+    path: '/about',
+    element: <AboutPage />,
   },
 
   // Auth Routes (Only accessible when NOT logged in)
@@ -86,6 +117,8 @@ const router = createBrowserRouter([
       },
     ],
   },
+  ], // Close GlobalLayout children
+  }, // Close GlobalLayout element
 ]);
 
 export function AppRouter() {
