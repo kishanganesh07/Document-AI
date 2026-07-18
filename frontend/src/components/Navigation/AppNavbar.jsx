@@ -266,38 +266,59 @@ export function AppNavbar() {
             </button>
           </div>
 
-          {/* User Profile / Account Button */}
-          <div style={{ position: 'relative' }}>
-            <button className="me-user-btn" onClick={() => setProfileOpen(p => !p)}>
-              <span>{user?.name || 'Account'}</span>
-              <ChevronDown size={10} style={{ opacity: 0.8 }} />
-            </button>
-
-            {profileOpen && (
+          {/* User Profile / Account Button OR Login/Sign up */}
+          <div style={{ position: 'relative', display: 'flex', gap: '8px' }}>
+            {user ? (
               <>
-                <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setProfileOpen(false)} />
-                <div className="me-dropdown">
-                  <div className="me-dropdown-header">
-                    <p style={{
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontSize: 13, fontWeight: 700, color: 'var(--text-primary)',
-                    }}>
-                      {user?.name || 'User'}
-                    </p>
-                    <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--text-muted)', marginTop: 3, letterSpacing: '0.03em' }}>
-                      {user?.email || ''}
-                    </p>
-                  </div>
-                  <div style={{ padding: '6px' }}>
-                    <button className="me-dropdown-item" onClick={() => { navigate('/settings'); setProfileOpen(false); }}>
-                      <SlidersHorizontal size={13} /> Settings
-                    </button>
-                    <div style={{ height: 1, background: 'var(--border)', margin: '4px 0' }} />
-                    <button className="me-dropdown-item danger" onClick={() => { logout(); navigate('/auth/login'); }}>
-                      <LogOut size={13} /> Log out
-                    </button>
-                  </div>
-                </div>
+                <button className="me-user-btn" onClick={() => setProfileOpen(p => !p)}>
+                  <span>{user.name || 'Account'}</span>
+                  <ChevronDown size={10} style={{ opacity: 0.8 }} />
+                </button>
+
+                {profileOpen && (
+                  <>
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setProfileOpen(false)} />
+                    <div className="me-dropdown">
+                      <div className="me-dropdown-header">
+                        <p style={{
+                          fontFamily: "'Plus Jakarta Sans', sans-serif",
+                          fontSize: 13, fontWeight: 700, color: 'var(--text-primary)',
+                        }}>
+                          {user.name || 'User'}
+                        </p>
+                        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--text-muted)', marginTop: 3, letterSpacing: '0.03em' }}>
+                          {user.email || ''}
+                        </p>
+                      </div>
+                      <div style={{ padding: '6px' }}>
+                        <button className="me-dropdown-item" onClick={() => { navigate('/settings'); setProfileOpen(false); }}>
+                          <SlidersHorizontal size={13} /> Settings
+                        </button>
+                        <div style={{ height: 1, background: 'var(--border)', margin: '4px 0' }} />
+                        <button className="me-dropdown-item danger" onClick={() => { logout(); navigate('/auth/login'); }}>
+                          <LogOut size={13} /> Log out
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <button 
+                  className="me-user-btn" 
+                  onClick={() => navigate('/auth/login')}
+                  style={{ background: 'transparent', border: '1px solid transparent', boxShadow: 'none' }}
+                >
+                  Login
+                </button>
+                <button 
+                  className="me-user-btn" 
+                  onClick={() => navigate('/auth/register')}
+                  style={{ background: 'var(--color-primary)', color: '#ffffff', borderColor: 'var(--color-primary)' }}
+                >
+                  Sign up
+                </button>
               </>
             )}
           </div>

@@ -790,32 +790,10 @@ export function LandingPage() {
         {/* ══════ NAVBAR ══════ */}
         <nav className={`lp-nav ${scrolled ? 'scrolled' : ''}`}>
           <div className="lp-nav-inner">
-            <Link to="/" className="lp-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '14px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,228,118,0.15)', boxShadow: '0 0 20px rgba(0,228,118,0.1)' }}>
-                <MetallicPaint
-                  imageSrc="/logo-black.png"
-                  seed={42}
-                  scale={4}
-                  patternSharpness={1.2}
-                  noiseScale={0.3}
-                  speed={0.4}
-                  liquid={0.6}
-                  mouseAnimation={false}
-                  brightness={1.6}
-                  contrast={0.9}
-                  refraction={0.02}
-                  blur={0.008}
-                  chromaticSpread={1.5}
-                  fresnel={0.8}
-                  angle={45}
-                  waveAmplitude={0.8}
-                  distortion={0.3}
-                  contour={0.4}
-                  lightColor="#ffffff"
-                  darkColor="#031405"
-                  tintColor="#00e476"
-                />
-              </div>
+            <Link to="/" className="lp-logo" style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <span style={{ fontSize: '24px', fontWeight: 800, color: '#e0e3e5', letterSpacing: '-0.03em' }}>DocuFlow</span>
+              <span className="lp-logo-dot" style={{ width: '6px', height: '6px', alignSelf: 'flex-end', marginBottom: '8px' }}></span>
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#00e476', letterSpacing: '0.1em', alignSelf: 'flex-start', marginTop: '2px', marginLeft: '2px' }}>AI</span>
             </Link>
             <div className="lp-nav-links">
               <a href="#features" className="lp-nav-link">Features</a>
