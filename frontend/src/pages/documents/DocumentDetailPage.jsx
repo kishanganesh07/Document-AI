@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getDocument } from '@/api/document.api';
+import { getDocument, deleteDocument } from '@/api/document.api';
 import { generateDocumentPreviewHtml } from '@/api/ai.api';
 import { downloadAsPdf } from '@/lib/pdf';
 import { StatusBadge, DocumentTypeBadge } from '@/components/ui/Badge';
@@ -15,8 +15,20 @@ import { useNotificationStore } from '@/stores/notification.store';
 export function DocumentDetailPage() {
   const { documentId } = useParams();
   const navigate = useNavigate();
-  const { success } = useNotificationStore();
+  const { success, error } = useNotificationStore();
   const [html, setHtml] = useState(null);
+
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this document?')) {
+      try {
+        await deleteDocument(documentId);
+        success('Document Deleted', 'The document has been removed.');
+        navigate('/documents');
+      } catch (err) {
+        error('Delete failed', err.message || 'Could not delete the document.');
+      }
+    }
+  };
 
   const { data: document, isLoading, isError } = useQuery({
     queryKey: ['document', documentId],
@@ -60,6 +72,7 @@ export function DocumentDetailPage() {
       success('Download complete', 'Your PDF has been saved.');
     } catch (err) {
       console.error(err);
+      error('Download failed', err.message || 'Could not generate PDF.');
     }
   };
 
@@ -97,7 +110,7 @@ export function DocumentDetailPage() {
           <Button variant="primary" icon={<Download size={16} />} onClick={handleDownload}>
             Download PDF
           </Button>
-          <Button variant="ghost" className="text-[var(--color-error)] hover:bg-[var(--color-error-bg)]" icon={<Trash2 size={16} />} onClick={() => { success('Document Deleted', 'The document has been removed.'); navigate('/documents'); }} />
+           <Button variant="ghost" className="text-[var(--color-error)] hover:bg-[var(--color-error-bg)]" icon={<Trash2 size={16} />} onClick={handleDelete} />
         </div>
       </div>
 

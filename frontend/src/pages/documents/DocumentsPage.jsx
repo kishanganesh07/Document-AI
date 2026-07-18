@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchDocuments } from '@/api/document.api';
+import { fetchDocuments, deleteDocument } from '@/api/document.api';
+import { generateDocumentPreviewHtml } from '@/api/ai.api';
+import { downloadAsPdf } from '@/lib/pdf';
 import { StatusBadge, DocumentTypeBadge } from '@/components/ui/Badge';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { formatDate } from '@/lib/utils';
-import { Search, Eye, Download, FileText, Plus, SlidersHorizontal } from 'lucide-react';
+import { Search, Eye, Download, FileText, Plus, SlidersHorizontal, Trash2 } from 'lucide-react';
+import { useNotificationStore } from '@/stores/notification.store';
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -15,10 +18,37 @@ export function DocumentsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
 
-  const { data, isLoading } = useQuery({
+  const { success, error } = useNotificationStore();
+
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['documents', { search, status: statusFilter, type: typeFilter }],
     queryFn: () => fetchDocuments({ search, status: statusFilter, documentType: typeFilter }),
   });
+
+  const handleDelete = async (id, title) => {
+    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+      try {
+        await deleteDocument(id);
+        success('Document Deleted', 'The document has been removed.');
+        refetch();
+      } catch (err) {
+        error('Delete failed', err.message || 'Could not delete the document.');
+      }
+    }
+  };
+
+  const handleDownloadDirect = async (e, doc) => {
+    e.stopPropagation();
+    try {
+      success('Download started', 'Generating PDF...');
+      const html = await generateDocumentPreviewHtml(doc.documentType, doc.documentData);
+      await downloadAsPdf(html, doc.title);
+      success('Download complete', 'Your PDF has been saved.');
+    } catch (err) {
+      console.error(err);
+      error('Download failed', err.message || 'Could not download PDF.');
+    }
+  };
 
   const hasFilters = search || statusFilter !== 'all' || typeFilter !== 'all';
 
@@ -193,10 +223,21 @@ export function DocumentsPage() {
                               variant="ghost"
                               size="xs"
                               icon={<Download size={13} />}
-                              title="View & Download"
-                              onClick={() => navigate(`/documents/${doc._id}`)}
+                              title="Download PDF"
+                              onClick={(e) => handleDownloadDirect(e, doc)}
                             />
                           )}
+                          <Button
+                            variant="ghost"
+                            size="xs"
+                            className="text-[var(--color-error)] hover:bg-[var(--color-error-bg)]"
+                            icon={<Trash2 size={13} />}
+                            title="Delete"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(doc._id, doc.title);
+                            }}
+                          />
                         </div>
                       </td>
                     </tr>

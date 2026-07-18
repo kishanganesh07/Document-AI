@@ -1,12 +1,13 @@
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 export async function downloadAsPdf(htmlString, filename) {
   // Create a hidden container for the HTML
   const container = document.createElement('div');
-  container.style.position = 'absolute';
-  container.style.left = '-9999px';
-  container.style.top = '-9999px';
+  container.style.position = 'fixed';
+  container.style.left = '0';
+  container.style.top = '0';
+  container.style.zIndex = '-9999';
   container.style.width = '794px'; // A4 width at 96 DPI
   container.style.backgroundColor = '#ffffff';
 
