@@ -149,9 +149,9 @@ export function AppNavbar() {
           gap: 6px;
           padding: 8px 18px;
           border-radius: 9999px;
-          border: none;
-          background: #111517;
-          color: #ffffff;
+          border: 1px solid var(--border);
+          background: var(--bg-surface);
+          color: var(--text-primary);
           cursor: pointer;
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: 11px;
@@ -159,19 +159,13 @@ export function AppNavbar() {
           letter-spacing: 0.08em;
           text-transform: uppercase;
           transition: all 0.2s ease;
+          box-shadow: var(--shadow-sm);
         }
         .me-user-btn:hover {
           background: var(--color-primary);
-          color: #001a0b;
+          color: #ffffff;
+          border-color: var(--color-primary);
           box-shadow: 0 0 15px rgba(0, 228, 118, 0.4);
-        }
-        .dark .me-user-btn {
-          background: #e0e3e5;
-          color: #101415;
-        }
-        .dark .me-user-btn:hover {
-          background: var(--color-primary);
-          color: #001a0b;
         }
 
         .me-dropdown {
@@ -190,7 +184,7 @@ export function AppNavbar() {
         .me-dropdown-header {
           padding: 14px 16px;
           border-bottom: 1px solid var(--border);
-          background: var(--color-primary-subtle);
+          background: var(--bg-surface-el);
         }
         .me-dropdown-item {
           display: flex; align-items: center; gap: 10px;
@@ -275,7 +269,7 @@ export function AppNavbar() {
           {/* User Profile / Account Button */}
           <div style={{ position: 'relative' }}>
             <button className="me-user-btn" onClick={() => setProfileOpen(p => !p)}>
-              <span>{user?.name?.split(' ')[0] || 'Account'}</span>
+              <span>{user?.name || 'Account'}</span>
               <ChevronDown size={10} style={{ opacity: 0.8 }} />
             </button>
 

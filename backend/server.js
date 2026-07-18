@@ -37,13 +37,14 @@ app.use('/api/ocr', ocrRoutes);
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
   } catch (err) {
     console.error(err.message);
-    process.exit(1);
+    console.warn("WARNING: Running without database connection. Saving documents and auth will not work.");
   }
+  
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 };
 
 startServer();

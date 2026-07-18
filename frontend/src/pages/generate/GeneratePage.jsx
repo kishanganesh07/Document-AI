@@ -236,13 +236,27 @@ export function GeneratePage() {
     }
   };
 
+  const handleManualSelect = (documentType) => {
+    store.resetWorkspace();
+    store.addMessage({
+      role: 'assistant',
+      content: `Manual generation started for ${DOCUMENT_TYPE_LABELS[documentType] || documentType}. Please fill out the required fields.`
+    });
+    store.setDetectedType(documentType, 1.0);
+    store.setDocumentData({});
+    store.setValidationResults([]);
+    store.setSuggestions([]);
+    setAiGeneratedFields(new Set());
+    setActiveTab('fields');
+  };
+
   if (isEmpty) {
     return (
       <GenerateEmptyState
         onPrompt={handleUserMessage}
-        onTemplateSelect={handleTemplateSelect} />);
-
-
+        onTemplateSelect={handleTemplateSelect}
+        onManualSelect={handleManualSelect} />
+    );
   }
 
   return (

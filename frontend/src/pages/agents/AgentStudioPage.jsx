@@ -58,12 +58,12 @@ function FlashcardItem({ card }) {
   return (
     <div
       onClick={() => setFlipped(!flipped)}
-      className="cursor-pointer bg-[#0a0d0b]/80 border border-cyan-500/10 hover:border-cyan-500/30 rounded-2xl p-6 min-h-[120px] flex flex-col justify-between transition-all select-none shadow-md hover:shadow-cyan-500/5 relative overflow-hidden"
+      className="cursor-pointer bg-[var(--bg-surface)] border border-cyan-500/10 hover:border-cyan-500/30 rounded-2xl p-6 min-h-[120px] flex flex-col justify-between transition-all select-none shadow-md hover:shadow-cyan-500/5 relative overflow-hidden"
     >
       <div className="absolute top-0 right-0 bg-cyan-500/10 text-cyan-400 text-[8px] font-bold tracking-widest px-2.5 py-1 rounded-bl">
         {flipped ? 'ANSWER' : 'QUESTION'}
       </div>
-      <div className="text-xs font-semibold text-white leading-relaxed">
+      <div className="text-xs font-semibold text-[var(--text-primary)] leading-relaxed">
         {flipped ? card.answer : card.question}
       </div>
     </div>
@@ -73,8 +73,8 @@ function FlashcardItem({ card }) {
 function QuizQuestionItem({ q, idx }) {
   const [selectedOpt, setSelectedOpt] = useState(null);
   return (
-    <div className="bg-[#0a0d0b]/60 border border-emerald-500/10 rounded-2xl p-5 space-y-3 shadow-inner">
-      <div className="text-xs font-bold text-white leading-relaxed">Q{idx+1}: {q.question}</div>
+    <div className="bg-[var(--bg-surface-el)] border border-emerald-500/10 rounded-2xl p-5 space-y-3 shadow-inner">
+      <div className="text-xs font-bold text-[var(--text-primary)] leading-relaxed">Q{idx+1}: {q.question}</div>
       <div className="grid grid-cols-1 gap-2">
         {q.options?.map((opt, optIdx) => {
           let optStyle = 'border-emerald-500/10 hover:bg-emerald-500/5';
@@ -205,22 +205,22 @@ export function AgentStudioPage() {
         {/* Header & Main Tabs */}
         <div className="flex flex-col md:flex-row md:items-end justify-between pb-6 border-b border-emerald-500/20 gap-6">
           <div>
-            <h1 className="text-4xl font-extrabold text-white flex items-center gap-3 tracking-tight">
+            <h1 className="text-4xl font-extrabold text-[var(--text-primary)] flex items-center gap-3 tracking-tight">
               <Sparkles className="text-[var(--color-primary)]" size={32} />
               AI Analyzer & Extractor Hub
             </h1>
-            <p className="text-emerald-100/70 text-sm mt-2 max-w-2xl leading-relaxed">
+            <p className="text-[var(--text-secondary)] text-sm mt-2 max-w-2xl leading-relaxed">
               Select an intelligent Analyzer or a Data Extractor. Provide your specific focus, and our agents will process your documents instantly.
             </p>
           </div>
           
-          <div className="flex bg-[#0a0d0b]/80 border border-emerald-500/30 p-1.5 rounded-2xl shadow-lg">
+          <div className="flex bg-[var(--bg-surface)] border border-emerald-500/30 p-1.5 rounded-2xl shadow-lg">
             <button
               onClick={() => handleCategorySwitch('analyzers')}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
                 activeCategory === 'analyzers'
                   ? 'bg-emerald-500/20 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
-                  : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5'
               }`}
             >
               <LayoutGrid size={16} /> Analyzers
@@ -230,7 +230,7 @@ export function AgentStudioPage() {
               className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
                 activeCategory === 'extractors'
                   ? 'bg-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.2)]'
-                  : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5'
               }`}
             >
               <Layers size={16} /> Data Extractors
@@ -243,7 +243,7 @@ export function AgentStudioPage() {
           
           {/* Left Col: Setup & Config */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="glass-tile p-8 rounded-[2rem] border border-emerald-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl bg-black/40 space-y-6">
+            <div className="glass-tile p-8 rounded-[2rem] border border-emerald-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl bg-[var(--bg-surface)] space-y-6">
               
               {/* Agent Selector */}
               <div className="space-y-2">
@@ -254,7 +254,7 @@ export function AgentStudioPage() {
                   <select
                     value={selectedAgent}
                     onChange={handleAgentSwitch}
-                    className="w-full appearance-none bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-2xl p-4 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400 transition-colors cursor-pointer shadow-inner"
+                    className="w-full appearance-none bg-[var(--bg-surface)] border border-emerald-500/20 rounded-2xl p-4 text-[var(--text-primary)] text-sm font-semibold focus:outline-none focus:border-emerald-400 transition-colors cursor-pointer shadow-inner"
                   >
                     {currentAgentList.map(agent => (
                       <option key={agent.id} value={agent.id}>
@@ -266,7 +266,7 @@ export function AgentStudioPage() {
                     <ChevronDown size={18} />
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1.5 px-1">{activeAgentInfo.desc}</p>
+                <p className="text-xs text-[var(--text-muted)] mt-1.5 px-1">{activeAgentInfo.desc}</p>
               </div>
 
               {/* Dynamic Inputs based on selected Agent */}
@@ -278,7 +278,7 @@ export function AgentStudioPage() {
                       value={dynamicInputs[field.key] || ''}
                       onChange={(e) => setDynamicInputs({ ...dynamicInputs, [field.key]: e.target.value })}
                       placeholder={field.placeholder}
-                      className="w-full bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-2xl p-4 text-white text-sm focus:outline-none focus:border-emerald-400 transition-colors min-h-[80px] resize-none placeholder:text-gray-600 shadow-inner"
+                      className="w-full bg-[var(--bg-surface)] border border-emerald-500/20 rounded-2xl p-4 text-[var(--text-primary)] text-sm focus:outline-none focus:border-emerald-400 transition-colors min-h-[80px] resize-none placeholder:text-[var(--text-xmuted)] shadow-inner"
                     />
                   </div>
                 ))}
@@ -287,13 +287,13 @@ export function AgentStudioPage() {
               {/* Input Mode Toggle for Document Base */}
               <div className="pt-2 border-t border-emerald-500/10">
                 <label className="text-xs font-bold text-emerald-500/80 uppercase tracking-wider mb-2 block">Source Document</label>
-                <div className="flex items-center gap-2 bg-[#0a0d0b]/60 border border-emerald-500/10 rounded-2xl p-1.5 mb-4">
+                <div className="flex items-center gap-2 bg-[var(--bg-surface-el)] border border-emerald-500/10 rounded-2xl p-1.5 mb-4">
                   <button
                     onClick={() => setInputMode('file')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${
                       inputMode === 'file'
                         ? 'bg-emerald-500/20 text-emerald-400 shadow-lg'
-                        : 'text-gray-500 hover:text-gray-300'
+                        : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                     }`}
                   >
                     <Upload size={16} /> File Upload
@@ -303,7 +303,7 @@ export function AgentStudioPage() {
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${
                       inputMode === 'text'
                         ? 'bg-emerald-500/20 text-emerald-400 shadow-lg'
-                        : 'text-gray-500 hover:text-gray-300'
+                        : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                     }`}
                   >
                     <FileText size={16} /> Paste Text
@@ -334,15 +334,15 @@ export function AgentStudioPage() {
                         />
                         <div className="flex flex-col items-center gap-4">
                           <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all shadow-xl ${
-                            isDragOver ? 'bg-emerald-500/30 text-emerald-300' : 'bg-[#111815] text-emerald-500/50'
+                            isDragOver ? 'bg-emerald-500/30 text-emerald-300' : 'bg-[var(--bg-deep)] text-emerald-500/50'
                           }`}>
                             <Upload size={28} />
                           </div>
                           <div>
-                            <p className="text-base font-bold text-white">
+                            <p className="text-base font-bold text-[var(--text-primary)]">
                               {isDragOver ? 'Drop to analyze' : 'Drag & Drop your file here'}
                             </p>
-                            <p className="text-xs text-gray-500 mt-1.5 font-medium">Supports PDF, TXT, CSV, Images (Max 10 MB)</p>
+                            <p className="text-xs text-[var(--text-muted)] mt-1.5 font-medium">Supports PDF, TXT, CSV, Images (Max 10 MB)</p>
                           </div>
                         </div>
                       </div>
@@ -352,7 +352,7 @@ export function AgentStudioPage() {
                           <FileCheck2 size={24} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-white truncate">{uploadedFile.name}</p>
+                          <p className="text-sm font-bold text-[var(--text-primary)] truncate">{uploadedFile.name}</p>
                           <p className="text-xs text-emerald-200/70 mt-1 font-medium">{formatBytes(uploadedFile.size)} · Ready</p>
                         </div>
                         <button
@@ -372,7 +372,7 @@ export function AgentStudioPage() {
                     value={docContext}
                     onChange={(e) => setDocContext(e.target.value)}
                     placeholder="Paste the document text content here..."
-                    className="w-full bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-2xl p-4 text-white text-sm focus:outline-none focus:border-emerald-400 transition-colors min-h-[140px] resize-none placeholder:text-gray-600"
+                    className="w-full bg-[var(--bg-surface)] border border-emerald-500/20 rounded-2xl p-4 text-[var(--text-primary)] text-sm focus:outline-none focus:border-emerald-400 transition-colors min-h-[140px] resize-none placeholder:text-[var(--text-xmuted)]"
                   />
                 )}
               </div>
@@ -403,17 +403,17 @@ export function AgentStudioPage() {
 
           {/* Right Col: Structured Output Panel */}
           <div className="lg:col-span-7 space-y-6 flex flex-col h-full">
-            <div className="glass-tile flex-1 p-8 rounded-[2rem] border border-emerald-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl bg-black/40 min-h-[650px] flex flex-col relative overflow-hidden">
+            <div className="glass-tile flex-1 p-8 rounded-[2rem] border border-emerald-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl bg-[var(--bg-surface)] min-h-[650px] flex flex-col relative overflow-hidden">
               
               <div className={`absolute top-0 right-0 w-[500px] h-[500px] blur-[120px] rounded-full pointer-events-none ${activeCategory === 'analyzers' ? 'bg-emerald-500/10' : 'bg-cyan-500/10'}`} />
               
               <div className="flex items-center justify-between pb-6 border-b border-emerald-500/10 mb-8 relative z-10">
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${activeAgentInfo.color} flex items-center justify-center text-white shadow-lg border border-white/10`}>
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${activeAgentInfo.color} flex items-center justify-center text-[var(--text-primary)] shadow-lg border border-white/10`}>
                     <activeAgentInfo.icon size={22} />
                   </div>
                   <div>
-                    <h3 className="font-extrabold text-white text-xl">{activeAgentInfo.name} Output</h3>
+                    <h3 className="font-extrabold text-[var(--text-primary)] text-xl">{activeAgentInfo.name} Output</h3>
                     <span className={`text-xs font-bold uppercase tracking-widest ${activeCategory === 'analyzers' ? 'text-emerald-400/80' : 'text-cyan-400/80'}`}>
                       {activeCategory === 'analyzers' ? 'Analysis Report' : 'Extracted Payload'}
                     </span>
@@ -426,7 +426,7 @@ export function AgentStudioPage() {
                   <div className="relative">
                     <Loader2 className={`animate-spin ${activeCategory === 'analyzers' ? 'text-emerald-400' : 'text-cyan-400'}`} size={56} />
                   </div>
-                  <p className="text-emerald-100/70 text-sm font-medium tracking-wide text-center">
+                  <p className="text-[var(--text-secondary)] text-sm font-medium tracking-wide text-center">
                     {activeCategory === 'analyzers' ? 'Running deep contextual analysis...' : 'Extracting and structuring data patterns...'}
                   </p>
                 </div>
@@ -437,12 +437,12 @@ export function AgentStudioPage() {
                   {selectedAgent === 'resume' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+                        <div className="bg-[var(--bg-surface)] border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
                           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-teal-500" />
                           <div className="text-4xl font-extrabold text-emerald-400 tracking-tight">{result.atsScore || 0}%</div>
                           <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">ATS Score</div>
                         </div>
-                        <div className="bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+                        <div className="bg-[var(--bg-surface)] border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
                           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-cyan-500" />
                           <div className="text-4xl font-extrabold text-teal-400 tracking-tight">{result.resumeScore || 0}%</div>
                           <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">Design Quality</div>
@@ -499,7 +499,7 @@ export function AgentStudioPage() {
                               Copy All
                             </button>
                           </div>
-                          <pre className="bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-2xl p-5 text-emerald-50/90 text-sm whitespace-pre-wrap font-sans leading-relaxed shadow-inner">
+                          <pre className="bg-[var(--bg-surface)] border border-emerald-500/20 rounded-2xl p-5 text-emerald-50/90 text-sm whitespace-pre-wrap font-sans leading-relaxed shadow-inner">
                             {result.coverLetter}
                           </pre>
                         </div>
@@ -513,7 +513,7 @@ export function AgentStudioPage() {
                       {result.summary && (
                         <div className="space-y-2">
                           <h4 className="text-xs font-bold text-rose-400 uppercase tracking-widest">Layperson Medical Summary</h4>
-                          <p className="text-sm text-emerald-50/90 leading-relaxed bg-[#0a0d0b]/80 p-5 rounded-2xl border border-emerald-500/20 shadow-inner">
+                          <p className="text-sm text-emerald-50/90 leading-relaxed bg-[var(--bg-surface)] p-5 rounded-2xl border border-emerald-500/20 shadow-inner">
                             {result.summary}
                           </p>
                         </div>
@@ -527,10 +527,10 @@ export function AgentStudioPage() {
                               <div key={idx} className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-sm flex justify-between items-center shadow-md">
                                 <div>
                                   <div className="font-bold text-rose-400 text-base">{v.metric}</div>
-                                  <div className="text-gray-500 text-[10px] mt-0.5">Reference Range: {v.referenceRange}</div>
+                                  <div className="text-[var(--text-muted)] text-[10px] mt-0.5">Reference Range: {v.referenceRange}</div>
                                 </div>
                                 <div className="text-right">
-                                  <div className="font-extrabold text-white text-lg">{v.value}</div>
+                                  <div className="font-extrabold text-[var(--text-primary)] text-lg">{v.value}</div>
                                   <span className="text-[9px] text-red-300 font-bold uppercase tracking-wider bg-red-500/20 px-2 py-0.5 rounded border border-red-500/35">
                                     {v.flag}
                                   </span>
@@ -560,7 +560,7 @@ export function AgentStudioPage() {
                   {/* LEGAL ANALYZER */}
                   {selectedAgent === 'legal' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                      <div className="bg-[#0a0d0b]/80 border border-blue-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+                      <div className="bg-[var(--bg-surface)] border border-blue-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
                         <div className="text-4xl font-extrabold text-blue-400 tracking-tight">{result.riskScore || 0}%</div>
                         <div className="text-xs text-blue-100/60 mt-1 uppercase tracking-widest font-bold">Overall Legal Risk</div>
@@ -569,7 +569,7 @@ export function AgentStudioPage() {
                       {result.summary && (
                         <div className="space-y-2">
                           <h4 className="text-xs font-bold text-blue-400 uppercase tracking-widest">Executive Legal Summary</h4>
-                          <p className="text-sm text-emerald-50/80 leading-relaxed bg-[#0a0d0b]/60 p-5 rounded-2xl border border-emerald-500/10 shadow-inner">
+                          <p className="text-sm text-emerald-50/80 leading-relaxed bg-[var(--bg-surface-el)] p-5 rounded-2xl border border-emerald-500/10 shadow-inner">
                             {result.summary}
                           </p>
                         </div>
@@ -596,7 +596,7 @@ export function AgentStudioPage() {
                               <div key={idx} className="bg-red-500/5 border border-red-500/20 rounded-2xl p-5 text-sm shadow-sm relative overflow-hidden">
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />
                                 <div className="font-bold text-red-400 mb-1 pl-2">Clause: &quot;{c.clause}&quot;</div>
-                                <div className="text-gray-400 pl-2 leading-relaxed">{c.explanation}</div>
+                                <div className="text-[var(--text-secondary)] pl-2 leading-relaxed">{c.explanation}</div>
                               </div>
                             ))}
                           </div>
@@ -629,14 +629,14 @@ export function AgentStudioPage() {
                   {selectedAgent === 'invoice' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+                        <div className="bg-[var(--bg-surface)] border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
                           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
                           <div className="text-3xl font-extrabold text-amber-400 tracking-tight">{result.verificationStatus || 'Unknown'}</div>
                           <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">Verification Status</div>
                         </div>
-                        <div className="bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+                        <div className="bg-[var(--bg-surface)] border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
                           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 to-red-500" />
-                          <div className="text-sm font-semibold text-white mt-2 truncate">{result.summary || 'Compiled Invoice'}</div>
+                          <div className="text-sm font-semibold text-[var(--text-primary)] mt-2 truncate">{result.summary || 'Compiled Invoice'}</div>
                           <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">Summary Details</div>
                         </div>
                       </div>
@@ -647,16 +647,16 @@ export function AgentStudioPage() {
                           <div className="border border-emerald-500/10 rounded-2xl overflow-hidden bg-[#0c0f0d]/50">
                             <table className="w-full text-left border-collapse text-xs">
                               <thead>
-                                <tr className="border-b border-emerald-500/10 bg-[#0f1412]/50 text-gray-400">
+                                <tr className="border-b border-emerald-500/10 bg-[#0f1412]/50 text-[var(--text-secondary)]">
                                   <th className="p-3 font-semibold">Key Parameters</th>
                                   <th className="p-3 font-semibold">Extracted Value</th>
                                 </tr>
                               </thead>
-                              <tbody className="divide-y divide-emerald-500/5 text-gray-300">
+                              <tbody className="divide-y divide-emerald-500/5 text-[var(--text-primary)]">
                                 {result.extractedData.map((data, idx) => (
                                   <tr key={idx} className="hover:bg-emerald-500/5 transition-all">
                                     <td className="p-3 font-semibold text-emerald-400">{data.key}</td>
-                                    <td className="p-3 font-mono text-white">{data.value}</td>
+                                    <td className="p-3 font-mono text-[var(--text-primary)]">{data.value}</td>
                                   </tr>
                                 ))}
                               </tbody>
@@ -672,7 +672,7 @@ export function AgentStudioPage() {
                             {result.actionableInsights.map((insight, idx) => (
                               <div key={idx} className="bg-amber-500/10 border-l-2 border-amber-500 p-4 rounded-r-xl flex items-start gap-3">
                                 <AlertTriangle className="text-amber-400 mt-0.5 shrink-0" size={14} />
-                                <p className="text-xs text-gray-300 leading-relaxed">{insight}</p>
+                                <p className="text-xs text-[var(--text-primary)] leading-relaxed">{insight}</p>
                               </div>
                             ))}
                           </div>
@@ -687,7 +687,7 @@ export function AgentStudioPage() {
                       {result.summary && (
                         <div className="space-y-2">
                           <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-widest">Academic summary</h4>
-                          <p className="text-sm text-emerald-50/90 leading-relaxed bg-[#0a0d0b]/80 p-5 rounded-2xl border border-emerald-500/20 shadow-inner">
+                          <p className="text-sm text-emerald-50/90 leading-relaxed bg-[var(--bg-surface)] p-5 rounded-2xl border border-emerald-500/20 shadow-inner">
                             {result.summary}
                           </p>
                         </div>
@@ -735,19 +735,19 @@ export function AgentStudioPage() {
                   {selectedAgent === 'finance' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                       {result.clientName && (
-                        <div className="bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-3xl p-5 text-center shadow-lg">
+                        <div className="bg-[var(--bg-surface)] border border-emerald-500/20 rounded-3xl p-5 text-center shadow-lg">
                           <div className="text-2xl font-extrabold text-emerald-400 tracking-tight">{result.clientName}</div>
                           <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">Client / Entity Name</div>
                         </div>
                       )}
 
                       <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+                        <div className="bg-[var(--bg-surface)] border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
                           <div className="absolute top-0 left-0 w-full h-1 bg-emerald-400" />
                           <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">${result.totalAmount || 0}</div>
                           <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">Total Invoiced Amount</div>
                         </div>
-                        <div className="bg-[#0a0d0b]/80 border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+                        <div className="bg-[var(--bg-surface)] border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
                           <div className="absolute top-0 left-0 w-full h-1 bg-emerald-400" />
                           <div className="text-3xl font-extrabold text-emerald-400 tracking-tight">${result.gstAmount || 0}</div>
                           <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">Tax ({result.taxRate || 0}%)</div>
@@ -760,21 +760,21 @@ export function AgentStudioPage() {
                           <div className="border border-emerald-500/10 rounded-2xl overflow-hidden bg-[#0c0f0d]/50">
                             <table className="w-full text-left border-collapse text-xs">
                               <thead>
-                                <tr className="border-b border-emerald-500/10 bg-[#0f1412]/50 text-gray-400">
+                                <tr className="border-b border-emerald-500/10 bg-[#0f1412]/50 text-[var(--text-secondary)]">
                                   <th className="p-3 font-semibold">Account Category</th>
                                   <th className="p-3 font-semibold text-right">Debit</th>
                                   <th className="p-3 font-semibold text-right">Credit</th>
                                 </tr>
                               </thead>
-                              <tbody className="divide-y divide-emerald-500/5 text-gray-300">
+                              <tbody className="divide-y divide-emerald-500/5 text-[var(--text-primary)]">
                                 <tr className="hover:bg-emerald-500/5 transition-all">
                                   <td className="p-3 font-semibold text-emerald-400">{result.accountingEntry.debit || 'Cash/Receivables'}</td>
-                                  <td className="p-3 font-mono text-white text-right">${result.totalAmount || 0}</td>
-                                  <td className="p-3 font-mono text-gray-600 text-right">-</td>
+                                  <td className="p-3 font-mono text-[var(--text-primary)] text-right">${result.totalAmount || 0}</td>
+                                  <td className="p-3 font-mono text-[var(--text-xmuted)] text-right">-</td>
                                 </tr>
                                 <tr className="hover:bg-emerald-500/5 transition-all">
                                   <td className="p-3 font-semibold text-emerald-400 pl-6">{result.accountingEntry.credit || 'Revenue/Services'}</td>
-                                  <td className="p-3 font-mono text-gray-600 text-right">-</td>
+                                  <td className="p-3 font-mono text-[var(--text-xmuted)] text-right">-</td>
                                   <td className="p-3 font-mono text-emerald-400 font-bold text-right">${result.totalAmount || 0}</td>
                                 </tr>
                               </tbody>
@@ -786,7 +786,7 @@ export function AgentStudioPage() {
                       {result.auditReport && (
                         <div className="space-y-2">
                           <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Financial Auditor Commentary</h4>
-                          <p className="text-sm text-emerald-50/80 leading-relaxed bg-[#0a0d0b]/80 p-5 rounded-2xl border border-emerald-500/20 shadow-inner">
+                          <p className="text-sm text-emerald-50/80 leading-relaxed bg-[var(--bg-surface)] p-5 rounded-2xl border border-emerald-500/20 shadow-inner">
                             {result.auditReport}
                           </p>
                         </div>
@@ -797,7 +797,7 @@ export function AgentStudioPage() {
                   {/* CONTRACT RISK ANALYZER */}
                   {selectedAgent === 'contract_risk' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                      <div className="bg-[#0a0d0b]/80 border border-red-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
+                      <div className="bg-[var(--bg-surface)] border border-red-500/20 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500" />
                         <div className="text-4xl font-extrabold text-red-500 tracking-tight">{result.overallRiskScore || 0}%</div>
                         <div className="text-xs text-red-200/60 mt-1 uppercase tracking-widest font-bold">Overall Liabilities Risk</div>
@@ -806,7 +806,7 @@ export function AgentStudioPage() {
                       {result.riskSummary && (
                         <div className="space-y-2">
                           <h4 className="text-xs font-bold text-red-400 uppercase tracking-widest">Risk Summary Report</h4>
-                          <p className="text-sm text-emerald-50/80 leading-relaxed bg-[#0a0d0b]/60 p-5 rounded-2xl border border-emerald-500/10 shadow-inner">
+                          <p className="text-sm text-emerald-50/80 leading-relaxed bg-[var(--bg-surface-el)] p-5 rounded-2xl border border-emerald-500/10 shadow-inner">
                             {result.riskSummary}
                           </p>
                         </div>
@@ -818,7 +818,7 @@ export function AgentStudioPage() {
                           <div className="space-y-2">
                             {result.criticalRisks.map((c, idx) => (
                               <div key={idx} className="bg-red-500/5 border border-red-500/20 rounded-xl p-4 flex justify-between items-center text-xs">
-                                <span className="font-semibold text-white">{c.risk}</span>
+                                <span className="font-semibold text-[var(--text-primary)]">{c.risk}</span>
                                 <span className={`font-bold px-2 py-0.5 rounded border uppercase text-[9px] ${
                                   c.severity === 'High' ? 'bg-red-500/20 border-red-500 text-red-300' :
                                   c.severity === 'Medium' ? 'bg-orange-500/20 border-orange-500 text-orange-300' :
@@ -854,7 +854,7 @@ export function AgentStudioPage() {
                       {result.analysisOverview && (
                         <div className="space-y-2">
                           <h4 className="text-xs font-bold text-purple-400 uppercase tracking-widest">Analysis Overview</h4>
-                          <p className="text-sm text-emerald-50/80 leading-relaxed bg-[#0a0d0b]/60 p-5 rounded-2xl border border-emerald-500/10 shadow-inner">
+                          <p className="text-sm text-emerald-50/80 leading-relaxed bg-[var(--bg-surface-el)] p-5 rounded-2xl border border-emerald-500/10 shadow-inner">
                             {result.analysisOverview}
                           </p>
                         </div>
@@ -879,9 +879,9 @@ export function AgentStudioPage() {
                           <h4 className="text-xs font-bold text-purple-400 uppercase tracking-widest">Detailed Analysis Findings</h4>
                           <div className="grid grid-cols-1 gap-3">
                             {result.detailedFindings.map((finding, idx) => (
-                              <div key={idx} className="bg-[#0a0d0b]/80 border border-purple-500/10 rounded-2xl p-5 space-y-2 shadow-md">
-                                <div className="font-bold text-white text-sm">{finding.topic}</div>
-                                <div className="text-xs text-gray-400 leading-relaxed">{finding.details}</div>
+                              <div key={idx} className="bg-[var(--bg-surface)] border border-purple-500/10 rounded-2xl p-5 space-y-2 shadow-md">
+                                <div className="font-bold text-[var(--text-primary)] text-sm">{finding.topic}</div>
+                                <div className="text-xs text-[var(--text-secondary)] leading-relaxed">{finding.details}</div>
                               </div>
                             ))}
                           </div>
@@ -893,7 +893,7 @@ export function AgentStudioPage() {
                   {/* OCR EXTRACTOR */}
                   {selectedAgent === 'ocr' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                      <div className="bg-[#0a0d0b]/80 border border-blue-500/20 rounded-3xl p-5 text-center shadow-lg">
+                      <div className="bg-[var(--bg-surface)] border border-blue-500/20 rounded-3xl p-5 text-center shadow-lg">
                         <div className="text-2xl font-extrabold text-blue-400 tracking-tight">{result.extractionModeUsed || 'Plain Text'}</div>
                         <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">Extraction Mode Used</div>
                       </div>
@@ -912,7 +912,7 @@ export function AgentStudioPage() {
                               Copy Text
                             </button>
                           </div>
-                          <pre className="bg-[#0c0f0d] border border-cyan-500/10 rounded-2xl p-5 text-gray-300 text-xs whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto">
+                          <pre className="bg-[#0c0f0d] border border-cyan-500/10 rounded-2xl p-5 text-[var(--text-primary)] text-xs whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto">
                             {result.extractedText}
                           </pre>
                         </div>
@@ -943,7 +943,7 @@ export function AgentStudioPage() {
                   {/* TRANSLATION AGENT */}
                   {selectedAgent === 'translate' && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                      <div className="bg-[#0a0d0b]/80 border border-fuchsia-500/20 rounded-3xl p-5 text-center shadow-lg">
+                      <div className="bg-[var(--bg-surface)] border border-fuchsia-500/20 rounded-3xl p-5 text-center shadow-lg">
                         <div className="text-2xl font-extrabold text-fuchsia-400 tracking-tight">{result.targetLanguage || 'Translated'}</div>
                         <div className="text-xs text-emerald-100/60 mt-1 uppercase tracking-widest font-bold">Target Language</div>
                       </div>
@@ -962,7 +962,7 @@ export function AgentStudioPage() {
                               Copy Translation
                             </button>
                           </div>
-                          <pre className="bg-[#0c0f0d] border border-fuchsia-500/10 rounded-2xl p-5 text-gray-300 text-xs whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto">
+                          <pre className="bg-[#0c0f0d] border border-fuchsia-500/10 rounded-2xl p-5 text-[var(--text-primary)] text-xs whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto">
                             {result.translatedText}
                           </pre>
                         </div>
@@ -975,7 +975,7 @@ export function AgentStudioPage() {
                             {result.translationNotes.map((note, idx) => (
                               <div key={idx} className="bg-fuchsia-500/5 border-l-2 border-fuchsia-500 p-4 rounded-r-xl flex items-start gap-3">
                                 <span className="text-fuchsia-400 font-extrabold mr-1">•</span>
-                                <p className="text-xs text-gray-300 leading-relaxed">{note}</p>
+                                <p className="text-xs text-[var(--text-primary)] leading-relaxed">{note}</p>
                               </div>
                             ))}
                           </div>
@@ -987,11 +987,11 @@ export function AgentStudioPage() {
                 </div>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 relative z-10">
-                  <div className="w-24 h-24 rounded-full bg-[#0a0d0b]/80 border border-emerald-500/20 flex items-center justify-center text-emerald-500/40 shadow-inner">
+                  <div className="w-24 h-24 rounded-full bg-[var(--bg-surface)] border border-emerald-500/20 flex items-center justify-center text-emerald-500/40 shadow-inner">
                     <Sparkles size={40} />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-white text-xl">Awaiting Configuration</h4>
+                    <h4 className="font-extrabold text-[var(--text-primary)] text-xl">Awaiting Configuration</h4>
                     <p className="text-emerald-100/50 text-sm mt-3 max-w-sm leading-relaxed mx-auto">
                       Fill out the target constraints on the left and upload your document. The output payload will be generated here.
                     </p>

@@ -23,17 +23,24 @@ export const useAuthStore = create()(
       organization: MOCK_ORG,
       token: null,
       isAuthenticated: false,
-      error: null,
-
       register: async (name, email, orgName, password) => {
         try {
           set({ error: null });
-          // Mock successful registration
-          await new Promise(resolve => setTimeout(resolve, 800));
+          
+          const response = await fetch(`${API_BASE}/api/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+          });
+          
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(data.message || 'Registration failed');
+          }
           
           set({
-            user: { _id: 'user_mock', name, email, role: 'owner' },
-            token: 'mock_token_123',
+            user: { ...data.user, role: data.user.role || 'owner' },
+            token: data.token,
             isAuthenticated: true,
             error: null
           });
@@ -48,16 +55,20 @@ export const useAuthStore = create()(
         try {
           set({ error: null });
           
-          // Mock successful login
-          await new Promise(resolve => setTimeout(resolve, 800));
+          const response = await fetch(`${API_BASE}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
           
-          if (password !== 'password' && password.length < 3) {
-             // throw new Error('Invalid credentials');
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(data.message || 'Login failed');
           }
 
           set({
-            user: { _id: 'user_mock', name: 'Mock User', email, role: 'owner' },
-            token: 'mock_token_123',
+            user: { ...data.user, role: data.user.role || 'owner' },
+            token: data.token,
             isAuthenticated: true,
             error: null
           });

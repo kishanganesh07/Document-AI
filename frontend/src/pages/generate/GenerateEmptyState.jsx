@@ -13,7 +13,7 @@ const SUGGESTED_PROMPTS = [
   { label: 'Generate ATS Resume', prompt: 'Build an ATS-friendly resume for a Software Engineer with 5 years of experience in React and Node.', icon: Briefcase, color: '#E11D48', bg: 'var(--color-error-bg)' },
 ];
 
-export function GenerateEmptyState({ onPrompt, onTemplateSelect }) {
+export function GenerateEmptyState({ onPrompt, onTemplateSelect, onManualSelect }) {
   const [hoveredPrompt, setHoveredPrompt] = useState(null);
 
   return (
@@ -37,7 +37,7 @@ export function GenerateEmptyState({ onPrompt, onTemplateSelect }) {
         }} />
       </div>
 
-      <div className="w-full max-w-2xl space-y-8 relative z-10">
+      <div className="w-full max-w-2xl space-y-8 relative z-10 pb-8">
 
         {/* Hero heading */}
         <div className="text-center space-y-4">
@@ -158,6 +158,41 @@ export function GenerateEmptyState({ onPrompt, onTemplateSelect }) {
                 <span style={{ fontSize: '10px', color: 'var(--text-xmuted)' }}>
                   {DOCUMENT_TYPE_LABELS[template.documentType]} · {template.usageCount.toLocaleString()} uses
                 </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Manual Generation */}
+        <div className="mt-8">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
+            <span style={{ fontSize: '11px', color: 'var(--text-xmuted)', whiteSpace: 'nowrap' }}>Or manually create from scratch</span>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+            {Object.entries(DOCUMENT_TYPE_LABELS).map(([type, label]) => (
+              <button
+                key={type}
+                onClick={() => onManualSelect && onManualSelect(type)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  padding: '10px 12px', borderRadius: '10px', textAlign: 'center',
+                  border: '1px solid var(--border)', background: 'var(--bg-surface-el)',
+                  fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)',
+                  cursor: 'pointer', transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'var(--color-primary)';
+                  e.currentTarget.style.color = 'var(--color-primary)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                }}
+              >
+                {label}
               </button>
             ))}
           </div>

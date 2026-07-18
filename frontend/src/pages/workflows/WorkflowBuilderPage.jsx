@@ -148,10 +148,10 @@ export function WorkflowBuilderPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-[#0a0d0b] border border-emerald-500/20 p-8 rounded-3xl max-w-lg w-full shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <h3 className="text-xl font-bold text-[var(--text-primary)] flex items-center gap-2">
                 <Play className="text-emerald-400" size={20} /> Configure Run
               </h3>
-              <button onClick={() => setShowConfig(false)} className="text-gray-500 hover:text-white transition-colors">
+              <button onClick={() => setShowConfig(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -180,10 +180,10 @@ export function WorkflowBuilderPage() {
                         value={triggerInput}
                         onChange={(e) => setTriggerInput(e.target.value)}
                         placeholder={configOpts.placeholder}
-                        className="w-full bg-[#111815] border border-emerald-500/20 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                        className="w-full bg-[var(--bg-deep)] border border-emerald-500/20 rounded-xl py-3 pl-10 pr-4 text-[var(--text-primary)] text-sm focus:outline-none focus:border-emerald-500 transition-colors"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">{configOpts.desc}</p>
+                    <p className="text-xs text-[var(--text-muted)] mt-2">{configOpts.desc}</p>
                   </div>
                 );
               })()}
@@ -200,10 +200,10 @@ export function WorkflowBuilderPage() {
                       value={emailInput}
                       onChange={(e) => setEmailInput(e.target.value)}
                       placeholder="client@example.com"
-                      className="w-full bg-[#111815] border border-emerald-500/20 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                      className="w-full bg-[var(--bg-deep)] border border-emerald-500/20 rounded-xl py-3 pl-10 pr-4 text-[var(--text-primary)] text-sm focus:outline-none focus:border-emerald-500 transition-colors"
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">The generated PDF will be sent as an attachment here.</p>
+                  <p className="text-xs text-[var(--text-muted)] mt-2">The generated PDF will be sent as an attachment here.</p>
                 </div>
               )}
             </div>
@@ -221,11 +221,11 @@ export function WorkflowBuilderPage() {
       {/* Header */}
       <div className="flex items-center justify-between pb-6 border-b border-emerald-500/10">
         <div>
-          <h1 className="text-3xl font-extrabold text-white flex items-center gap-3">
+          <h1 className="text-3xl font-extrabold text-[var(--text-primary)] flex items-center gap-3">
             <GitMerge className="text-[var(--color-primary)]" />
             Workflow Automation
           </h1>
-          <p className="text-gray-400 text-sm mt-1">Design no-code AI pipelines to build professional resumes from external sources.</p>
+          <p className="text-[var(--text-secondary)] text-sm mt-1">Design no-code AI pipelines to build professional resumes from external sources.</p>
         </div>
         <Button
           onClick={openTestConfig}
@@ -241,7 +241,7 @@ export function WorkflowBuilderPage() {
         {/* Toolbox */}
         <div className="lg:col-span-1 space-y-6">
           <div className="glass-tile p-6 rounded-3xl border border-emerald-500/10 space-y-4">
-            <h2 className="text-lg font-bold text-white mb-2">Available Actions</h2>
+            <h2 className="text-lg font-bold text-[var(--text-primary)] mb-2">Available Actions</h2>
             <div className="space-y-6">
               
               {Object.entries(PIPELINE_NODES).map(([category, nodes]) => (
@@ -254,14 +254,14 @@ export function WorkflowBuilderPage() {
                     return (
                       <div
                         key={node.id}
-                        className="p-4 rounded-2xl bg-[#0f1412]/40 border border-emerald-500/5 hover:border-emerald-500/10 transition-all flex flex-col space-y-2 relative group"
+                        className="p-4 rounded-2xl bg-[var(--bg-surface-el)] border border-emerald-500/5 hover:border-emerald-500/10 transition-all flex flex-col space-y-2 relative group"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
                               <Icon size={16} />
                             </div>
-                            <span className="font-bold text-white text-sm">{node.name}</span>
+                            <span className="font-bold text-[var(--text-primary)] text-sm">{node.name}</span>
                           </div>
                           <button
                             onClick={() => addNode(node.id)}
@@ -270,7 +270,7 @@ export function WorkflowBuilderPage() {
                             <Plus size={14} />
                           </button>
                         </div>
-                        <p className="text-xs text-gray-500 leading-relaxed">{node.desc}</p>
+                        <p className="text-xs text-[var(--text-muted)] leading-relaxed">{node.desc}</p>
                       </div>
                     );
                   })}
@@ -306,26 +306,26 @@ export function WorkflowBuilderPage() {
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                       <Plus className="text-emerald-500/40 group-hover:text-emerald-400 group-hover:scale-110 transition-all" size={24} />
                       <div>
-                        <div className="text-sm font-bold text-gray-300 group-hover:text-white transition-colors">Select a Trigger</div>
-                        <div className="text-xs text-gray-500">Click a data source from the sidebar</div>
+                        <div className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--text-primary)] transition-colors">Select a Trigger</div>
+                        <div className="text-xs text-[var(--text-muted)]">Click a data source from the sidebar</div>
                       </div>
                     </div>
                   ) : (
                     <div className={`w-full max-w-sm p-4 rounded-2xl border transition-all duration-500 flex items-center justify-between ${
                       activeStep === pipeline.trigger.id ? 'bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_20px_rgba(0,228,118,0.15)] animate-pulse'
-                        : completedSteps.has(pipeline.trigger.id) ? 'bg-emerald-500/5 border-emerald-500/20 text-gray-400'
-                        : 'bg-[#0f1412]/40 border-emerald-500/5 text-gray-300'
+                        : completedSteps.has(pipeline.trigger.id) ? 'bg-emerald-500/5 border-emerald-500/20 text-[var(--text-secondary)]'
+                        : 'bg-[var(--bg-surface-el)] border-emerald-500/5 text-[var(--text-primary)]'
                     }`}>
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${completedSteps.has(pipeline.trigger.id) ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
                           {completedSteps.has(pipeline.trigger.id) ? <CheckCircle2 size={18} /> : <GitMerge size={18} />}
                         </div>
                         <div>
-                          <div className="font-bold text-sm text-white">{pipeline.trigger.name}</div>
-                          <div className="text-xs text-gray-500 capitalize">Trigger</div>
+                          <div className="font-bold text-sm text-[var(--text-primary)]">{pipeline.trigger.name}</div>
+                          <div className="text-xs text-[var(--text-muted)] capitalize">Trigger</div>
                         </div>
                       </div>
-                      <button onClick={() => removeNode('trigger')} disabled={running} className="text-gray-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all disabled:opacity-50">
+                      <button onClick={() => removeNode('trigger')} disabled={running} className="text-[var(--text-muted)] hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all disabled:opacity-50">
                         <Trash2 size={15} />
                       </button>
                     </div>
@@ -350,26 +350,26 @@ export function WorkflowBuilderPage() {
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                       <Plus className="text-emerald-500/40 group-hover:text-emerald-400 group-hover:scale-110 transition-all" size={24} />
                       <div>
-                        <div className="text-sm font-bold text-gray-300 group-hover:text-white transition-colors">Select an AI Processor</div>
-                        <div className="text-xs text-gray-500">Click a processor from the sidebar</div>
+                        <div className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--text-primary)] transition-colors">Select an AI Processor</div>
+                        <div className="text-xs text-[var(--text-muted)]">Click a processor from the sidebar</div>
                       </div>
                     </div>
                   ) : (
                     <div className={`w-full max-w-sm p-4 rounded-2xl border transition-all duration-500 flex items-center justify-between ${
                       activeStep === pipeline.processor.id ? 'bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_20px_rgba(0,228,118,0.15)] animate-pulse'
-                        : completedSteps.has(pipeline.processor.id) ? 'bg-emerald-500/5 border-emerald-500/20 text-gray-400'
-                        : 'bg-[#0f1412]/40 border-emerald-500/5 text-gray-300'
+                        : completedSteps.has(pipeline.processor.id) ? 'bg-emerald-500/5 border-emerald-500/20 text-[var(--text-secondary)]'
+                        : 'bg-[var(--bg-surface-el)] border-emerald-500/5 text-[var(--text-primary)]'
                     }`}>
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${completedSteps.has(pipeline.processor.id) ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
                           {completedSteps.has(pipeline.processor.id) ? <CheckCircle2 size={18} /> : <Sparkles size={18} />}
                         </div>
                         <div>
-                          <div className="font-bold text-sm text-white">{pipeline.processor.name}</div>
-                          <div className="text-xs text-gray-500 capitalize">Processor</div>
+                          <div className="font-bold text-sm text-[var(--text-primary)]">{pipeline.processor.name}</div>
+                          <div className="text-xs text-[var(--text-muted)] capitalize">Processor</div>
                         </div>
                       </div>
-                      <button onClick={() => removeNode('processor')} disabled={running} className="text-gray-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all disabled:opacity-50">
+                      <button onClick={() => removeNode('processor')} disabled={running} className="text-[var(--text-muted)] hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all disabled:opacity-50">
                         <Trash2 size={15} />
                       </button>
                     </div>
@@ -394,26 +394,26 @@ export function WorkflowBuilderPage() {
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                       <Plus className="text-emerald-500/40 group-hover:text-emerald-400 group-hover:scale-110 transition-all" size={24} />
                       <div>
-                        <div className="text-sm font-bold text-gray-300 group-hover:text-white transition-colors">Select a Destination</div>
-                        <div className="text-xs text-gray-500">Click an output format from the sidebar</div>
+                        <div className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--text-primary)] transition-colors">Select a Destination</div>
+                        <div className="text-xs text-[var(--text-muted)]">Click an output format from the sidebar</div>
                       </div>
                     </div>
                   ) : (
                     <div className={`w-full max-w-sm p-4 rounded-2xl border transition-all duration-500 flex items-center justify-between ${
                       activeStep === pipeline.output.id ? 'bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_20px_rgba(0,228,118,0.15)] animate-pulse'
-                        : completedSteps.has(pipeline.output.id) ? 'bg-emerald-500/5 border-emerald-500/20 text-gray-400'
-                        : 'bg-[#0f1412]/40 border-emerald-500/5 text-gray-300'
+                        : completedSteps.has(pipeline.output.id) ? 'bg-emerald-500/5 border-emerald-500/20 text-[var(--text-secondary)]'
+                        : 'bg-[var(--bg-surface-el)] border-emerald-500/5 text-[var(--text-primary)]'
                     }`}>
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${completedSteps.has(pipeline.output.id) ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
                           {completedSteps.has(pipeline.output.id) ? <CheckCircle2 size={18} /> : <DownloadCloud size={18} />}
                         </div>
                         <div>
-                          <div className="font-bold text-sm text-white">{pipeline.output.name}</div>
-                          <div className="text-xs text-gray-500 capitalize">Output</div>
+                          <div className="font-bold text-sm text-[var(--text-primary)]">{pipeline.output.name}</div>
+                          <div className="text-xs text-[var(--text-muted)] capitalize">Output</div>
                         </div>
                       </div>
-                      <button onClick={() => removeNode('output')} disabled={running} className="text-gray-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all disabled:opacity-50">
+                      <button onClick={() => removeNode('output')} disabled={running} className="text-[var(--text-muted)] hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all disabled:opacity-50">
                         <Trash2 size={15} />
                       </button>
                     </div>
@@ -430,8 +430,8 @@ export function WorkflowBuilderPage() {
                       <DownloadCloud size={24} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-white">Pipeline Execution Complete</h4>
-                      <p className="text-xs text-emerald-100/70 mt-1">The workflow generated a formatted PDF document.</p>
+                      <h4 className="font-bold text-[var(--text-primary)]">Pipeline Execution Complete</h4>
+                      <p className="text-xs text-[var(--text-secondary)] mt-1">The workflow generated a formatted PDF document.</p>
                     </div>
                     <a
                       href={pdfResult}
