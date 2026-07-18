@@ -5,9 +5,8 @@ export const getDocuments = async (req, res) => {
   try {
     const { search, documentType, status, page = 1, pageSize = 10 } = req.query;
     
-    // In a real app with auth, we would use req.user.id
-    // For now, we fetch all or mock an ownerId
-    let query = {};
+    // We fetch documents belonging to the logged-in user
+    let query = { ownerId: req.user.id };
     
     if (search) {
       query.$or = [
@@ -50,7 +49,7 @@ export const getDocuments = async (req, res) => {
 // Get single document by ID
 export const getDocumentById = async (req, res) => {
   try {
-    const document = await Document.findById(req.params.id);
+    const document = await Document.findOne({ _id: req.params.id, ownerId: req.user.id });
     if (!document) {
       return res.status(404).json({ message: 'Document not found' });
     }
@@ -66,11 +65,7 @@ export const createDocument = async (req, res) => {
   try {
     const { documentType, documentData, status, title } = req.body;
     
-    // Mock user for now since auth might not be fully wired in frontend
-    // In production: const ownerId = req.user._id;
-    // We'll use a hardcoded valid ObjectId or create a dummy one for now.
-    // Let's just create a dummy object id string for ownerId if not provided
-    const ownerId = req.body.ownerId || '60d0fe4f5311236168a109ca'; // Mock valid ObjectId
+    const ownerId = req.user.id;
 
     const newDoc = new Document({
       ownerId,
@@ -91,8 +86,8 @@ export const createDocument = async (req, res) => {
 // Update a document
 export const updateDocument = async (req, res) => {
   try {
-    const updatedDoc = await Document.findByIdAndUpdate(
-      req.params.id, 
+    const updatedDoc = await Document.findOneAndUpdate(
+      { _id: req.params.id, ownerId: req.user.id }, 
       req.body, 
       { new: true, runValidators: true }
     );
@@ -111,7 +106,7 @@ export const updateDocument = async (req, res) => {
 // Delete a document
 export const deleteDocument = async (req, res) => {
   try {
-    const deletedDoc = await Document.findByIdAndDelete(req.params.id);
+    const deletedDoc = await Document.findOneAndDelete({ _id: req.params.id, ownerId: req.user.id });
     if (!deletedDoc) {
       return res.status(404).json({ message: 'Document not found' });
     }
@@ -124,8 +119,8 @@ export const deleteDocument = async (req, res) => {
 
 export const getDashboardStats = async (req, res) => {
   try {
-    const totalDocuments = await Document.countDocuments();
-    const drafts = await Document.countDocuments({ status: 'draft' });
+    const totalDocuments = await Document.countDocuments({ ownerId: req.user.id });
+    const drafts = await Document.countDocuments({ ownerId: req.user.id, status: 'draft' });
     
     // Mock chart data for now, or aggregate by date
     const chartData = Array.from({ length: 30 }).map((_, i) => {

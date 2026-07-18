@@ -1,5 +1,14 @@
 const API_BASE = import.meta.env.VITE_API_URL || '';
 import { MOCK_TEMPLATES } from '@/mocks/templates.mock'; // Still mock templates for now
+import { useAuthStore } from '@/stores/auth.store';
+
+const getAuthHeaders = (isJson = false) => {
+  const token = useAuthStore.getState().token;
+  const headers = {};
+  if (isJson) headers['Content-Type'] = 'application/json';
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  return headers;
+};
 
 export async function fetchDocuments(filters) {
   try {
@@ -10,7 +19,9 @@ export async function fetchDocuments(filters) {
     if (filters?.page) params.append('page', filters.page);
     if (filters?.pageSize) params.append('pageSize', filters.pageSize);
 
-    const response = await fetch(`${API_BASE}/api/documents?${params.toString()}`);
+    const response = await fetch(`${API_BASE}/api/documents?${params.toString()}`, {
+      headers: getAuthHeaders()
+    });
     if (!response.ok) throw new Error('Failed to fetch documents');
     return await response.json();
   } catch (error) {
@@ -21,7 +32,9 @@ export async function fetchDocuments(filters) {
 
 export async function getDocument(id) {
   try {
-    const response = await fetch(`${API_BASE}/api/documents/${id}`);
+    const response = await fetch(`${API_BASE}/api/documents/${id}`, {
+      headers: getAuthHeaders()
+    });
     if (!response.ok) throw new Error('Document not found');
     return await response.json();
   } catch (error) {
@@ -46,7 +59,7 @@ export async function saveDocument(type, data, status = 'draft', title = '') {
 
     const response = await fetch(`${API_BASE}/api/documents`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(true),
       body: JSON.stringify(payload)
     });
 
@@ -61,7 +74,8 @@ export async function saveDocument(type, data, status = 'draft', title = '') {
 export async function deleteDocument(id) {
   try {
     const response = await fetch(`${API_BASE}/api/documents/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: getAuthHeaders()
     });
     if (!response.ok) throw new Error('Failed to delete document');
     return await response.json();
@@ -85,7 +99,9 @@ export async function deleteTemplate(id) {
 
 export async function fetchRecentStats() {
   try {
-    const response = await fetch(`${API_BASE}/api/documents/stats`);
+    const response = await fetch(`${API_BASE}/api/documents/stats`, {
+      headers: getAuthHeaders()
+    });
     if (!response.ok) throw new Error('Failed to fetch dashboard stats');
     return await response.json();
   } catch (error) {

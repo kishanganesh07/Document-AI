@@ -37,45 +37,49 @@ export function LineItemsEditor({ items, currency = 'INR', onChange }) {
   return (
     <div className="space-y-3">
       {/* Header */}
-      <div className="grid grid-cols-[1fr_60px_80px_80px_32px] gap-2 px-1">
-        {['Description', 'Qty', 'Rate', 'Amount', ''].map((h) =>
-        <span key={h} className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-xmuted)]">{h}</span>
-        )}
+      <div className="grid grid-cols-[1fr_80px_100px_100px_40px] gap-3 px-2 items-center">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] text-left">Description</span>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] text-center">Qty</span>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] text-right">Rate</span>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] text-right">Amount</span>
+        <span></span>
       </div>
 
       {/* Items */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         {items.map((item, index) =>
-        <div key={item.id || index} className="grid grid-cols-[1fr_60px_80px_80px_32px] gap-2 items-start">
+        <div key={item.id || index} className="grid grid-cols-[1fr_80px_100px_100px_40px] gap-3 items-center">
             <input
             value={item.description}
             onChange={(e) => updateItem(item.id, 'description', e.target.value)}
             placeholder="Item description"
-            className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-2.5 py-1.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-xmuted)] focus:outline-none focus:border-[var(--color-primary)]" />
+            className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-xmuted)] focus:outline-none focus:border-[var(--color-primary)] transition-colors" />
           
             <input
             type="number"
             value={item.quantity}
             onChange={(e) => updateItem(item.id, 'quantity', Number(e.target.value))}
-            className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-2 py-1.5 text-sm text-[var(--text-primary)] text-center focus:outline-none focus:border-[var(--color-primary)]"
+            className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] text-center focus:outline-none focus:border-[var(--color-primary)] transition-colors"
             min={1} />
           
             <input
             type="number"
             value={item.rate}
             onChange={(e) => updateItem(item.id, 'rate', Number(e.target.value))}
-            className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-2 py-1.5 text-sm text-[var(--text-primary)] text-right focus:outline-none focus:border-[var(--color-primary)]"
+            className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] text-right focus:outline-none focus:border-[var(--color-primary)] transition-colors"
             min={0} />
           
-            <div className="px-2 py-1.5 text-sm font-medium text-[var(--text-primary)] text-right">
+            <div className="px-3 py-2 text-sm font-semibold text-[var(--text-primary)] text-right flex items-center justify-end">
               {formatCurrency(item.amount, currency)}
             </div>
-            <button
-            onClick={() => removeItem(item.id)}
-            className="p-1.5 text-[var(--text-xmuted)] hover:text-[var(--color-error)] transition-colors rounded-lg hover:bg-[var(--color-error-bg)]">
-            
-              <Trash2 size={13} />
-            </button>
+            <div className="flex items-center justify-center">
+              <button
+              onClick={() => removeItem(item.id)}
+              className="p-2 text-[var(--text-xmuted)] hover:text-[var(--color-error)] transition-colors rounded-lg hover:bg-[var(--color-error-bg)]"
+              title="Remove item">
+                <Trash2 size={16} />
+              </button>
+            </div>
           </div>
         )}
       </div>

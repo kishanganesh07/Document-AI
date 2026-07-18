@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Plus } from 'lucide-react';
 
 
 
@@ -28,6 +28,25 @@ export function DynamicFieldRenderer({
   const [collapsedSections, setCollapsedSections] = useState(
     new Set(schema.sections.filter((s) => s.defaultCollapsed).map((s) => s.id))
   );
+
+  const [isAddingCustom, setIsAddingCustom] = useState(false);
+  const [newCustomFieldName, setNewCustomFieldName] = useState('');
+
+  const schemaFields = new Set(
+    schema.sections.flatMap(s => s.fields.map(f => f.key))
+  );
+
+  const customFieldKeys = Object.keys(documentData).filter(
+    key => !schemaFields.has(key) && !key.startsWith('_') && key !== 'currency'
+  );
+
+  const handleAddCustomField = () => {
+    if (newCustomFieldName.trim()) {
+      onChange(newCustomFieldName.trim(), '');
+      setNewCustomFieldName('');
+      setIsAddingCustom(false);
+    }
+  };
 
   const toggleSection = (id) => {
     setCollapsedSections((prev) => {
@@ -118,6 +137,7 @@ export function DynamicFieldRenderer({
                         <EditableField
                         field={field}
                         value={documentData[field.key]}
+                        currency={documentData.currency || 'INR'}
                         onChange={onChange}
                         validation={getValidation(field.key)}
                         isAIGenerated={aiGeneratedFields.has(field.key)} />
@@ -131,6 +151,69 @@ export function DynamicFieldRenderer({
           </div>);
 
       })}
+
+      {/* Custom Fields Section */}
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] overflow-hidden mt-4">
+        <div className="w-full flex items-center justify-between px-4 py-3 border-b border-[var(--border)]">
+          <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
+            Custom Fields
+          </span>
+        </div>
+        <div className="px-4 pb-4 space-y-4 pt-4">
+          {customFieldKeys.map((key) => (
+            <div key={key} className="mb-4">
+              <EditableField
+                field={{ key, label: key, type: 'text' }}
+                value={documentData[key]}
+                currency={documentData.currency || 'INR'}
+                onChange={onChange}
+                validation={getValidation(key)}
+                isAIGenerated={aiGeneratedFields.has(key)}
+              />
+            </div>
+          ))}
+
+          {isAddingCustom ? (
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="text"
+                autoFocus
+                value={newCustomFieldName}
+                onChange={(e) => setNewCustomFieldName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddCustomField();
+                  if (e.key === 'Escape') {
+                    setIsAddingCustom(false);
+                    setNewCustomFieldName('');
+                  }
+                }}
+                placeholder="Field name..."
+                className="flex-1 bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-3 py-1.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--color-primary)] transition-colors"
+              />
+              <button 
+                onClick={handleAddCustomField}
+                className="px-3 py-1.5 bg-[var(--color-primary)] text-[#001a0b] text-xs font-bold rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Add
+              </button>
+              <button 
+                onClick={() => { setIsAddingCustom(false); setNewCustomFieldName(''); }}
+                className="px-3 py-1.5 text-[var(--text-muted)] text-xs font-bold rounded-lg hover:bg-[var(--bg-hover)] transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsAddingCustom(true)}
+              className="flex items-center gap-2 text-xs text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors mt-2 font-medium"
+            >
+              <Plus size={13} />
+              Add Custom Field
+            </button>
+          )}
+        </div>
+      </div>
     </div>);
 
 }

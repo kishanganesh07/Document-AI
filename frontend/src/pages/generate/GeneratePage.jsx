@@ -327,11 +327,11 @@ export function GeneratePage() {
       )}
 
       {/* ── 3-column body ── */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div className="hidden md:flex flex-1 overflow-hidden">
 
         {/* Column 1: AI Chat (narrow, fixed width) */}
         <div style={{
-          width: 320, flexShrink: 0, display: 'flex', flexDirection: 'column',
+          width: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column',
           borderRight: '1px solid var(--border)', background: 'var(--bg-base)',
           overflow: 'hidden',
         }}>
@@ -340,7 +340,7 @@ export function GeneratePage() {
 
         {/* Column 2: Document Form (scrollable) */}
         <div style={{
-          flex: 1, display: 'flex', flexDirection: 'column',
+          flex: '1.2', minWidth: '400px', display: 'flex', flexDirection: 'column',
           borderRight: '1px solid var(--border)', overflow: 'hidden',
           background: 'var(--bg-surface)',
         }}>
@@ -404,7 +404,7 @@ export function GeneratePage() {
         </div>
 
         {/* Column 3: Live Preview */}
-        <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-surface-el)' }}>
+        <div style={{ flex: '1', minWidth: '350px', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-surface-el)' }}>
           <DocumentPreview
             html={store.previewHtml}
             isLoading={previewLoading}
@@ -434,9 +434,9 @@ export function GeneratePage() {
       </div>
 
       {/* Mobile Tabs */}
-      <div className="md:hidden flex flex-col w-full h-full overflow-hidden">
+      <div className="md:hidden flex flex-col w-full flex-1 overflow-hidden">
         <div className="flex border-b border-[var(--border)] bg-[var(--bg-surface)] flex-shrink-0">
-          {['chat', 'fields', 'preview'].map((tab) => (
+          {['chat', 'fields'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -450,7 +450,7 @@ export function GeneratePage() {
             </button>
           ))}
         </div>
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden relative">
           {activeTab === 'chat' && <ChatPanel onSend={handleUserMessage} onQuickAction={() => {}} />}
           {activeTab === 'fields' && store.detectedType && (
             <div className="h-full overflow-y-auto p-4">
@@ -462,9 +462,6 @@ export function GeneratePage() {
                 onChange={handleFieldChange}
               />
             </div>
-          )}
-          {activeTab === 'preview' && (
-            <DocumentPreview html={store.previewHtml} isLoading={previewLoading} error={previewError} />
           )}
         </div>
       </div>

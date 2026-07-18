@@ -4,16 +4,9 @@ import { cn } from '@/lib/utils';
 
 
 import { ValidationMessage } from './ValidationMessage';
+import { formatCurrency } from '@/lib/utils';
 
-
-
-
-
-
-
-
-
-export function EditableField({ field, value, onChange, validation, isAIGenerated }) {
+export function EditableField({ field, value, currency = 'INR', onChange, validation, isAIGenerated }) {
   const [editing, setEditing] = useState(false);
   const [localValue, setLocalValue] = useState(String(value ?? ''));
   const inputRef = useRef(null);
@@ -23,7 +16,11 @@ export function EditableField({ field, value, onChange, validation, isAIGenerate
   }, [value]);
 
   const commit = () => {
-    onChange(field.key, localValue);
+    let finalValue = localValue;
+    if (field.type === 'number' || field.type === 'currency') {
+      finalValue = localValue === '' ? null : Number(localValue);
+    }
+    onChange(field.key, finalValue);
     setEditing(false);
   };
 
@@ -39,7 +36,9 @@ export function EditableField({ field, value, onChange, validation, isAIGenerate
   'border-[var(--border)]';
 
   const displayValue = value !== undefined && value !== null && value !== '' ?
-  (field.type === 'json' && typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)) :
+  (field.type === 'json' && typeof value === 'object' ? JSON.stringify(value, null, 2) : 
+   field.type === 'currency' ? formatCurrency(value, currency) :
+   String(value)) :
   <span className="text-[var(--text-xmuted)] italic">Not set</span>;
 
   if (field.type === 'textarea') {

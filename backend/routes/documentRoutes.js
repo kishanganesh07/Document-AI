@@ -7,14 +7,15 @@ import {
   deleteDocument,
   getDashboardStats 
 } from '../controller/documentController.js';
+import { verifyToken } from '../middleware/verifyToken.js';
 
 const router = express.Router();
 
-router.get('/stats', getDashboardStats); // Must come before /:id
-router.get('/', getDocuments);
-router.get('/:id', getDocumentById);
-router.post('/', createDocument);
-router.put('/:id', updateDocument);
-router.delete('/:id', deleteDocument);
+router.get('/stats', verifyToken, getDashboardStats); // Must come before /:id
+router.get('/', verifyToken, getDocuments);
+router.get('/:id', verifyToken, getDocumentById);
+router.post('/', verifyToken, createDocument);
+router.put('/:id', verifyToken, updateDocument);
+router.delete('/:id', verifyToken, deleteDocument);
 
 export default router;
