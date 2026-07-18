@@ -63,31 +63,10 @@ export function LoginPage() {
       <div className="hidden lg:flex flex-col justify-between w-1/2 p-16 relative z-10">
         <div className="anim-fade-in-down" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center gap-3">
-            <div className="w-24 h-24 rounded-3xl bg-[#12161a] border border-emerald-500/30 flex items-center justify-center shadow-[0_0_35px_rgba(0,228,118,0.25)] overflow-hidden">
-              <MetallicPaint
-                imageSrc="/logo-black.png"
-                seed={42}
-                scale={4}
-                patternSharpness={1.2}
-                noiseScale={0.3}
-                speed={0.4}
-                liquid={0.6}
-                mouseAnimation={false}
-                brightness={1.6}
-                contrast={0.9}
-                refraction={0.02}
-                blur={0.008}
-                chromaticSpread={1.5}
-                fresnel={0.8}
-                angle={45}
-                waveAmplitude={0.8}
-                distortion={0.3}
-                contour={0.4}
-                lightColor="#ffffff"
-                darkColor="#031405"
-                tintColor="#00e476"
-              />
-            </div>
+            <span className="text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
+              DocuFlow<span className="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)] inline-block ml-1 shadow-[0_0_10px_var(--color-primary)]"></span>
+              <span className="text-xs font-semibold tracking-[0.12em] text-[var(--text-xmuted)] uppercase ml-2 select-none align-super">AI</span>
+            </span>
           </div>
         </div>
 
@@ -125,31 +104,10 @@ export function LoginPage() {
           <div className="relative">
             {/* Mobile Branding */}
             <div className="lg:hidden flex items-center gap-3 mb-10 justify-center">
-              <div className="w-24 h-24 rounded-3xl bg-[#12161a] border border-emerald-500/30 flex items-center justify-center shadow-[0_0_35px_rgba(0,228,118,0.25)] overflow-hidden">
-                <MetallicPaint
-                  imageSrc="/logo-black.png"
-                  seed={42}
-                  scale={4}
-                  patternSharpness={1.2}
-                  noiseScale={0.3}
-                  speed={0.4}
-                  liquid={0.6}
-                  mouseAnimation={false}
-                  brightness={1.6}
-                  contrast={0.9}
-                  refraction={0.02}
-                  blur={0.008}
-                  chromaticSpread={1.5}
-                  fresnel={0.8}
-                  angle={45}
-                  waveAmplitude={0.8}
-                  distortion={0.3}
-                  contour={0.4}
-                  lightColor="#ffffff"
-                  darkColor="#031405"
-                  tintColor="#00e476"
-                />
-              </div>
+              <span className="text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
+                DocuFlow<span className="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)] inline-block ml-1 shadow-[0_0_10px_var(--color-primary)]"></span>
+                <span className="text-xs font-semibold tracking-[0.12em] text-[var(--text-xmuted)] uppercase ml-2 select-none align-super">AI</span>
+              </span>
             </div>
 
             <div className="mb-10 text-center lg:text-left">
