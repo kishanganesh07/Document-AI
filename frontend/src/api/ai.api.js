@@ -10,107 +10,55 @@ export async function processUserPrompt(prompt, file, onProgress) {
   try {
     let body;
     let headers = {};
+    let isFormData = false;
 
     if (file) {
       body = new FormData();
       body.append('prompt', prompt);
       body.append('document', file);
+      isFormData = true;
       // FormData handles its own Content-Type boundary
     } else {
       body = JSON.stringify({ prompt });
       headers['Content-Type'] = 'application/json';
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
     onProgress('extracting');
-    const isDocReq = prompt.toLowerCase().includes('generate') || prompt.toLowerCase().includes('create') || prompt.toLowerCase().includes('make') || prompt.toLowerCase().includes('invoice') || prompt.toLowerCase().includes('resume') || prompt.toLowerCase().includes('offer');
     
-    const result = {
-      isDocumentRequest: true,
-      chatResponse: "I've generated the document you requested based on your prompt. Let me know if you need any adjustments!",
-      documentType: 'invoice',
-      confidence: 0.95,
-      documentData: {
-        invoiceNumber: 'INV-2026-042',
-        issueDate: new Date().toLocaleDateString(),
-        dueDate: new Date(Date.now() + 14 * 86400000).toLocaleDateString(),
-        clientName: 'Hackathon Judges',
-        clientEmail: 'judges@example.com',
-        totalAmount: 1500,
-        notes: 'Thank you for evaluating DocuFlow!',
-        items: [
-          { description: 'Winner Trophy', quantity: 1, rate: 1000, amount: 1000 },
-          { description: 'Awesome UI/UX', quantity: 1, rate: 500, amount: 500 }
-        ]
-      },
-      validationResults: [],
-      missingFields: [],
-      suggestions: []
-    };
+    // Call the actual backend Generate endpoint
+    const response = await fetch(`${API_BASE}/api/generate`, {
+      method: 'POST',
+      headers,
+      body
+    });
 
-    if (prompt.toLowerCase().includes('offer')) {
-      result.documentType = 'offer_letter';
-      result.documentData = {
-        candidateName: 'John Doe',
-        jobTitle: 'Senior Developer',
-        companyName: 'Tech Innovators Inc.',
-        salary: '$120,000',
-        startDate: 'Next Monday'
-      };
-    } else if (prompt.toLowerCase().includes('report')) {
-      result.documentType = 'report';
-      result.documentData = {
-        title: 'Monthly Hackathon Performance',
-        summary: 'Excellent performance across all metrics.',
-        metrics: { totalViews: 12500, conversions: '42%' }
-      };
-    } else if (prompt.toLowerCase().includes('certificate')) {
-      result.documentType = 'certificate';
-      result.documentData = {
-        recipientName: 'Hackathon Winner',
-        companyName: 'Hackathon Organizers',
-        reason: 'For building an exceptional, professional document AI app.'
-      };
-    } else if (prompt.toLowerCase().includes('resume')) {
-      result.documentType = 'resume';
-      result.documentData = {
-        name: 'Jane Smith',
-        professionalTitle: 'Full Stack Engineer',
-        professionalSummary: 'Experienced developer building great UIs.',
-        experience: [{ role: 'Developer', company: 'Tech', duration: '2024-Present' }],
-        education: [{ degree: 'B.S. Computer Science', university: 'State University' }]
-      };
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || 'Failed to generate document');
     }
+
+    const data = await response.json();
     
     onProgress('validating');
-    const validationResults = result.validationResults || [];
-    const missingFields = result.missingFields || [];
-    const suggestions = result.suggestions || [];
-
-    onProgress('preparing_preview');
+    // Simulate validation time for better UX
     await delay(300);
 
-    let docType = (result.documentType || 'invoice').toLowerCase();
-    
-    // Validate that the document type exists in our schema registry, fallback if not
-    if (!['invoice', 'offer_letter', 'certificate', 'quotation', 'report', 'question_paper', 'resume'].includes(docType)) {
-      docType = 'invoice';
-    }
+    onProgress('preparing_preview');
+    await delay(200);
 
     return {
-      isDocumentRequest: result.isDocumentRequest,
-      chatResponse: result.chatResponse,
-      documentType: docType,
-      confidence: result.confidence || 0.9,
-      documentData: result.documentData || {},
-      validationResults,
-      missingFields,
-      suggestions
+      isDocumentRequest: data.isDocumentRequest,
+      chatResponse: data.chatResponse,
+      documentType: data.documentType,
+      confidence: data.confidence,
+      documentData: data.documentData || {},
+      validationResults: data.validationResults || [],
+      missingFields: data.missingFields || [],
+      suggestions: data.suggestions || []
     };
-  } catch (err) {
-    console.error('AI generation error:', err);
-    throw err;
+  } catch (error) {
+    console.error('Error in processUserPrompt:', error);
+    throw error;
   }
 }
 

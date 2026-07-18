@@ -9,10 +9,7 @@ import { cn } from '@/lib/utils';
 
 const TABS = [
   { id: 'profile', label: 'Profile', icon: User, emoji: '👤' },
-  { id: 'security', label: 'Security', icon: Shield, emoji: '🔐' },
   { id: 'appearance', label: 'Appearance', icon: Moon, emoji: '🎨' },
-  { id: 'notifications', label: 'Notifications', icon: Bell, emoji: '🔔' },
-  { id: 'api', label: 'Developer', icon: Key, emoji: '🔑' },
 ];
 
 export function SettingsPage() {
@@ -64,28 +61,9 @@ export function SettingsPage() {
             <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl shadow-[var(--shadow-sm)] overflow-hidden animate-fade-in">
               <div className="px-6 py-5 border-b border-[var(--border)] bg-gradient-to-r from-[var(--color-primary)]/5 to-transparent">
                 <h2 className="text-base font-bold text-[var(--text-primary)]">Profile Information</h2>
-                <p className="text-xs text-[var(--text-muted)] mt-0.5">Update your personal details and avatar.</p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">Your personal identity and registration details.</p>
               </div>
               <div className="p-6 space-y-6">
-                {/* Avatar */}
-                <div className="flex items-center gap-5">
-                  <div className="relative">
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-blue-600 flex items-center justify-center text-white font-bold text-3xl shadow-sm">
-                      {user?.name?.charAt(0) || 'U'}
-                    </div>
-                    <button className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[var(--bg-surface)] border-2 border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--color-primary)] transition-colors shadow-sm">
-                      <Camera size={13} />
-                    </button>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[var(--text-primary)]">{user?.name || 'Your Name'}</p>
-                    <p className="text-xs text-[var(--text-muted)] mt-0.5 capitalize">{user?.role || 'Member'}</p>
-                    <button className="text-xs text-[var(--color-primary)] font-medium mt-1.5 hover:underline">
-                      Change avatar
-                    </button>
-                  </div>
-                </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Input label="Full Name" defaultValue={user?.name} />
                   <Input label="Email Address" defaultValue={user?.email} disabled />
@@ -143,20 +121,7 @@ export function SettingsPage() {
             </div>
           )}
 
-          {/* Other tabs placeholder */}
-          {(activeTab === 'security' || activeTab === 'notifications' || activeTab === 'api') && (
-            <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl shadow-[var(--shadow-sm)] p-12 text-center animate-fade-in">
-              <div className="w-14 h-14 rounded-2xl bg-[var(--bg-surface-el)] flex items-center justify-center mx-auto mb-4 text-2xl">
-                {TABS.find(t => t.id === activeTab)?.emoji}
-              </div>
-              <h3 className="text-base font-bold text-[var(--text-primary)]">
-                {TABS.find(t => t.id === activeTab)?.label} Settings
-              </h3>
-              <p className="text-sm text-[var(--text-muted)] mt-2 max-w-xs mx-auto">
-                Advanced configuration for {activeTab} will be available here in the next update.
-              </p>
-            </div>
-          )}
+
 
         </div>
       </div>

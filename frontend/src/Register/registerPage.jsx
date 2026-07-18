@@ -4,6 +4,9 @@ import { Sparkles, ArrowRight, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { useNotificationStore } from '@/stores/notification.store';
 import { AmbientParticles } from '@/components/Navigation/AppShell';
+import Particles from '@/components/ui/Particles';
+import MetallicPaint from '@/components/ui/MetallicPaint';
+
 
 export function RegisterPage() {
   const [name, setName] = useState('');
@@ -44,19 +47,53 @@ export function RegisterPage() {
   ];
 
   return (
-    <div className="min-h-screen flex bg-[var(--bg-base)] relative overflow-hidden">
+    <div className="min-h-screen flex bg-[#0a0f0c] relative overflow-hidden">
+      {/* Particles Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <Particles
+          particleColors={["#00e476", "#b1ccc3", "#e5c364", "#00ff85"]}
+          particleCount={100}
+          particleSpread={10}
+          speed={0.08}
+          particleBaseSize={100}
+          moveParticlesOnHover={true}
+          alphaParticles={true}
+          disableRotation={false}
+        />
+      </div>
       {/* Ambient Background */}
       <AmbientParticles />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-primary-dim)_0%,_transparent_60%)] opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--color-primary-dim)_0%,_transparent_60%)] opacity-25 pointer-events-none" />
 
       {/* Left branding panel */}
       <div className="hidden lg:flex flex-col justify-between w-1/2 p-16 relative z-10">
         <div className="anim-fade-in-down" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[var(--color-primary)] flex items-center justify-center shadow-[0_0_20px_var(--color-primary-dim)]">
-              <Sparkles size={20} className="text-white" />
+            <div className="w-24 h-24 rounded-3xl bg-[#12161a] border border-emerald-500/30 flex items-center justify-center shadow-[0_0_35px_rgba(0,228,118,0.25)] overflow-hidden">
+              <MetallicPaint
+                imageSrc="/logo-black.png"
+                seed={42}
+                scale={4}
+                patternSharpness={1.2}
+                noiseScale={0.3}
+                speed={0.4}
+                liquid={0.6}
+                mouseAnimation={false}
+                brightness={1.6}
+                contrast={0.9}
+                refraction={0.02}
+                blur={0.008}
+                chromaticSpread={1.5}
+                fresnel={0.8}
+                angle={45}
+                waveAmplitude={0.8}
+                distortion={0.3}
+                contour={0.4}
+                lightColor="#ffffff"
+                darkColor="#031405"
+                tintColor="#00e476"
+              />
             </div>
-            <span className="font-bold text-2xl tracking-tight text-[var(--text-primary)]">DocuFlow</span>
           </div>
         </div>
 
@@ -91,10 +128,31 @@ export function RegisterPage() {
           <div className="relative">
             {/* Mobile Branding */}
             <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
-              <div className="w-10 h-10 rounded-xl bg-[var(--color-primary)] flex items-center justify-center shadow-[0_0_20px_var(--color-primary-dim)]">
-                <Sparkles size={20} className="text-white" />
+              <div className="w-24 h-24 rounded-3xl bg-[#12161a] border border-emerald-500/30 flex items-center justify-center shadow-[0_0_35px_rgba(0,228,118,0.25)] overflow-hidden">
+                <MetallicPaint
+                  imageSrc="/logo-black.png"
+                  seed={42}
+                  scale={4}
+                  patternSharpness={1.2}
+                  noiseScale={0.3}
+                  speed={0.4}
+                  liquid={0.6}
+                  mouseAnimation={false}
+                  brightness={1.6}
+                  contrast={0.9}
+                  refraction={0.02}
+                  blur={0.008}
+                  chromaticSpread={1.5}
+                  fresnel={0.8}
+                  angle={45}
+                  waveAmplitude={0.8}
+                  distortion={0.3}
+                  contour={0.4}
+                  lightColor="#ffffff"
+                  darkColor="#031405"
+                  tintColor="#00e476"
+                />
               </div>
-              <span className="font-bold text-2xl tracking-tight text-[var(--text-primary)]">DocuFlow</span>
             </div>
 
             <div className="mb-8 text-center lg:text-left">

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AppNavbar } from './AppNavbar';
 import { CommandPalette } from '@/components/global/CommandPalette';
 import { ToastContainer } from '@/components/ui/Toast';
+import Particles from '@/components/ui/Particles';
 
 /* ── Ambient floating particles overlay (shared across all app pages) ── */
 export function AmbientParticles() {
@@ -123,8 +124,21 @@ export function AppShell() {
       background: 'var(--bg-app)',
       position: 'relative',
     }}>
-      {/* Ambient background particles — always present */}
-      <AmbientParticles />
+
+
+      {/* 3D WebGL Particles Background Pattern */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <Particles
+          particleColors={["#00e476", "#b1ccc3", "#e5c364", "#00ff85"]}
+          particleCount={180}
+          particleSpread={12}
+          speed={0.08}
+          particleBaseSize={100}
+          moveParticlesOnHover={true}
+          alphaParticles={true}
+          disableRotation={false}
+        />
+      </div>
 
       {/* Navbar is above the particle layer */}
       <div style={{ position: 'relative', zIndex: 50 }}>

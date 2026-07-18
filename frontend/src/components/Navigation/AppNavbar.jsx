@@ -8,14 +8,15 @@ import {
 import { useUIStore } from '@/stores/ui.store';
 import { useAuthStore } from '@/stores/auth.store';
 import { cn } from '@/lib/utils';
+import MetallicPaint from '@/components/ui/MetallicPaint';
+
 
 const NAV_LINKS = [
   { to: '/dashboard', icon: Gauge, label: 'Dashboard', end: true },
-  { to: '/generate', icon: Wand2, label: 'Generate' },
-  { to: '/documents', icon: ScrollText, label: 'Documents' },
-  { to: '/templates', icon: Layers, label: 'Templates' },
-  { to: '/organization', icon: Network, label: 'Organization' },
-  { to: '/settings', icon: SlidersHorizontal, label: 'Settings' },
+  { to: '/workflows', icon: Network, label: 'Workflows' },
+  { to: '/agents', icon: Wand2, label: 'AI Hub' },
+  { to: '/generate', icon: SlidersHorizontal, label: 'Manual Gen' },
+  { to: '/documents', icon: ScrollText, label: 'History' },
 ];
 
 export function AppNavbar() {
@@ -28,15 +29,14 @@ export function AppNavbar() {
   return (
     <>
       <style>{`
-        /* ── Theme-Responsive App Navbar ── */
+        /* ── Floating Capsule App Navbar ── */
         .me-navbar {
-          height: 52px;
-          background: var(--bg-sidebar);
-          border-bottom: 1px solid var(--border);
+          height: 80px;
+          background: transparent;
           display: flex;
           align-items: center;
-          padding: 0 20px;
-          gap: 0;
+          justify-content: space-between;
+          padding: 0 40px;
           position: sticky;
           top: 0;
           z-index: 50;
@@ -45,58 +45,94 @@ export function AppNavbar() {
         .me-logo {
           display: flex; align-items: center; gap: 10px;
           font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 15px; font-weight: 800; letter-spacing: -0.04em;
+          font-size: 16px; font-weight: 800; letter-spacing: -0.04em;
           color: var(--text-primary); text-decoration: none;
-          padding-right: 20px;
-          border-right: 1px solid var(--border);
           flex-shrink: 0; white-space: nowrap;
+          transition: opacity 0.2s;
+        }
+        .me-logo:hover {
+          opacity: 0.8;
         }
         .me-logo-dot {
-          width: 7px; height: 7px; border-radius: 50%;
+          width: 8px; height: 8px; border-radius: 50%;
           background: var(--color-primary);
-          box-shadow: 0 0 8px var(--color-primary);
+          box-shadow: 0 0 10px var(--color-primary);
           flex-shrink: 0;
         }
         .me-logo-sub {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 8px; font-weight: 500; color: var(--text-xmuted);
-          letter-spacing: 0.1em; text-transform: uppercase;
-          display: block; line-height: 1; margin-top: 1px;
+          font-size: 8px; font-weight: 600; color: var(--text-xmuted);
+          letter-spacing: 0.12em; text-transform: uppercase;
         }
+        .logo-shine {
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+          transform: skewX(-20deg);
+          animation: shine 3s infinite;
+        }
+        @keyframes shine {
+          0% { left: -100%; }
+          20% { left: 200%; }
+          100% { left: 200%; }
+        }
+        
+        /* Floating Glassmorphic Capsule */
+        .me-capsule-container {
+          display: flex;
+          align-items: center;
+          background: var(--glass-bg);
+          border: 1px solid var(--glass-border);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-radius: 9999px;
+          padding: 5px 6px 5px 24px;
+          gap: 20px;
+          box-shadow: 0 12px 34px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+          transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .me-capsule-container:hover {
+          border-color: var(--border-mint);
+          box-shadow: 0 16px 40px rgba(0, 228, 118, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
         .me-nav-links {
-          display: flex; align-items: center; gap: 2px;
-          flex: 1; padding: 0 14px; overflow-x: auto;
+          display: flex; align-items: center; gap: 8px;
         }
-        .me-nav-links::-webkit-scrollbar { display: none; }
         .me-nav-item {
-          display: flex; align-items: center; gap: 6px;
-          padding: 6px 12px; border-radius: 6px;
-          font-size: 13px; font-weight: 500;
-          font-family: 'Inter', sans-serif;
+          display: inline-block;
+          padding: 6px 12px;
+          border-radius: 9999px;
+          font-size: 11px; font-weight: 700;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
           text-decoration: none; white-space: nowrap;
-          transition: all 0.15s ease;
+          transition: all 0.2s ease;
           color: var(--text-muted);
-          letter-spacing: -0.01em;
-          position: relative;
         }
         .me-nav-item:hover {
-          background: var(--bg-hover);
           color: var(--text-primary);
         }
         .me-nav-item.active {
           color: var(--color-primary);
           background: var(--color-primary-subtle);
         }
-        .me-nav-item.active::after {
-          content: '';
-          position: absolute; bottom: -1px; left: 10px; right: 10px;
-          height: 1px; border-radius: 1px;
-          background: var(--color-primary);
-          box-shadow: 0 0 6px var(--color-primary);
+
+        .me-capsule-actions {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          border-left: 1px solid var(--border);
+          padding-left: 12px;
+          margin-left: 4px;
         }
-        .me-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+
         .me-icon-btn {
-          width: 32px; height: 32px; border-radius: 6px;
+          width: 32px; height: 32px; border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
           color: var(--text-muted); background: transparent; border: none;
           cursor: pointer; transition: all 0.15s; position: relative;
@@ -105,67 +141,42 @@ export function AppNavbar() {
           background: var(--bg-hover);
           color: var(--text-primary);
         }
-        .me-search-btn {
-          display: flex; align-items: center; gap: 8px;
-          padding: 6px 12px; border-radius: 6px;
-          border: 1px solid var(--border);
-          background: var(--bg-deep);
-          cursor: pointer; height: 32px;
-          color: var(--text-muted); font-size: 12px;
-          font-family: 'JetBrains Mono', monospace;
-          letter-spacing: 0.02em;
-          min-width: 160px;
-          transition: all 0.2s;
-        }
-        .me-search-btn:hover {
-          border-color: var(--border-mint);
-          background: var(--color-primary-subtle);
-          color: var(--text-primary);
-        }
-        .me-kbd {
-          display: flex; align-items: center; gap: 2px;
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 9px; color: var(--text-xmuted);
-          background: var(--bg-hover);
-          border: 1px solid var(--border);
-          border-radius: 4px; padding: 2px 5px;
-        }
-        .me-generate-btn {
-          display: flex; align-items: center; gap: 6px;
-          padding: 7px 14px; border-radius: 6px;
-          background: var(--color-primary); color: #001a0b;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 12px; font-weight: 800;
-          border: none; cursor: pointer; white-space: nowrap;
-          letter-spacing: -0.01em; text-decoration: none;
-          transition: all 0.2s;
-          margin-left: 6px;
-        }
-        .me-generate-btn:hover {
-          background: var(--color-primary-hover);
-          box-shadow: 0 0 20px rgba(0,228,118,0.4);
-          transform: translateY(-1px);
-        }
+
+        /* Solid Pill Button */
         .me-user-btn {
-          display: flex; align-items: center; gap: 8px;
-          padding: 4px 8px 4px 4px; border-radius: 8px;
-          border: 1px solid var(--border);
-          background: transparent; cursor: pointer;
-          transition: all 0.15s; color: var(--text-primary);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 18px;
+          border-radius: 9999px;
+          border: none;
+          background: #111517;
+          color: #ffffff;
+          cursor: pointer;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          transition: all 0.2s ease;
         }
         .me-user-btn:hover {
-          background: var(--bg-hover);
-          border-color: var(--border-strong);
+          background: var(--color-primary);
+          color: #001a0b;
+          box-shadow: 0 0 15px rgba(0, 228, 118, 0.4);
         }
-        .me-avatar {
-          width: 26px; height: 26px; border-radius: 6px;
-          overflow: hidden; flex-shrink: 0;
-          border: 1px solid var(--color-primary-subtle);
+        .dark .me-user-btn {
+          background: #e0e3e5;
+          color: #101415;
         }
-        .me-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .dark .me-user-btn:hover {
+          background: var(--color-primary);
+          color: #001a0b;
+        }
+
         .me-dropdown {
-          position: absolute; right: 0; top: calc(100% + 8px);
-          width: 220px; border-radius: 12px;
+          position: absolute; right: 0; top: calc(100% + 12px);
+          width: 220px; border-radius: 16px;
           background: var(--bg-surface);
           border: 1px solid var(--border);
           box-shadow: var(--shadow-lg);
@@ -183,7 +194,7 @@ export function AppNavbar() {
         }
         .me-dropdown-item {
           display: flex; align-items: center; gap: 10px;
-          padding: 9px 14px; font-size: 13px; font-weight: 500;
+          padding: 10px 14px; font-size: 13px; font-weight: 500;
           font-family: 'Inter', sans-serif;
           color: var(--text-secondary); cursor: pointer; border: none;
           background: transparent; width: 100%; text-align: left;
@@ -192,6 +203,7 @@ export function AppNavbar() {
         .me-dropdown-item:hover { background: var(--bg-hover); color: var(--text-primary); }
         .me-dropdown-item.danger { color: var(--color-error); }
         .me-dropdown-item.danger:hover { background: var(--color-error-bg); }
+        
         .me-mobile-overlay {
           position: fixed; inset: 0; background: rgba(0,0,0,0.7);
           backdrop-filter: blur(4px); z-index: 200;
@@ -208,9 +220,7 @@ export function AppNavbar() {
           to   { transform: translateX(0); }
         }
         @media (max-width: 900px) {
-          .me-nav-links { display: none; }
-          .me-search-btn { display: none; }
-          .me-generate-btn { display: none; }
+          .me-capsule-container { display: none; }
           .me-mobile-toggle { display: flex !important; }
         }
         .me-mobile-toggle { display: none; }
@@ -219,76 +229,54 @@ export function AppNavbar() {
       <header className="me-navbar">
         {/* Logo */}
         <Link to="/dashboard" className="me-logo">
-          <div className="me-logo-dot" />
-          <div>
-            <span>DocuFlow</span>
-            <span className="me-logo-sub">AI Documents</span>
-          </div>
+          DocFlow<span className="me-logo-dot"></span>
+          <span className="me-logo-sub">AI</span>
         </Link>
 
-        {/* Nav links */}
-        <nav className="me-nav-links">
-          {NAV_LINKS.map(({ to, icon: Icon, label, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) => cn('me-nav-item', isActive && 'active')}
-            >
-              <Icon size={13} />
-              {label}
-            </NavLink>
-          ))}
-        </nav>
+        {/* Floating Capsule containing Navigation & Actions */}
+        <div className="me-capsule-container">
+          {/* Nav links */}
+          <nav className="me-nav-links">
+            {NAV_LINKS.map(({ to, label, end }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                className={({ isActive }) => cn('me-nav-item', isActive && 'active')}
+              >
+                {label}
+              </NavLink>
+            ))}
+          </nav>
 
-        {/* Right actions */}
-        <div className="me-actions">
-          {/* Search */}
-          <button className="me-search-btn" onClick={openCommandPalette}>
-            <ScanSearch size={12} />
-            <span style={{ flex: 1, textAlign: 'left' }}>search...</span>
-            <span className="me-kbd">⌘K</span>
-          </button>
+          {/* Capsule actions */}
+          <div className="me-capsule-actions">
+            {/* Search (Icon Only for capsule simplicity) */}
+            <button className="me-icon-btn" onClick={openCommandPalette} title="Search (⌘K)">
+              <ScanSearch size={14} />
+            </button>
 
-          {/* Generate */}
-          <NavLink to="/generate" className="me-generate-btn">
-            <Sparkles size={12} />
-            Generate
-          </NavLink>
+            {/* Theme Toggle */}
+            <button className="me-icon-btn" onClick={toggleTheme} title="Toggle theme">
+              {theme === 'dark' ? <SunMedium size={14} /> : <MoonStar size={14} />}
+            </button>
 
-          {/* Theme */}
-          <button className="me-icon-btn" onClick={toggleTheme} title="Toggle theme">
-            {theme === 'dark' ? <SunMedium size={15} /> : <MoonStar size={15} />}
-          </button>
-
-          {/* Notifications */}
-          <button className="me-icon-btn" title="Notifications" style={{ position: 'relative' }}>
-            <Bell size={14} />
-            <span style={{
-              position: 'absolute', top: 6, right: 6,
-              width: 5, height: 5, borderRadius: '50%',
-              background: 'var(--color-primary)', boxShadow: '0 0 6px var(--color-primary)',
-            }} />
-          </button>
-
-          {/* User */}
-          <div style={{ position: 'relative', marginLeft: 4 }}>
-            <button className="me-user-btn" onClick={() => setProfileOpen(p => !p)}>
-              <div className="me-avatar">
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=1d3a2a&color=00e476&rounded=true&bold=true`}
-                  alt="avatar"
-                />
-              </div>
+            {/* Notifications */}
+            <button className="me-icon-btn" title="Notifications" style={{ position: 'relative' }}>
+              <Bell size={14} />
               <span style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: 12, fontWeight: 600,
-                maxWidth: 72, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                color: 'var(--text-secondary)',
-              }}>
-                {user?.name?.split(' ')[0] || 'User'}
-              </span>
-              <ChevronDown size={12} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+                position: 'absolute', top: 6, right: 6,
+                width: 5, height: 5, borderRadius: '50%',
+                background: 'var(--color-primary)', boxShadow: '0 0 6px var(--color-primary)',
+              }} />
+            </button>
+          </div>
+
+          {/* User Profile / Account Button */}
+          <div style={{ position: 'relative' }}>
+            <button className="me-user-btn" onClick={() => setProfileOpen(p => !p)}>
+              <span>{user?.name?.split(' ')[0] || 'Account'}</span>
+              <ChevronDown size={10} style={{ opacity: 0.8 }} />
             </button>
 
             {profileOpen && (
@@ -319,12 +307,12 @@ export function AppNavbar() {
               </>
             )}
           </div>
-
-          {/* Mobile toggle */}
-          <button className="me-icon-btn me-mobile-toggle" onClick={() => setMobileOpen(true)}>
-            <Menu size={17} />
-          </button>
         </div>
+
+        {/* Mobile toggle */}
+        <button className="me-icon-btn me-mobile-toggle" onClick={() => setMobileOpen(true)}>
+          <Menu size={17} />
+        </button>
       </header>
 
       {/* Mobile nav drawer */}

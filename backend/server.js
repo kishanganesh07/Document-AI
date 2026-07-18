@@ -4,6 +4,10 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import generateRoutes from './routes/generateRoutes.js';
+import agentRoutes from './routes/agentRoutes.js';
+import documentRoutes from './routes/documentRoutes.js';
+import workflowRoutes from './routes/workflowRoutes.js';
+import ocrRoutes from './routes/ocrRoutes.js';
 
 dotenv.config();
 
@@ -23,6 +27,12 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/generate', generateRoutes);
+app.use('/api/agents', agentRoutes);
+app.use('/api/documents', documentRoutes);
+app.use('/api/workflows', workflowRoutes);
+app.use('/api/ocr', ocrRoutes);
+
+
 
 const startServer = async () => {
   try {

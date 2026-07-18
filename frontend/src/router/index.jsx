@@ -14,6 +14,10 @@ import { BatchPage } from '@/pages/batch/BatchPage';
 import { VerifyPage } from '@/pages/verify/VerifyPage';
 import { LoginPage } from '@/Login/loginPage';
 import { RegisterPage } from '@/Register/registerPage';
+import { AgentStudioPage } from '@/pages/agents/AgentStudioPage';
+import { WorkflowBuilderPage } from '@/pages/workflows/WorkflowBuilderPage';
+
+
 
 const router = createBrowserRouter([
   // Always Public - Verification
@@ -45,6 +49,8 @@ const router = createBrowserRouter([
         element: <AppShell />,
         children: [
           { path: '/dashboard', element: <HomePage /> },
+          { path: '/agents', element: <AgentStudioPage /> },
+          { path: '/workflows', element: <WorkflowBuilderPage /> },
 
           {
             path: '/generate',

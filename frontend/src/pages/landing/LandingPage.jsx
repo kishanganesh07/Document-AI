@@ -5,6 +5,10 @@ import {
   ArrowRight, CheckCircle, Download, Sparkles, Bot, FileCheck,
   BarChart3, Globe, Lock, ChevronRight, Terminal
 } from 'lucide-react';
+import Particles from '@/components/ui/Particles';
+import MetallicPaint from '@/components/ui/MetallicPaint';
+
+
 
 /* ─────────────────────────────────────────────
    Hooks
@@ -749,6 +753,20 @@ export function LandingPage() {
       `}</style>
 
       <div className="lp-root">
+        {/* 3D WebGL Particles Background Pattern */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+          <Particles
+            particleColors={["#00e476", "#b1ccc3", "#e5c364", "#00ff85"]}
+            particleCount={180}
+            particleSpread={12}
+            speed={0.08}
+            particleBaseSize={100}
+            moveParticlesOnHover={true}
+            alphaParticles={true}
+            disableRotation={false}
+          />
+        </div>
+
         {/* ── Particle background ── */}
         <div className="lp-particle-bg" aria-hidden="true">
           <div className="lp-orb lp-orb-1" />
@@ -772,9 +790,32 @@ export function LandingPage() {
         {/* ══════ NAVBAR ══════ */}
         <nav className={`lp-nav ${scrolled ? 'scrolled' : ''}`}>
           <div className="lp-nav-inner">
-            <Link to="/" className="lp-logo">
-              <div className="lp-logo-dot" />
-              DocuFlow
+            <Link to="/" className="lp-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '14px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,228,118,0.15)', boxShadow: '0 0 20px rgba(0,228,118,0.1)' }}>
+                <MetallicPaint
+                  imageSrc="/logo-black.png"
+                  seed={42}
+                  scale={4}
+                  patternSharpness={1.2}
+                  noiseScale={0.3}
+                  speed={0.4}
+                  liquid={0.6}
+                  mouseAnimation={false}
+                  brightness={1.6}
+                  contrast={0.9}
+                  refraction={0.02}
+                  blur={0.008}
+                  chromaticSpread={1.5}
+                  fresnel={0.8}
+                  angle={45}
+                  waveAmplitude={0.8}
+                  distortion={0.3}
+                  contour={0.4}
+                  lightColor="#ffffff"
+                  darkColor="#031405"
+                  tintColor="#00e476"
+                />
+              </div>
             </Link>
             <div className="lp-nav-links">
               <a href="#features" className="lp-nav-link">Features</a>
@@ -1058,9 +1099,32 @@ export function LandingPage() {
         <footer className="lp-footer">
           <div className="lp-footer-inner">
             <div>
-              <div style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 15, fontWeight: 800, color: '#e0e3e5', letterSpacing: '-0.03em', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e476', boxShadow: '0 0 8px #00e476' }} />
-                DocuFlow
+              <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center' }}>
+                <div style={{ width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(0,228,118,0.15)', boxShadow: '0 0 15px rgba(0,228,118,0.08)' }}>
+                  <MetallicPaint
+                    imageSrc="/logo-black.png"
+                    seed={42}
+                    scale={4}
+                    patternSharpness={1.2}
+                    noiseScale={0.3}
+                    speed={0.4}
+                    liquid={0.6}
+                    mouseAnimation={false}
+                    brightness={1.6}
+                    contrast={0.9}
+                    refraction={0.02}
+                    blur={0.008}
+                    chromaticSpread={1.5}
+                    fresnel={0.8}
+                    angle={45}
+                    waveAmplitude={0.8}
+                    distortion={0.3}
+                    contour={0.4}
+                    lightColor="#ffffff"
+                    darkColor="#031405"
+                    tintColor="#00e476"
+                  />
+                </div>
               </div>
               <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: '#3b4b3d', letterSpacing: '0.04em' }}>
                 © {new Date().getFullYear()} DocuFlow. AI Secure Document Intelligence.

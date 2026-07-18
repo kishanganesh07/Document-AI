@@ -3,7 +3,7 @@ import { fetchRecentStats, fetchDocuments } from '@/api/document.api';
 import {
   FileText, Wand2, Sparkles, TrendingUp, Clock, ChevronRight,
   CheckCircle2, AlertCircle, ArrowUpRight, Zap,
-  Users, Shield, BarChart3, Activity, FileCheck
+  Users, Shield, BarChart3, Activity, FileCheck, Network
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { Link, useNavigate } from 'react-router-dom';
@@ -149,10 +149,10 @@ function DocRow({ doc, index }) {
 }
 
 const QUICK_ACTIONS = [
-  { label: 'New Invoice', to: '/generate', icon: FileText, accent: '#00e476', bg: 'rgba(0,228,118,0.08)' },
-  { label: 'Offer Letter', to: '/generate', icon: Users, accent: '#b1ccc3', bg: 'rgba(177,204,195,0.08)' },
-  { label: 'Certificate', to: '/generate', icon: Shield, accent: '#e5c364', bg: 'rgba(229,195,100,0.08)' },
-  { label: 'Quotation', to: '/generate', icon: BarChart3, accent: '#00e476', bg: 'rgba(0,228,118,0.06)' },
+  { label: 'Build Workflow', to: '/workflows', icon: Network, accent: '#00e476', bg: 'rgba(0,228,118,0.08)' },
+  { label: 'AI Hub', to: '/agents', icon: Wand2, accent: '#b1ccc3', bg: 'rgba(177,204,195,0.08)' },
+  { label: 'Manual Gen', to: '/generate', icon: Wand2, accent: '#e5c364', bg: 'rgba(229,195,100,0.08)' },
+  { label: 'Doc History', to: '/documents', icon: FileText, accent: '#00e476', bg: 'rgba(0,228,118,0.06)' },
 ];
 
 const MONTH_STATS = [
@@ -636,11 +636,10 @@ export function HomePage() {
                 </span>
               </div>
               <p style={{ fontSize: 13, color: '#b9cbb9', lineHeight: 1.65, marginBottom: 14, position: 'relative', zIndex: 1 }}>
-                You frequently generate <strong style={{ color: '#e0e3e5' }}>Invoices</strong> at month-end.
-                Set up automated batch generation to save 40+ minutes.
+                Automate your recruitment process by routing <strong style={{ color: '#e0e3e5' }}>LinkedIn profiles</strong> through the AI Workflow Builder to generate instant Professional Resumes.
               </p>
-              <button className="me-ai-auto-btn" onClick={() => navigate('/batch')}>
-                <Zap size={12} /> Configure Automation
+              <button className="me-ai-auto-btn" onClick={() => navigate('/workflows')}>
+                <Zap size={12} /> Open Workflow Builder
               </button>
             </div>
 
